@@ -1,0 +1,2813 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     95139,       2404]*)
+(*NotebookOutlinePosition[     96029,       2435]*)
+(*  CellTagsIndexPosition[     95985,       2431]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell["Numerische Loesung von Anfangswertaufgaben", "Title"],
+
+Cell[CellGroupData[{
+
+Cell["Util / Module", "Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(Off[Remove::rmnsm]; Remove["\<Global`*\>"]; 
+    Off[General::spell1];\), "\[IndentingNewLine]", 
+    \(\(SetOptions[{Plot, ListPlot}, Frame \[Rule] True, 
+        GridLines \[Rule] 
+          Automatic,  (*\(AspectRatio \[Rule] Automatic\)\(,\)*) 
+          TextStyle \[Rule] {FontSlant \[Rule] "\<Italic\>", 
+            FontSize \[Rule] 14}, 
+        FormatType \[Rule] TraditionalForm];\)\), "\[IndentingNewLine]", 
+    \(\(SetOptions[{GraphicsArray}, Frame \[Rule] True, 
+        TextStyle \[Rule] {FontSlant \[Rule] "\<Italic\>", 
+            FontSize \[Rule] 14}, 
+        FormatType \[Rule] TraditionalForm];\)\), "\[IndentingNewLine]", 
+    \(\(Unprotect[NumberForm];\)\), "\[IndentingNewLine]", 
+    \(\(SetAttributes[NumberForm, Listable];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(Stuetzstellen[A_, B_, H_]\)\(:=\)\(Module[{m}, 
+        m = \((B - A)\)/H; \[IndentingNewLine]Table[
+          H, {i, 1, m}]]\)\( (*end\ module*) \)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(\(ExplicitRungeKutta[Xo_, Yo_, H_, f_]\)\(:=\)\(Module[{N, ret, k}, 
+        N = Length[H]; 
+        ret = {{Xo, Yo}}; \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] 
+            N, \(k++\), \[IndentingNewLine]\(AppendTo[
+              ret, {ret[\([k, 1]\)] + H[\([k]\)], 
+                ret[\([k, 2]\)] + 
+                  f[ret[\([k, 1]\)], ret[\([k, 2]\)], H[\([k]\)]]*
+                    H[\([k]\)]}];\)\[IndentingNewLine]] (*end\ for*) ; \
+\[IndentingNewLine]ret]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(ImplicitRungeKutta[Xo_, Yo_, H_, f_, alpha_, gamma_, 
+        betta_]\)\(:=\)\(Module[{N, ret, k, F, X, i, w}, N = Length[H]; 
+        ret = {{Xo, Yo}}; \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] N, \(k++\), \[IndentingNewLine]X = 
+            Table[ret[\([k, 1]\)] + alpha[\([i]\)]*H[\([k]\)], {i, 1, 
+                Length[alpha]}]; \[IndentingNewLine]w[t_] := 
+            f[X, Table[
+                ret[\([k, 2]\)] + betta[\([i]\)] . t*H[\([k]\)], {i, 1, 
+                  Length[alpha]}]]; \[IndentingNewLine]F = 
+            FixedPoint[w, Table[ret[\([k, 2]\)], {i, 1, Length[alpha]}], 
+              4]; \[IndentingNewLine]AppendTo[
+            ret, {ret[\([k, 1]\)] + H[\([k]\)], 
+              ret[\([k, 2]\)] + 
+                F . gamma*
+                  H[\([k]\)]}];\[IndentingNewLine]] (*end\ for*) ; \
+\[IndentingNewLine]ret]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(AdamsBashforth[Xo_, Yo_, H_, f_, e_, alpha_, 
+        M_]\)\(:=\)\(Module[{N, ret, k}, 
+        N = Length[H]; \[IndentingNewLine]If[e[0, 0, 0] \[Equal] \(-10\), 
+          ret = {Xo, Yo}, 
+          ret\  = ExplicitRungeKutta[Xo, Yo, 
+              If[N < M - 1, H, Take[H, M - 1]], e]]; \[IndentingNewLine]For[
+          k = M, k \[LessEqual] N, \(k++\), \[IndentingNewLine]AppendTo[
+            ret, {ret[\([k, 1]\)] + H[\([k]\)], 
+              ret[\([k, 
+                    2]\)] + \((\[Sum]\+\(j = 1\)\%M\((f[
+                            ret[\([k + 1 - j, 1]\)], ret[\([k + 1 - j, 2]\)]]*
+                          alpha[\([j]\)])\))\)*
+                  H[\([k]\)]}]\[IndentingNewLine]] (*end\ for*) ; \
+\[IndentingNewLine]ret]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(AdamsMoulton[Xo_, Yo_, H_, f_, e_, alpha_, 
+        M_]\)\(:=\)\(Module[{N, ret, k, newy, w}, 
+        N = Length[H]; \[IndentingNewLine]If[e[0, 0, 0] \[Equal] \(-10\), 
+          ret = {Xo, Yo}, 
+          ret\  = ExplicitRungeKutta[Xo, Yo, 
+              If[N < M - 1, H, Take[H, M - 1]], e]]; \[IndentingNewLine]For[
+          k = M, k \[LessEqual] N, \(k++\), \[IndentingNewLine]w[t_] := 
+            ret[\([k, 2]\)] + 
+              f[ret[\([k, 1]\)] + H[\([k]\)], t]*H[\([k]\)]*
+                alpha[\([1]\)] + \((\[Sum]\+\(j = 1\)\%M\((f[
+                          ret[\([k + 1 - j, 1]\)], ret[\([k + 1 - j, 2]\)]]*
+                        alpha[\([j + 1]\)])\))\)*
+                H[\([k]\)]; \[IndentingNewLine]newy = 
+            FixedPoint[w, ret[\([k, 2]\)], 4]; \[IndentingNewLine]AppendTo[
+            ret, {ret[\([k, 1]\)] + H[\([k]\)], 
+              newy}]\[IndentingNewLine]] (*end\ for*) ; \
+\[IndentingNewLine]ret]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(BDF[Xo_, Yo_, H_, f_, e_, G_, 
+        M_]\)\(:=\)\(Module[{N, ret, k, newy, w}, 
+        N = Length[H]; \[IndentingNewLine]If[e[0, 0, 0] \[Equal] \(-10\), 
+          ret = {Xo, Yo}, 
+          ret\  = ExplicitRungeKutta[Xo, Yo, 
+              If[N < M - 1, H, Take[H, M - 1]], e]]; \[IndentingNewLine]For[
+          k = M, k \[LessEqual] 
+            N, \(k++\), \[IndentingNewLine]w[
+              t_] := \((H[\([k]\)]*
+                    f[ret[\([k, 1]\)] + H[\([k]\)], 
+                      t] - \((\[Sum]\+\(j = 1\)\%M\((ret[\([k + 1 - j, 2]\)]*
+                          G[\([j + 1]\)])\))\))\)/
+              G[\([1]\)]; \[IndentingNewLine]newy = 
+            FixedPoint[w, ret[\([k, 2]\)], 4]; \[IndentingNewLine]AppendTo[
+            ret, {ret[\([k, 1]\)] + H[\([k]\)], 
+              newy}]\[IndentingNewLine]] (*end\ for*) ; \
+\[IndentingNewLine]ret]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(FehlerAuswertung[l_, y_, 
+        f_]\)\(:=\)\(Module[{yk, ek, dk, dksum, k, lsg}, ek = \(yk = {}\); 
+        dk = \(dksum = {0}\); \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] \ Length[l], \(k++\), \[IndentingNewLine]AppendTo[
+            yk, y[l[\([k, 1]\)]]]; \[IndentingNewLine]AppendTo[ek, 
+            y[l[\([k, 1]\)]] - 
+              l[\([k, 2]\)]]] (*end\ for*) ; \[IndentingNewLine]For[k = 2, 
+          k \[LessEqual] \ Length[l], \(k++\), \[IndentingNewLine]AppendTo[
+            dk, y[l[\([k, 
+                    1]\)]] - \((l[\([k - 1, 
+                      2]\)] + \((l[\([k, 1]\)] - l[\([k - 1, 1]\)])\)*
+                    f[l[\([k - 1, 1]\)], l[\([k - 1, 2]\)], 
+                      l[\([k, 1]\)] - 
+                        l[\([k - 1, 1]\)]])\)]; \[IndentingNewLine]AppendTo[
+            dksum, Plus @@ 
+              dk]] (*end\ for*) ; \[IndentingNewLine]Transpose[{l[\([All, 
+                1]\)], l[\([All, 2]\)], yk, ek, dk, 
+            dksum}]]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(OrdnungAuswertung[Xo_, Yo_, C_, f_, y_, K_, 
+        NumOfFunkEval_]\)\(:=\)\(Module[{lsg, ret, k}, 
+        ret = {}; \[IndentingNewLine]For[k = 0, 
+          k \[LessEqual] \ K, \ \(k++\), \[IndentingNewLine]lsg = 
+            ExplicitRungeKutta[Xo, Yo, Stuetzstellen[Xo, Xo + C, C\/2. \^k], 
+              f]; \[IndentingNewLine]AppendTo[
+            ret, {k, 2\^k, C\/2. \^k, 
+              NumOfFunkEval*2\^k, \(Last[lsg]\)[\([2]\)], \(-Log[10, 
+                  Abs[\((\(Last[lsg]\)[\([2]\)] - y[Xo + C])\)/y[Xo + C]]]\), 
+              If[k \[NotEqual] 0, 
+                Log[10, Abs[\(Last[lsg]\)[\([2]\)] - y[Xo + \
+C]]\/Abs[\(Last[ret]\)[\([5]\)] - y[Xo + C]]]\/Log[10, \(C\/2. \^k\)\/\(C\/2. \
+\^\(k - 1\)\)], 
+                0]}]] (*end\ for*) ; \[IndentingNewLine]ret]\)\( (*end\ \
+module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(OrdnungAuswertungImplicit[Xo_, Yo_, C_, f_, y_, K_, alpha_, gamma_, 
+        betta_]\)\(:=\)\(Module[{lsg, ret, k}, 
+        ret = {}; \[IndentingNewLine]For[k = 0, 
+          k \[LessEqual] \ K, \ \(k++\), \[IndentingNewLine]lsg = 
+            ImplicitRungeKutta[Xo, Yo, Stuetzstellen[Xo, Xo + C, C\/2. \^k], 
+              f, alpha, gamma, betta]; \[IndentingNewLine]AppendTo[
+            ret, {k, 2\^k, 
+              C\/2. \^k, \(Last[lsg]\)[\([2]\)], \(-Log[10, 
+                  Abs[\((\(Last[lsg]\)[\([2]\)] - y[Xo + C])\)/y[Xo + C]]]\), 
+              If[k \[NotEqual] 0, 
+                Log[10, Abs[\(Last[lsg]\)[\([2]\)] - y[Xo + \
+C]]\/Abs[\(Last[ret]\)[\([4]\)] - y[Xo + C]]]\/Log[10, \(C\/2. \^k\)\/\(C\/2. \
+\^\(k - 1\)\)], 
+                0]}]] (*end\ for*) ; \[IndentingNewLine]ret]\)\( (*end\ \
+module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(OrdnungAuswertungABM[Xo_, Yo_, C_, f_, e_, y_, K_, alpha_, 
+        M_]\)\(:=\)\(Module[{lsg, ret, k}, 
+        ret = {}; \[IndentingNewLine]For[k = 0, 
+          k \[LessEqual] \ K, \ \(k++\), \[IndentingNewLine]lsg = 
+            AdamsBashforth[Xo, Yo, Stuetzstellen[Xo, Xo + C, C\/2. \^k], f, 
+              e, alpha, M]; \[IndentingNewLine]AppendTo[
+            ret, {k, 2\^k, 
+              C\/2. \^k, \(Last[lsg]\)[\([2]\)], \(-Log[10, 
+                  Abs[\((\(Last[lsg]\)[\([2]\)] - y[Xo + C])\)/y[Xo + C]]]\), 
+              If[k \[NotEqual] 0, 
+                Log[10, Abs[\(Last[lsg]\)[\([2]\)] - y[Xo + \
+C]]\/Abs[\(Last[ret]\)[\([4]\)] - y[Xo + C]]]\/Log[10, \(C\/2. \^k\)\/\(C\/2. \
+\^\(k - 1\)\)], 
+                0]}]] (*end\ for*) ; \[IndentingNewLine]ret]\)\( (*end\ \
+module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(OrdnungAuswertungAMM[Xo_, Yo_, C_, f_, e_, y_, K_, alpha_, 
+        M_]\)\(:=\)\(Module[{lsg, ret, k}, 
+        ret = {}; \[IndentingNewLine]For[k = 0, 
+          k \[LessEqual] \ K, \ \(k++\), \[IndentingNewLine]lsg = 
+            AdamsMoulton[Xo, Yo, Stuetzstellen[Xo, Xo + C, C\/2. \^k], f, e, 
+              alpha, M]; \[IndentingNewLine]AppendTo[
+            ret, {k, 2\^k, 
+              C\/2. \^k, \(Last[lsg]\)[\([2]\)], \(-Log[10, 
+                  Abs[\((\(Last[lsg]\)[\([2]\)] - y[Xo + C])\)/y[Xo + C]]]\), 
+              If[k \[NotEqual] 0, 
+                Log[10, Abs[\(Last[lsg]\)[\([2]\)] - y[Xo + \
+C]]\/Abs[\(Last[ret]\)[\([4]\)] - y[Xo + C]]]\/Log[10, \(C\/2. \^k\)\/\(C\/2. \
+\^\(k - 1\)\)], 
+                0]}]] (*end\ for*) ; \[IndentingNewLine]ret]\)\( (*end\ \
+module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(\[IndentingNewLine]\)\(\(OrdnungAuswertungBDF[Xo_, Yo_, C_, f_, e_, 
+        y_, K_, G_, M_]\)\(:=\)\(Module[{lsg, ret, k}, 
+        ret = {}; \[IndentingNewLine]For[k = 0, 
+          k \[LessEqual] \ K, \ \(k++\), \[IndentingNewLine]lsg = 
+            BDF[Xo, Yo, Stuetzstellen[Xo, Xo + C, C\/2. \^k], f, e, G, 
+              M]; \[IndentingNewLine]AppendTo[
+            ret, {k, 2\^k, 
+              C\/2. \^k, \(Last[lsg]\)[\([2]\)], \(-Log[10, 
+                  Abs[\((\(Last[lsg]\)[\([2]\)] - y[Xo + C])\)/y[Xo + C]]]\), 
+              If[k \[NotEqual] 0, 
+                Log[10, Abs[\(Last[lsg]\)[\([2]\)] - y[Xo + \
+C]]\/Abs[\(Last[ret]\)[\([4]\)] - y[Xo + C]]]\/Log[10, \(C\/2. \^k\)\/\(C\/2. \
+\^\(k - 1\)\)], 
+                0]}]] (*end\ for*) ; \[IndentingNewLine]ret]\)\( (*end\ \
+module*) \)\)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(AdaptiveExplizitRungeKutta[Xo_, Yo_, c_, epsabs_, epsrel_, ho_, 
+        f1_, f2_, p1_, p2_, sigma_, lamdaMin_, lamdaMax_, nf_, 
+        y_]\)\(:=\)\(Module[{ret, k, hk, q, yp1, yp2, epsk, lamdak, hlist, 
+          declinehlist, numberf, localepslist, 
+          declineh}, \[IndentingNewLine]ret = {{Xo, Yo}}; hk = ho; q = p1; 
+        k = 1; hlist = \(declinehlist = \(localepslist = {0. }\)\); \
+\[IndentingNewLine]declineh = 0; numberf = 0; 
+        apsepslist = \(relepslist = {0. }\); \[IndentingNewLine]While[
+          ret[\([k, 1]\)] + hk < Xo + c, \[IndentingNewLine]yp1 = 
+            ret[\([k, 2]\)] + 
+              f1[ret[\([k, 1]\)], ret[\([k, 2]\)], hk]*
+                hk; \[IndentingNewLine]yp2 = 
+            ret[\([k, 2]\)] + f2[ret[\([k, 1]\)], ret[\([k, 2]\)], hk]*hk; 
+          numberf += 
+            nf; \[IndentingNewLine]epsk = \((epsabs + 
+                  epsrel*Max[yp1, ret[\([k, 2]\)]])\)*
+              hk\/c; \[IndentingNewLine]lamdak = 
+            If[yp1 \[NotEqual] \ yp2, \@\(epsk\/Abs[yp2 - yp1]\)\%q, 
+              lamdaMax]; \[IndentingNewLine]If[
+            lamdak \[GreaterEqual] \ 1 - sigma, \[IndentingNewLine]AppendTo[
+              ret, {Min[ret[\([k, 1]\)] + hk, Xo + c], 
+                yp2}]; \[IndentingNewLine]hk = 
+              If[lamdak \[GreaterEqual] \ 1 + sigma, 
+                Min[lamdaMax, lamdak]*hk, hk]; \[IndentingNewLine]AppendTo[
+              hlist, hk]; AppendTo[declinehlist, declineh]; 
+            AppendTo[localepslist, 
+              Abs[yp2 - yp1]]; \[IndentingNewLine]AppendTo[apsepslist, 
+              y[ret[\([k, 1]\)]] - ret[\([k, 2]\)]]; 
+            AppendTo[
+              relepslist, \((y[ret[\([k, 1]\)]] - ret[\([k, 2]\)])\)/
+                y[ret[\([k, 1]\)]]]; \[IndentingNewLine]\(k++\); 
+            declineh = 0, \[IndentingNewLine]hk = 
+              Max[Abs[lamdaMin], Abs[lamdak]]*
+                hk; \(declineh++\)] (*end\ If*) \[IndentingNewLine]] (*end\ \
+while*) ; \[IndentingNewLine]{ret, hlist, declinehlist, numberf, 
+          localepslist, apsepslist, 
+          relepslist}]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(passiveExtrapolation[Xo_, Yo_, C_, f_, p_, K1_, eps_, 
+        y_]\)\(:=\)\(Module[{ord, yk, ykk, I, J, K, i, k, st, ret, h, L, 
+          maxi}, \[IndentingNewLine]ret = {}; ord = {}; K = K1; maxi = 20; 
+        If[eps > 1, maxi = eps, ]; \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] maxi, \ \(k++\), \[IndentingNewLine]st = 
+            Stuetzstellen[Xo, Xo + C, C/2. \^\(K - 1\)]; 
+          yk = \(Last[
+                ExplicitRungeKutta[Xo, Yo, st, 
+                  f]]\)[\([2]\)]; \[IndentingNewLine]AppendTo[
+            ret, {yk}]; \[IndentingNewLine]For[i = 2, 
+            i \[LessEqual] k, \ \(i++\), 
+            ykk = \((2\^\(p + i - 2\)*ret[\([k, i - 1]\)] - 
+                    ret[\([k - 1, i - 1]\)])\)/\((2\^\(p + i - 2\) - 
+                    1)\); \[IndentingNewLine]AppendTo[ret[\([k]\)], ykk]; 
+            If[eps < 1 && Abs[ykk - yk] < eps, maxi = \(-1\); Break, 
+              yk = ykk];\[IndentingNewLine]] (*end\ for*) ; \(K++\);\
+\[IndentingNewLine]] (*end\ for*) ; 
+        L = Length[ret // Last]; \[IndentingNewLine]For[I = 1, 
+          I < L, \(I++\), 
+          For[J = I, 
+            J < L, \(J++\), \[IndentingNewLine]AppendTo[
+              ret[\([I]\)], "\<-\>"]]]; \[IndentingNewLine]L = Length[ret]; 
+        For[I = 1, 
+          I < L, \(I++\), \[IndentingNewLine]AppendTo[ord, 
+            Log[10, Abs[\(Last[ret]\)[\([I]\)] - y[Xo + \
+C]]\/Abs[\(ret[\([Length[ret] - 1]\)]\)[\([I]\)] - y[Xo + C]]]\/Log[10, \
+\(C\/2. \^k\)\/\(C\/2. \^\(k - 1\)\)]]]; 
+        AppendTo[ord, "\<-\>"]; \[IndentingNewLine]AppendTo[ret, 
+          ord]\[IndentingNewLine]]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(activeExtrapolation[Xo_, Yo_, C_, Hlist_, f_, p_, 
+        u]\)\(:=\)\(Module[{xo, yo, i, ret}, \[IndentingNewLine]ret = {}; 
+        xo = Xo; 
+        yo = Yo; \[IndentingNewLine]For[i = 1, 
+          i \[LessEqual] 
+            C/Hlist[\([1]\)], \ \(i++\), \[IndentingNewLine]AppendTo[ret, 
+            Take[passiveExtrapolation[xo, yo, Hlist[\([1]\)], f, p, 1, 3, u], 
+              3, 3]]; \[IndentingNewLine]xo += Hlist[\([1]\)]; 
+          yo = \(ret[\([i]\)]\)[\([3, 
+                3]\)]\[IndentingNewLine]] (*end\ for*) ; \
+\[IndentingNewLine]NumberForm[ret, 
+          30]\[IndentingNewLine]]\)\( (*end\ module*) \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Naeherungstabellen\tExplicit Runge-Kutta", "Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[" Euler Polygonzugverfahren", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(c = 0.4;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.025;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := 2*y\), "\n", 
+    \(\(\[Phi][x_, y_, h_] := 
+        f[x, y];\) (*EulerVerfahren*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[2*x];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg = ExplicitRungeKutta[x0, y0, st, \[Phi]];\)\), "\n", 
+    \(\(plot1 = 
+        ListPlot[lsg, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02]];\)\), "\n", 
+    \(\(plot2 = 
+        Plot[u[x], {x, x0, x0 + c}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[plot1, plot2, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        NumberForm[FehlerAuswertung[lsg, u, \[Phi]], 
+          8];\)\), "\[IndentingNewLine]", 
+    \(\(data = 
+        PrependTo[
+          data, {"\<\!\(x\_k\)\>", "\<\!\(y\_k\)\>", "\<y(\!\(x\_k\))\>", "\<\
+\!\(e\_k\)\>", "\<\!\(d\_k\)\>", "\<\[Sum]\!\(d\_k\)\>"}];\)\), "\
+\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[data, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ 
+            ColumnLines \[Rule] True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[" verbessertes Polygonzugverfahren", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(c = 0.4;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := 2*y\), "\n", 
+    \(\(\[Phi][x_, y_, h_] := 
+        f[x + h/2, y + h/2*f[x, y]];\) (*verbessertes\ Polygonzug - 
+        verfahren*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[2*x];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg = ExplicitRungeKutta[x0, y0, st, \[Phi]];\)\), "\n", 
+    \(\(plot1 = 
+        ListPlot[lsg, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02]];\)\), "\n", 
+    \(\(plot2 = 
+        Plot[u[x], {x, x0, x0 + c}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[plot1, plot2, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        NumberForm[FehlerAuswertung[lsg, u, \[Phi]], 
+          12];\)\), "\[IndentingNewLine]", 
+    \(\(data = 
+        PrependTo[
+          data, {"\<\!\(x\_k\)\>", "\<\!\(y\_k\)\>", "\<y(\!\(x\_k\))\>", "\<\
+\!\(e\_k\)\>", "\<\!\(d\_k\)\>", "\<\[Sum]\!\(d\_k\)\>"}];\)\), "\
+\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[data, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ 
+            ColumnLines \[Rule] True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[" Heun", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(c = 0.4;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := 2*y\), "\n", 
+    \(\(\[Phi][x_, y_, h_] := 
+        0.5*\((f[x, y] + 
+              f[x + h, 
+                y + h*f[x, y]])\);\) (*Heun*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[2*x];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg = ExplicitRungeKutta[x0, y0, st, \[Phi]];\)\), "\n", 
+    \(\(plot1 = 
+        ListPlot[lsg, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02]];\)\), "\n", 
+    \(\(plot2 = 
+        Plot[u[x], {x, x0, x0 + c}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[plot1, plot2, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        NumberForm[FehlerAuswertung[lsg, u, \[Phi]], 
+          12];\)\), "\[IndentingNewLine]", 
+    \(\(data = 
+        PrependTo[
+          data, {"\<\!\(x\_k\)\>", "\<\!\(y\_k\)\>", "\<y(\!\(x\_k\))\>", "\<\
+\!\(e\_k\)\>", "\<\!\(d\_k\)\>", "\<\[Sum]\!\(d\_k\)\>"}];\)\), "\
+\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[data, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ 
+            ColumnLines \[Rule] True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Standard-Runge-Kutta", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(c = 0.4;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.2;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := 2*y\), "\n", 
+    \(\(\[Phi][x_, y_, 
+          h_] := \[IndentingNewLine]1\/6*f[x, y] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, y + h\/2*f[x, y]] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, 
+              y + h\/2*
+                  f[x + h\/2, y + h\/2*f[x, y]]] + \[IndentingNewLine]1\/6*
+            f[x + h, 
+              y + h*f[x + h\/2, 
+                    y + h\/2*
+                        f[x + h\/2, 
+                          y + h\/2*
+                              f[x, y]]]];\) (*Standard\ Runge\ Kutta*) \), "\
+\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[2*x];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg = ExplicitRungeKutta[x0, y0, st, \[Phi]];\)\), "\n", 
+    \(\(plot1 = 
+        ListPlot[lsg, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02]];\)\), "\n", 
+    \(\(plot2 = 
+        Plot[u[x], {x, x0, x0 + c}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[plot1, plot2, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        NumberForm[FehlerAuswertung[lsg, u, \[Phi]], 
+          12];\)\), "\[IndentingNewLine]", 
+    \(\(data = 
+        PrependTo[
+          data, {"\<\!\(x\_k\)\>", "\<\!\(y\_k\)\>", "\<y(\!\(x\_k\))\>", "\<\
+\!\(e\_k\)\>", "\<\!\(d\_k\)\>", "\<\[Sum]\!\(d\_k\)\>"}];\)\), "\
+\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[data, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ 
+            ColumnLines \[Rule] True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Grafiken\t\tExplicit Runge-Kutta\t\tDGL-Systeme", "Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell["Standard-Runge-Kutta\t/ mathematisches Pendel", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(\(\(x0 = {0, 0};\)\n
+    \(y0 = {1, 0};\)\[IndentingNewLine]
+    \(c = 6*\[Pi];\)\[IndentingNewLine]
+    \(h = 0.01;\)\[IndentingNewLine]
+    \(st = Stuetzstellen[x0[\([1]\)], \((x0 + c)\)[\([1]\)], h];\)\n
+    f[x_, y_] := {y[\([2]\)], \(-y[\([1]\)]\)}\n
+    \(\[Phi][x_, y_, 
+          h_] := \[IndentingNewLine]1\/6*f[x, y] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, y + h\/2*f[x, y]] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, 
+              y + h\/2*
+                  f[x + h\/2, y + h\/2*f[x, y]]] + \[IndentingNewLine]1\/6*
+            f[x + h, 
+              y + h*f[x + h\/2, 
+                    y + h\/2*
+                        f[x + h\/2, 
+                          y + h\/2*
+                              f[x, y]]]];\)\)\( (*Standard\ Runge\ Kutta*) \)\
+\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg = ExplicitRungeKutta[x0, y0, st, \[Phi]];\)\), "\n", 
+    \(\(plot1 = 
+        ListPlot[{\(lsg[\([All, 1]\)]\)[\([All, 1]\)], lsg[\([All, 2, 1]\)]} // 
+            Transpose, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] {RGBColor[0, 0, 1]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(plot2 = 
+        ListPlot[{\(lsg[\([All, 1]\)]\)[\([All, 1]\)], lsg[\([All, 2, 2]\)]} // 
+            Transpose, PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[plot1, plot2, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Standard-Runge-Kutta\t/ Raeuber-Beute Modell", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(\(\(x0 = {0, 0};\)\n
+    \(y0 = {500, 2000};\)\[IndentingNewLine]
+    \(c = 200;\)\[IndentingNewLine]
+    \(h = 1;\)\[IndentingNewLine]
+    \(a1 = 0.008;\)\[IndentingNewLine]
+    \(a2 = 1.0;\)\[IndentingNewLine]
+    \(c1 = 0.00001;\)\[IndentingNewLine]
+    \(c2 = 0.002;\)\[IndentingNewLine]
+    \(st = Stuetzstellen[x0[\([1]\)], \((x0 + c)\)[\([1]\)], h];\)\n
+    f[x_, 
+        y_] := {\((c1*y[\([2]\)] - a1)\)*y[\([1]\)], \((a2 - c2*y[\([1]\)])\)*
+          y[\([2]\)]}\n
+    \(\[Phi][x_, y_, 
+          h_] := \[IndentingNewLine]1\/6*f[x, y] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, y + h\/2*f[x, y]] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, 
+              y + h\/2*
+                  f[x + h\/2, y + h\/2*f[x, y]]] + \[IndentingNewLine]1\/6*
+            f[x + h, 
+              y + h*f[x + h\/2, 
+                    y + h\/2*
+                        f[x + h\/2, 
+                          y + h\/2*
+                              f[x, y]]]];\)\)\( (*Standard\ Runge\ Kutta*) \)\
+\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg = ExplicitRungeKutta[x0, y0, st, \[Phi]];\)\), "\n", 
+    \(\(plot1 = 
+        ListPlot[{\(lsg[\([All, 1]\)]\)[\([All, 1]\)], lsg[\([All, 2, 1]\)]} // 
+            Transpose, PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(plot2 = 
+        ListPlot[{\(lsg[\([All, 1]\)]\)[\([All, 1]\)], lsg[\([All, 2, 2]\)]} // 
+            Transpose, PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[plot1, plot2, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(ListPlot[{lsg[\([All, 2, 1]\)], lsg[\([All, 2, 2]\)]} // Transpose, 
+        PlotJoined \[Rule] True];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Standard-Runge-Kutta\t/ Dreikoerperproblem", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \( (*x0 = {0, 0, 0, 0}; y0 = {0.994, 0, 0, \(-2.001585106379082522\)}; 
+      c = 17.06521656015796256; \[Mu] = 
+        0.012277471;*) \[IndentingNewLine]\(x0 = {0, 0, 0, 0};\)\), "\n", 
+    \(\(y0 = {1.15, 0, 0, 0.00761};\)\), "\[IndentingNewLine]", 
+    \(\(c = 29.5;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.001;\)\), "\[IndentingNewLine]", 
+    \(\(\[Mu] = 0.0121486;\)\), "\[IndentingNewLine]", 
+    \(\(st = 
+        Stuetzstellen[x0[\([1]\)], \((x0 + c)\)[\([1]\)], h];\)\), "\n", 
+    \(\(f[x_, 
+          y_] := {\[IndentingNewLine]y[\([2]\)], \
+\[IndentingNewLine]y[\([1]\)] + 
+            2*y[\([4]\)] - \((1 - \[Mu])\)*\(y[\([1]\)] + \
+\[Mu]\)\/\((\((y[\([1]\)] + \[Mu])\)\^2 + y[\([3]\)]\^2)\)\^\(3\/2\) - \[Mu]*\
+\(y[\([1]\)] - \((1 - \[Mu])\)\)\/\((\((y[\([1]\)] - \((1 - \[Mu])\))\)\^2 + \
+y[\([3]\)]\^2)\)\^\(3\/2\), \[IndentingNewLine]y[\([4]\)], \
+\[IndentingNewLine]y[\([3]\)] - 
+            2*y[\([2]\)] - \((1 - \[Mu])\)*
+              y[\([3]\)]\/\((\((y[\([1]\)] + \[Mu])\)\^2 + y[\([3]\)]\^2)\)\^\
+\(3\/2\) - \[Mu]*
+              y[\([3]\)]\/\((\((y[\([1]\)] - \((1 - \[Mu])\))\)\^2 + \
+y[\([3]\)]\^2)\)\^\(3\/2\)\[IndentingNewLine]};\)\), "\n", 
+    \(\(\[Phi][x_, y_, 
+          h_] := \[IndentingNewLine]1\/6*f[x, y] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, y + h\/2*f[x, y]] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, 
+              y + h\/2*
+                  f[x + h\/2, y + h\/2*f[x, y]]] + \[IndentingNewLine]1\/6*
+            f[x + h, 
+              y + h*f[x + h\/2, 
+                    y + h\/2*
+                        f[x + h\/2, 
+                          y + h\/2*
+                              f[x, y]]]];\) (*Standard\ Runge\ Kutta*) \)}], \
+"Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\(lsg = ExplicitRungeKutta[x0, y0, st, \[Phi]];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(plot1 = 
+        ListPlot[{\(lsg[\([All, 1]\)]\)[\([All, 1]\)], lsg[\([All, 2, 1]\)]} // 
+            Transpose, PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(plot2 = 
+        ListPlot[{\(lsg[\([All, 1]\)]\)[\([All, 1]\)], lsg[\([All, 2, 2]\)]} // 
+            Transpose, PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(plot3 = 
+        ListPlot[{\(lsg[\([All, 1]\)]\)[\([All, 1]\)], lsg[\([All, 2, 3]\)]} // 
+            Transpose, PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(plot4 = 
+        ListPlot[{\(lsg[\([All, 1]\)]\)[\([All, 1]\)], lsg[\([All, 2, 4]\)]} // 
+            Transpose, PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(phase = 
+        ListPlot[{lsg[\([All, 2, 1]\)], lsg[\([All, 2, 3]\)]} // Transpose, 
+          PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(energ1 = 
+        ListPlot[{lsg[\([All, 2, 1]\)], lsg[\([All, 2, 2]\)]} // Transpose, 
+          PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(energ2 = 
+        ListPlot[{lsg[\([All, 2, 3]\)], lsg[\([All, 2, 4]\)]} // Transpose, 
+          PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Erde = 
+        ListPlot[{{\[Mu], 0}}, DisplayFunction \[Rule] Identity, 
+          PlotStyle \[Rule] {PointSize[0.06]}];\)\), "\[IndentingNewLine]", 
+    \(\(Mond = 
+        ListPlot[{{1 - \[Mu], 0}}, DisplayFunction \[Rule] Identity, 
+          PlotStyle \[Rule] {PointSize[0.02]}];\)\), "\n", 
+    \(\(Show[plot1, plot2, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Show[plot3, plot4, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Show[energ1, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Show[energ2, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Show[phase, Erde, Mond, 
+        Graphics[{Text["\<Erde\>", {\[Mu] - 0.15, 0.25}], 
+            Text["\<Mond\>", {1 - \[Mu] - 0.15, 0.25}]}], 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ordnungstabellen\tExplicit Runge-Kutta", "Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[" Euler Polygonzugverfahren\t\tf[x,y]=y", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0. ;\)\), "\n", 
+    \(\(y0 = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(c = 2. ;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_, y_] := y;\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, h_] := 
+        f[x, y];\) (*EulerVerfahren*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[x];\)\), "\[IndentingNewLine]", 
+    \(\(n = 11. ;\)\), "\[IndentingNewLine]", 
+    \(\(numf = 1. ;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(data = 
+        OrdnungAuswertung[x0, y0, c, \[Phi], u, n, 
+          numf];\)\), "\[IndentingNewLine]", 
+    \(\(p1 = 
+        ListPlot[
+          Transpose[{Log[10, data[\([All, 4]\)]], data[\([All, 6]\)]}], 
+          DisplayFunction \[Rule] Identity, 
+          PlotStyle \[Rule] {PointSize[0.02]}];\)\), "\[IndentingNewLine]", 
+    \(\(p2 = 
+        ListPlot[
+          Transpose[{Log[10, data[\([All, 4]\)]], data[\([All, 6]\)]}], 
+          PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[p1, p2, DisplayFunction \[Rule] $DisplayFunction, 
+        FrameLabel \[Rule] {\*"\"\<\!\(10\^k\) Auswertungen\>\"", \
+"\<Erreichte Praezision\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<nf\>", "\<appr\>", "\<prec\>", \
+"\<disord\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  " Euler Polygonzugverfahren\t\t",
+  Cell[BoxData[
+      \(TraditionalForm\`f[x, y] = \(-200\) xy\^2\)]]
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-200\)*x*y[x]\^2, y[\(-1\)] == 1\/101}, 
+        y, x];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = \(-1\);\)\), "\n", 
+    \(\(y0 = 1. \/101;\)\), "\[IndentingNewLine]", 
+    \(\(c = \ 1.0;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_, y_] := \(-200.0\)*x*y\^2;\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, h_] := 
+        f[x, y];\) (*EulerVerfahren*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := 1\/\(1 + 100\ *x\^2\);\)\), "\[IndentingNewLine]", 
+    \(\(n = 13;\)\), "\[IndentingNewLine]", 
+    \(\(numf = 1. ;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(data = 
+        OrdnungAuswertung[x0, y0, c, \[Phi], u, n, 
+          numf];\)\), "\[IndentingNewLine]", 
+    \(\(p1 = 
+        ListPlot[
+          Transpose[{Log[10, data[\([All, 4]\)]], data[\([All, 6]\)]}], 
+          DisplayFunction \[Rule] Identity, 
+          PlotStyle \[Rule] {PointSize[0.02]}];\)\), "\[IndentingNewLine]", 
+    \(\(p2 = 
+        ListPlot[
+          Transpose[{Log[10, data[\([All, 4]\)]], data[\([All, 6]\)]}], 
+          PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[p1, p2, DisplayFunction \[Rule] $DisplayFunction, 
+        FrameLabel \[Rule] {\*"\"\<\!\(10\^k\) Auswertungen\>\"", \
+"\<Erreichte Praezision\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<nf\>", "\<appr\>", "\<prec\>", \
+"\<disord\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[" Standard Runge-Kutta Verfahren\tf[x,y]=y", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0. ;\)\), "\n", 
+    \(\(y0 = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(c = 2. ;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_, y_] := y;\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, 
+          h_] := \[IndentingNewLine]1\/6*f[x, y] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, y + h\/2*f[x, y]] + \[IndentingNewLine]1\/3*
+            f[x + h\/2, 
+              y + h\/2*
+                  f[x + h\/2, y + h\/2*f[x, y]]] + \[IndentingNewLine]1\/6*
+            f[x + h, 
+              y + h*f[x + h\/2, 
+                    y + h\/2*
+                        f[x + h\/2, 
+                          y + h\/2*
+                              f[x, y]]]];\) (*Standard\ Runge\ Kutta*) \), "\
+\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[x];\)\), "\[IndentingNewLine]", 
+    \(\(n = 9. ;\)\), "\[IndentingNewLine]", 
+    \(\(numf = 4. ;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(data = 
+        OrdnungAuswertung[x0, y0, c, \[Phi], u, n, 
+          numf];\)\), "\[IndentingNewLine]", 
+    \(\(p1 = 
+        ListPlot[
+          Transpose[{Log[10, data[\([All, 4]\)]], data[\([All, 6]\)]}], 
+          DisplayFunction \[Rule] Identity, 
+          PlotStyle \[Rule] {PointSize[0.02]}];\)\), "\[IndentingNewLine]", 
+    \(\(p2 = 
+        ListPlot[
+          Transpose[{Log[10, data[\([All, 4]\)]], data[\([All, 6]\)]}], 
+          PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[p1, p2, DisplayFunction \[Rule] $DisplayFunction, 
+        FrameLabel \[Rule] {\*"\"\<\!\(10\^k\) Auswertungen\>\"", \
+"\<Erreichte Praezision\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<nf\>", "\<appr\>", "\<prec\>", \
+"\<disord\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[" Butcher Verfahren\t\t\tf[x,y]=y", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0. ;\)\), "\n", 
+    \(\(y0 = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(c = 2. ;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_, y_] := y;\)\), "\[IndentingNewLine]", 
+    \(\[Phi][x_, y_, 
+        h_] := \[IndentingNewLine]Module[{k1, k2, k3, k4, k5, 
+          lsg}, \[IndentingNewLine]k1 = f[x, y]; \[IndentingNewLine]k2 = 
+          f[x + h\/8, y + h\/8*k1]; \[IndentingNewLine]k3 = 
+          f[x + h\/4, y + h\/4*k2]; \[IndentingNewLine]k4 = 
+          f[x + h\/2, y + h\/2*k1 - h*k2 + h*k3]; \[IndentingNewLine]k5 = 
+          f[x + \(3*h\)\/4, 
+            y + \(3*h\)\/16*k1 + \(9*h\)\/16*k4]; \[IndentingNewLine]k6 = 
+          f[x + h, 
+            y - \(5*h\)\/7*k1 + \(4*h\)\/7*k2 + \(12*h\)\/7*k3 - \(12*h\)\/7*
+                k4 + \(8*h\)\/7*k5]; \[IndentingNewLine]lsg = 
+          7\/90*k1 + 16\/45*k3 + 2\/15*k4 + 16\/45*k5 + 
+            7\/90*k6\[IndentingNewLine]\[IndentingNewLine]];  (*Butcher\
+*) \[IndentingNewLine]u[x_] := Exp[x];\), "\[IndentingNewLine]", 
+    \(\(n = 12. ;\)\), "\[IndentingNewLine]", 
+    \(\(numf = 6. ;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(data = 
+        OrdnungAuswertung[x0, y0, c, \[Phi], u, n, 
+          numf];\)\), "\[IndentingNewLine]", 
+    \(\(p1 = 
+        ListPlot[
+          Transpose[{Log[10, data[\([All, 4]\)]], data[\([All, 6]\)]}], 
+          DisplayFunction \[Rule] Identity, 
+          PlotStyle \[Rule] {PointSize[0.02]}];\)\), "\[IndentingNewLine]", 
+    \(\(p2 = 
+        ListPlot[
+          Transpose[{Log[10, data[\([All, 4]\)]], data[\([All, 6]\)]}], 
+          PlotJoined \[Rule] True, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[p1, p2, DisplayFunction \[Rule] $DisplayFunction, 
+        FrameLabel \[Rule] {\*"\"\<\!\(10\^k\) Auswertungen\>\"", \
+"\<Erreichte Praezision\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<nf\>", "\<appr\>", "\<prec\>", \
+"\<disord\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Extrapolation \t\tpassive / aktive", "Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "Standard-Runge-Kutta\t\t",
+  Cell[BoxData[
+      \(y' \[Equal] \(-2\) \(y\^2\) x\)]]
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-2\)*y[x]\^2*x, y[0] \[Equal] 1}, y, 
+        x];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(p = 4;\)\), "\[IndentingNewLine]", 
+    \(f[x_, y_] := \(-2\)*y\^2*x\), "\[IndentingNewLine]", 
+    \(\[Phi][x_, y_, 
+        h_] := \[IndentingNewLine]1\/6*f[x, y] + \[IndentingNewLine]1\/3*
+          f[x + h\/2, y + h\/2*f[x, y]] + \[IndentingNewLine]1\/3*
+          f[x + h\/2, 
+            y + h\/2*
+                f[x + h\/2, 
+                  y + h\/2*f[x, y]]] + \[IndentingNewLine]\(\(1\/6\)\(*\)\(f[
+            x + h, y + 
+              h*f[x + h\/2, 
+                  y + h\/2*
+                      f[x + h\/2, 
+                        y + h\/2*
+                            f[x, y]]]]\)\( (*Standard\ Runge\ Kutta*) \)\)\), \
+"\[IndentingNewLine]", 
+    \(\(u[x_] := 1/\((1 + x\^2)\);\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg = 
+        passiveExtrapolation[x0, y0, c, \[Phi], p, 2, 0.000000000001, 
+          u];\)\), "\n", 
+    \(\(data = NumberForm[lsg, 30] // Transpose;\)\), "\[IndentingNewLine]", 
+    \(\(data = 
+        PrependTo[
+            data, {Table[1/2\^i, {i, 1, Length[lsg] - 1}], "\<p\>"} // 
+              Flatten] // Transpose;\)\), "\[IndentingNewLine]", 
+    \(t1 = 
+      FrameBox[GridBox[data, ColumnAlignments \[Rule] Left, \ 
+          ColumnLines \[Rule] True]]; Print[t1 // DisplayForm];\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(h = {0.5, 0.25, 0.125};\)\), "\[IndentingNewLine]", 
+    \(lsg = activeExtrapolation[x0, y0, c, h, \[Phi], p, u]; 
+    data = NumberForm[lsg, 30];\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, i \[LessEqual] Length[data], \(i++\), 
+        t1 = FrameBox[
+            GridBox[data[\([i]\)], ColumnAlignments \[Rule] Left, \ 
+              ColumnLines \[Rule] True]]; 
+        Print[t1 // DisplayForm]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "Polygonzugverfahren\t\t",
+  Cell[BoxData[
+      \(y' \[Equal] \(-y\)\)]]
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(p = 1;\)\), "\[IndentingNewLine]", 
+    \(f[x_, y_] := \(-y\)\), "\n", 
+    \(\(\[Phi][x_, y_, h_] := f[x, y];\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[\(-x\)];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg = 
+        passiveExtrapolation[x0, y0, c, \[Phi], p, 2, 0.00000001, 
+          u];\)\), "\n", 
+    \(\(data = NumberForm[lsg, 30] // Transpose;\)\), "\[IndentingNewLine]", 
+    \(\(data = 
+        PrependTo[
+            data, {Table[1/2\^i, {i, 1, Length[lsg] - 1}], "\<p\>"} // 
+              Flatten] // Transpose;\)\), "\[IndentingNewLine]", 
+    \(t1 = 
+      FrameBox[GridBox[data, ColumnAlignments \[Rule] Left, \ 
+          ColumnLines \[Rule] True]]; Print[t1 // DisplayForm];\)}], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Adaptive Explicit Runge-Kutta\tRunge-Kutta-Fehlberg Verfahren", \
+"Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell["y'\[Equal]Cos(x)*y", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell["Rechnungen", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(DSolve[{\(y'\)[x] \[Equal] Cos[x]*y[x], y[0] \[Equal] 1}, y, 
+      x]\)], "Input"],
+
+Cell[BoxData[
+    \({{y \[Rule] \((\[ExponentialE]\^Sin[#1] &)\)}}\)], "Output"]
+}, Open  ]],
+
+Cell[BoxData[{
+    \(\(x0 = 0. ;\)\), "\n", 
+    \(\(y0 = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(c = 12. ;\)\), "\[IndentingNewLine]", 
+    \(\(eabs = 0.01;\)\), "\[IndentingNewLine]", 
+    \(\(erel = 0.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.037;\)\), "\[IndentingNewLine]", 
+    \(\(p1 = 2;\)\), "\[IndentingNewLine]", 
+    \(\(p2 = 3;\)\), "\[IndentingNewLine]", 
+    \(\(sigma = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(lamdaMin = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(lamdaMax = 10;\)\[IndentingNewLine] (*sigma = 
+        0.5; \[IndentingNewLine]lamdaMin = 
+        0.2; \[IndentingNewLine]\(lamdaMax = 
+          1.6;\)*) \), "\[IndentingNewLine]", 
+    \(f[x_, y_] := Cos[x]*y\), "\n", 
+    \(\(\[Phi]1[x_, y_, h_] := 
+        1\/2*f[x, y] + 
+          1\/2*f[x + h, y + h*f[x, y]];\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi]2[x_, y_, h_] := 
+        1\/6*f[x, y] + 1\/6*f[x + h, y + h*f[x, y]] + 
+          2\/3*f[x + h\/2, 
+              y + h\/4*f[x, y] + 
+                h\/4*f[x + h, y + h*f[x, y]]];\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[Sin\ [x]];\)\), "\[IndentingNewLine]", 
+    \(\(nf = 3. ;\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(lsg = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sigma, lamdaMin, lamdaMax, nf, 
+          u];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(nameList = {"\<Naeherung\>", "\<geschaetzte lokale Fehler\>", \
+"\<Schrittweite\>", "\<Zurueckweisung\>", "\<Absolute Fehler\>", "\<Relative \
+Fehler\>"};\)\), "\[IndentingNewLine]", 
+    \(\(dataList = {lsg[\([1]\)], {\(lsg[\([1]\)]\)[\([All, 1]\)], 
+              lsg[\([5]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([2]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([3]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([6]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([7]\)]} // 
+            Transpose};\)\), "\[IndentingNewLine]", 
+    \(\(plotList = 
+        Table[ListPlot[dataList[\([i]\)], PlotJoined \[Rule] True, 
+            PlotRange \[Rule] All, DisplayFunction \[Rule] Identity, 
+            PlotLabel \[Rule] SequenceForm[nameList[\([i]\)]]], {i, 1, 
+            6}];\)\), "\n", 
+    \(\(Plot[u[x], {x, x0, x0 + c}];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ausgabe", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(Print["\<Anzahl der Auswertungen: \>", 
+        lsg[\([4]\)], \ "\<  Gitterpunkte: \>", 
+        Length[lsg[\([1]\)]], \ "\<  Zurueckgewiesene Schrittweiten: \>", 
+        Plus @@ lsg[\([3]\)]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Startschrittweite: \>", \(lsg[\([2]\)]\)[\([2]\)], \ "\<  \
+Endschrittweite: \>", lsg[\([2]\)] // Last];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximaler absoluter/relativer Fehler: \>", 
+        lsg[\([6]\)] // Max, \ "\< / \>", 
+        lsg[\([7]\)] // Last];\)\), "\[IndentingNewLine]", 
+    \(\(Show[GraphicsArray[Partition[plotList, 2]], 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Rechnungen", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(SigmaTable = {}; LamdaMinTable = {}; 
+    LamdaMaxTable = {};\), "\[IndentingNewLine]", 
+    \(For[sig = 0.0, sig \[LessEqual] 0.5, 
+      sig += 0.01, \[IndentingNewLine]temp = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sig, lamdaMin, lamdaMax, nf, 
+          u]; \[IndentingNewLine]AppendTo[
+        SigmaTable, {sig, \(-Log[10, eabs]\), \(-Log[10, 
+              temp[\([6]\)] // Max]\), 
+          Log[10, temp[\([6]\)] // Max]/Log[10, eabs], 
+          temp[\([4]\)]}]\[IndentingNewLine]] (*end\ for*) \), "\
+\[IndentingNewLine]", 
+    \(For[laMin = 0.0, laMin < 1 - sigma, 
+      laMin += 0.01, \[IndentingNewLine]temp = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sigma, laMin, lamdaMax, nf, 
+          u]; \[IndentingNewLine]AppendTo[
+        LamdaMinTable, {laMin, \(-Log[10, eabs]\), \(-Log[10, 
+              temp[\([6]\)] // Max]\), 
+          Log[10, temp[\([6]\)] // Max]/Log[10, eabs], 
+          temp[\([4]\)]}]] (*end\ for*) \), "\[IndentingNewLine]", 
+    \(For[laMax = 1 + sigma, laMax < 2 + sigma, 
+      laMax += 0.01, \[IndentingNewLine]temp = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sigma, lamdaMin, laMax, nf, 
+          u]; \[IndentingNewLine]AppendTo[
+        LamdaMaxTable, {laMax, \(-Log[10, eabs]\), \(-Log[10, 
+              temp[\([6]\)] // Max]\), 
+          Log[10, temp[\([6]\)] // Max]/Log[10, eabs], 
+          temp[\([4]\)]}]] (*end\ for*) \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(testTables = {SigmaTable, LamdaMinTable, 
+          LamdaMaxTable};\)\), "\[IndentingNewLine]", 
+    \(\(testLabels = {{"\<\[Delta]\>", "\<epsIst / epsSoll\>"}, \
+{"\<\[Delta]\>", "\<nf\>"}, {\*"\"\<\!\(\[Lambda]\_min\)\>\"", "\<epsIst / \
+epsSoll\>"}, {\*"\"\<\!\(\[Lambda]\_min\)\>\"", "\<nf\>"}, {\*"\"\<\!\(\
+\[Lambda]\_max\)\>\"", "\<epsIst / epsSoll\>"}, \
+{\*"\"\<\!\(\[Lambda]\_max\)\>\"", "\<nf\>"}};\)\), "\[IndentingNewLine]", 
+    \(\(testFrameLabels = {"\<\[Delta] - Untersuchung\>", \
+\*"\"\<\!\(\[Lambda]\_min\) - Untersuchung\>\"", \*"\"\<\!\(\[Lambda]\_max\) \
+- Untersuchung\>\""};\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ausgabe", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(Table[
+        testplot = {ListPlot[{\(testTables[\([i]\)]\)[\([All, 
+                      1]\)], \(testTables[\([i]\)]\)[\([All, 4]\)]} // 
+                Transpose, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+              DisplayFunction \[Rule] Identity, 
+              FrameLabel -> testLabels[\([2*i - 1]\)], 
+              RotateLabel -> 
+                True], \[IndentingNewLine]ListPlot[{\(testTables[\([i]\)]\)[\(\
+[All, 1]\)], \(testTables[\([i]\)]\)[\([All, 5]\)]} // Transpose, 
+              PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+              DisplayFunction \[Rule] Identity, 
+              FrameLabel -> testLabels[\([2*i]\)], 
+              RotateLabel -> True]}; \[IndentingNewLine]Show[
+          GraphicsArray[Partition[testplot, 2]], 
+          DisplayFunction \[Rule] $DisplayFunction, 
+          PlotLabel -> testFrameLabels[\([i]\)]]\[IndentingNewLine], {i, 1, 
+          3, 1}];\)\)], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+    \(TraditionalForm\`y' \[Equal] \(-2\) xy\^2\)]]], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell["Rechnungen", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-2\)*\(y[x]\^2\) x, y[0] \[Equal] 1}, y, 
+        x];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(x0 = 0. ;\)\), "\n", 
+    \(\(y0 = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(eabs = 0.001;\)\), "\[IndentingNewLine]", 
+    \(\(erel = 0.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.037;\)\), "\[IndentingNewLine]", 
+    \(\(p1 = 2;\)\), "\[IndentingNewLine]", 
+    \(\(p2 = 3;\)\), "\[IndentingNewLine]", 
+    \(\(sigma = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(lamdaMin = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(lamdaMax = 10;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_, y_] := \(-2\)*y*x;\)\), "\n", 
+    \(\(\[Phi]1[x_, y_, h_] := 
+        1\/2*f[x, y] + 
+          1\/2*f[x + h, y + h*f[x, y]];\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi]2[x_, y_, h_] := 
+        1\/6*f[x, y] + 1\/6*f[x + h, y + h*f[x, y]] + 
+          2\/3*f[x + h\/2, 
+              y + h\/4*f[x, y] + 
+                h\/4*f[x + h, y + h*f[x, y]]];\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] := 1\/\(1 + x\^2\);\)\), "\[IndentingNewLine]", 
+    \(\(nf = 3. ;\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(lsg = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sigma, lamdaMin, lamdaMax, nf, 
+          u];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(nameList = {"\<Naeherung\>", "\<geschaetzte lokale Fehler\>", \
+"\<Schrittweite\>", "\<Zurueckweisung\>", "\<Absolute Fehler\>", "\<Relative \
+Fehler\>"};\)\), "\[IndentingNewLine]", 
+    \(\(dataList = {lsg[\([1]\)], {\(lsg[\([1]\)]\)[\([All, 1]\)], 
+              lsg[\([5]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([2]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([3]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([6]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([7]\)]} // 
+            Transpose};\)\), "\[IndentingNewLine]", 
+    \(\(plotList = 
+        Table[ListPlot[dataList[\([i]\)], PlotJoined \[Rule] True, 
+            PlotRange \[Rule] All, DisplayFunction \[Rule] Identity, 
+            PlotLabel \[Rule] SequenceForm[nameList[\([i]\)]]], {i, 1, 
+            6}];\)\), "\n", 
+    \(\(Plot[u[x], {x, x0, x0 + c}];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ausgabe", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(Print["\<Anzahl der Auswertungen: \>", 
+        lsg[\([4]\)], \ "\<  Gitterpunkte: \>", 
+        Length[lsg[\([1]\)]], \ "\<  Zurueckgewiesene Schrittweiten: \>", 
+        Plus @@ lsg[\([3]\)]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Startschrittweite: \>", \(lsg[\([2]\)]\)[\([2]\)], \ "\<  \
+Endschrittweite: \>", lsg[\([2]\)] // Last];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximaler absoluter/relativer Fehler: \>", 
+        lsg[\([6]\)] // Max, \ "\< / \>", 
+        lsg[\([7]\)] // Last];\)\), "\[IndentingNewLine]", 
+    \(\(Show[GraphicsArray[Partition[plotList, 2]], 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Rechnungen", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(SigmaTable = {}; LamdaMinTable = {}; 
+    LamdaMaxTable = {};\), "\[IndentingNewLine]", 
+    \(For[sig = 0.0, sig \[LessEqual] 0.5, 
+      sig += 0.01, \[IndentingNewLine]temp = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sig, lamdaMin, lamdaMax, nf, 
+          u]; \[IndentingNewLine]AppendTo[
+        SigmaTable, {sig, \(-Log[10, eabs]\), \(-Log[10, 
+              temp[\([6]\)] // Max]\), 
+          Log[10, temp[\([6]\)] // Max]/Log[10, eabs], 
+          temp[\([4]\)]}]\[IndentingNewLine]] (*end\ for*) \), "\
+\[IndentingNewLine]", 
+    \(For[laMin = 0.0, laMin < 1 - sigma, 
+      laMin += 0.01, \[IndentingNewLine]temp = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sigma, laMin, lamdaMax, nf, 
+          u]; \[IndentingNewLine]AppendTo[
+        LamdaMinTable, {laMin, \(-Log[10, eabs]\), \(-Log[10, 
+              temp[\([6]\)] // Max]\), 
+          Log[10, temp[\([6]\)] // Max]/Log[10, eabs], 
+          temp[\([4]\)]}]] (*end\ for*) \), "\[IndentingNewLine]", 
+    \(For[laMax = 1 + sigma, laMax < 2 + sigma, 
+      laMax += 0.01, \[IndentingNewLine]temp = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sigma, lamdaMin, laMax, nf, 
+          u]; \[IndentingNewLine]AppendTo[
+        LamdaMaxTable, {laMax, \(-Log[10, eabs]\), \(-Log[10, 
+              temp[\([6]\)] // Max]\), 
+          Log[10, temp[\([6]\)] // Max]/Log[10, eabs], 
+          temp[\([4]\)]}]] (*end\ for*) \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(testTables = {SigmaTable, LamdaMinTable, 
+          LamdaMaxTable};\)\), "\[IndentingNewLine]", 
+    \(\(testLabels = {{"\<\[Delta]\>", "\<epsIst / epsSoll\>"}, \
+{"\<\[Delta]\>", "\<nf\>"}, {\*"\"\<\!\(\[Lambda]\_min\)\>\"", "\<epsIst / \
+epsSoll\>"}, {\*"\"\<\!\(\[Lambda]\_min\)\>\"", "\<nf\>"}, {\*"\"\<\!\(\
+\[Lambda]\_max\)\>\"", "\<epsIst / epsSoll\>"}, \
+{\*"\"\<\!\(\[Lambda]\_max\)\>\"", "\<nf\>"}};\)\), "\[IndentingNewLine]", 
+    \(\(testFrameLabels = {"\<\[Delta] - Untersuchung\>", \
+\*"\"\<\!\(\[Lambda]\_min\) - Untersuchung\>\"", \*"\"\<\!\(\[Lambda]\_max\) \
+- Untersuchung\>\""};\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ausgabe", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(Table[
+        testplot = {ListPlot[{\(testTables[\([i]\)]\)[\([All, 
+                      1]\)], \(testTables[\([i]\)]\)[\([All, 4]\)]} // 
+                Transpose, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+              DisplayFunction \[Rule] Identity, 
+              FrameLabel -> testLabels[\([2*i - 1]\)], 
+              RotateLabel -> 
+                True], \[IndentingNewLine]ListPlot[{\(testTables[\([i]\)]\)[\(\
+[All, 1]\)], \(testTables[\([i]\)]\)[\([All, 5]\)]} // Transpose, 
+              PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+              DisplayFunction \[Rule] Identity, 
+              FrameLabel -> testLabels[\([2*i]\)], 
+              RotateLabel -> True]}; \[IndentingNewLine]Show[
+          GraphicsArray[Partition[testplot, 2]], 
+          DisplayFunction \[Rule] $DisplayFunction, 
+          PlotLabel -> testFrameLabels[\([i]\)]]\[IndentingNewLine], {i, 1, 
+          3, 1}];\)\)], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+    \(TraditionalForm\`y' \[Equal] \(-200\) xy\^2\)]]], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell["Rechnungen", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(DSolve[{\(y'\)[x] \[Equal] \(-200\)*x*y[x]\^2, y[\(-1\)] == 1\/101}, y, 
+      x]\)], "Input"],
+
+Cell[BoxData[
+    \({{y \[Rule] \((1\/\(1 + 100\ #1\^2\) &)\)}}\)], "Output"]
+}, Open  ]],
+
+Cell[BoxData[{
+    \(\(x0 = 0. ;\)\), "\n", 
+    \(\(y0 = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(eabs = 0.01;\)\), "\[IndentingNewLine]", 
+    \(\(erel = 0.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.037;\)\), "\[IndentingNewLine]", 
+    \(\(p1 = 2;\)\), "\[IndentingNewLine]", 
+    \(\(p2 = 3;\)\), "\[IndentingNewLine]", 
+    \(\(sigma = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(lamdaMin = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(lamdaMax = 10;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_, y_] := \(-200.0\)*x*y\^2;\)\), "\n", 
+    \(\(\[Phi]1[x_, y_, h_] := 
+        1\/2*f[x, y] + 
+          1\/2*f[x + h, y + h*f[x, y]];\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi]2[x_, y_, h_] := 
+        1\/6*f[x, y] + 1\/6*f[x + h, y + h*f[x, y]] + 
+          2\/3*f[x + h\/2, 
+              y + h\/4*f[x, y] + 
+                h\/4*f[x + h, y + h*f[x, y]]];\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] := 1\/\(1 + 100\ *x\^2\);\)\), "\[IndentingNewLine]", 
+    \(\(nf = 3. ;\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(lsg = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sigma, lamdaMin, lamdaMax, nf, 
+          u];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(nameList = {"\<Naeherung\>", "\<geschaetzte lokale Fehler\>", \
+"\<Schrittweite\>", "\<Zurueckweisung\>", "\<Absolute Fehler\>", "\<Relative \
+Fehler\>"};\)\), "\[IndentingNewLine]", 
+    \(\(dataList = {lsg[\([1]\)], {\(lsg[\([1]\)]\)[\([All, 1]\)], 
+              lsg[\([5]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([2]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([3]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([6]\)]} // 
+            Transpose, {\(lsg[\([1]\)]\)[\([All, 1]\)], lsg[\([7]\)]} // 
+            Transpose};\)\), "\[IndentingNewLine]", 
+    \(\(plotList = 
+        Table[ListPlot[dataList[\([i]\)], PlotJoined \[Rule] True, 
+            PlotRange \[Rule] All, DisplayFunction \[Rule] Identity, 
+            PlotLabel \[Rule] SequenceForm[nameList[\([i]\)]]], {i, 1, 
+            6}];\)\), "\n", 
+    \(\(Plot[u[x], {x, x0, x0 + c}];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ausgabe", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(Print["\<Anzahl der Auswertungen: \>", 
+        lsg[\([4]\)], \ "\<  Gitterpunkte: \>", 
+        Length[lsg[\([1]\)]], \ "\<  Zurueckgewiesene Schrittweiten: \>", 
+        Plus @@ lsg[\([3]\)]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Startschrittweite: \>", \(lsg[\([2]\)]\)[\([2]\)], \ "\<  \
+Endschrittweite: \>", lsg[\([2]\)] // Last];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximaler absoluter/relativer Fehler: \>", 
+        lsg[\([6]\)] // Max, \ "\< / \>", 
+        lsg[\([7]\)] // Last];\)\), "\[IndentingNewLine]", 
+    \(\(Show[GraphicsArray[Partition[plotList, 2]], 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Rechnungen", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(SigmaTable = {}; LamdaMinTable = {}; 
+    LamdaMaxTable = {};\), "\[IndentingNewLine]", 
+    \(For[sig = 0.0, sig \[LessEqual] 0.5, 
+      sig += 0.01, \[IndentingNewLine]temp = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sig, lamdaMin, lamdaMax, nf, 
+          u]; \[IndentingNewLine]AppendTo[
+        SigmaTable, {sig, \(-Log[10, eabs]\), \(-Log[10, 
+              temp[\([6]\)] // Max]\), 
+          Log[10, temp[\([6]\)] // Max]/Log[10, eabs], 
+          temp[\([4]\)]}]\[IndentingNewLine]] (*end\ for*) \), "\
+\[IndentingNewLine]", 
+    \(For[laMin = 0.0, laMin < 1 - sigma, 
+      laMin += 0.01, \[IndentingNewLine]temp = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sigma, laMin, lamdaMax, nf, 
+          u]; \[IndentingNewLine]AppendTo[
+        LamdaMinTable, {laMin, \(-Log[10, eabs]\), \(-Log[10, 
+              temp[\([6]\)] // Max]\), 
+          Log[10, temp[\([6]\)] // Max]/Log[10, eabs], 
+          temp[\([4]\)]}]] (*end\ for*) \), "\[IndentingNewLine]", 
+    \(For[laMax = 1 + sigma, laMax < 2 + sigma, 
+      laMax += 0.01, \[IndentingNewLine]temp = 
+        AdaptiveExplizitRungeKutta[x0, y0, c, eabs, erel, 
+          h, \[Phi]1, \[Phi]2, p1, p2, sigma, lamdaMin, laMax, nf, 
+          u]; \[IndentingNewLine]AppendTo[
+        LamdaMaxTable, {laMax, \(-Log[10, eabs]\), \(-Log[10, 
+              temp[\([6]\)] // Max]\), 
+          Log[10, temp[\([6]\)] // Max]/Log[10, eabs], 
+          temp[\([4]\)]}]] (*end\ for*) \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(testTables = {SigmaTable, LamdaMinTable, 
+          LamdaMaxTable};\)\), "\[IndentingNewLine]", 
+    \(\(testLabels = {{"\<\[Delta]\>", "\<epsIst / epsSoll\>"}, \
+{"\<\[Delta]\>", "\<nf\>"}, {\*"\"\<\!\(\[Lambda]\_min\)\>\"", "\<epsIst / \
+epsSoll\>"}, {\*"\"\<\!\(\[Lambda]\_min\)\>\"", "\<nf\>"}, {\*"\"\<\!\(\
+\[Lambda]\_max\)\>\"", "\<epsIst / epsSoll\>"}, \
+{\*"\"\<\!\(\[Lambda]\_max\)\>\"", "\<nf\>"}};\)\), "\[IndentingNewLine]", 
+    \(\(testFrameLabels = {"\<\[Delta] - Untersuchung\>", \
+\*"\"\<\!\(\[Lambda]\_min\) - Untersuchung\>\"", \*"\"\<\!\(\[Lambda]\_max\) \
+- Untersuchung\>\""};\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ausgabe", "Subsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(Table[
+        testplot = {ListPlot[{\(testTables[\([i]\)]\)[\([All, 
+                      1]\)], \(testTables[\([i]\)]\)[\([All, 4]\)]} // 
+                Transpose, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+              DisplayFunction \[Rule] Identity, 
+              FrameLabel -> testLabels[\([2*i - 1]\)], 
+              RotateLabel -> 
+                True], \[IndentingNewLine]ListPlot[{\(testTables[\([i]\)]\)[\(\
+[All, 1]\)], \(testTables[\([i]\)]\)[\([All, 5]\)]} // Transpose, 
+              PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+              DisplayFunction \[Rule] Identity, 
+              FrameLabel -> testLabels[\([2*i]\)], 
+              RotateLabel -> True]}; \[IndentingNewLine]Show[
+          GraphicsArray[Partition[testplot, 2]], 
+          DisplayFunction \[Rule] $DisplayFunction, 
+          PlotLabel -> testFrameLabels[\([i]\)]]\[IndentingNewLine], {i, 1, 
+          3, 1}];\)\)], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Timing am Beispiel y'\[Equal]Cos(x)y", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(AdaptiveExplizitRungeKuttaTime[Xo_, Yo_, c_, epsabs_, epsrel_, ho_, 
+        f1_, f2_, p1_, sigma_, lamdaMin_, lamdaMax_] := 
+      Module[{ret, hk, q, yp1, yp2, epsk, lamdak, k}, ret = {{Xo, Yo}}; 
+        hk = ho; q = p1; 
+        k = 1; \[IndentingNewLine]While[
+          ret[\([\)\(k, 1\)\(]\)] + hk < Xo + c, \[IndentingNewLine]yp1 = 
+            ret[\([\)\(k, 2\)\(]\)] + 
+              f1[ret[\([\)\(k, 1\)\(]\)], ret[\([\)\(k, 2\)\(]\)], hk]*hk; 
+          yp2 = ret[\([\)\(k, 2\)\(]\)] + 
+              f2[ret[\([\)\(k, 1\)\(]\)], ret[\([\)\(k, 2\)\(]\)], hk]*
+                hk; \[IndentingNewLine]epsk = \((epsabs + 
+                  epsrel*Max[yp1, ret[\([\)\(k, 2\)\(]\)]])\)*hk\/c; 
+          lamdak = 
+            If[yp1 \[NotEqual] \ yp2, \((epsk/Abs[yp2 - yp1])\)\^\(1/q\), 
+              lamdaMax]; \[IndentingNewLine]If[
+            lamdak \[GreaterEqual] \ 1 - sigma, 
+            AppendTo[
+              ret, {Min[ret[\([\)\(k, 1\)\(]\)] + hk, Xo + c], 
+                yp2}]; \[IndentingNewLine]hk = 
+              If[lamdak \[GreaterEqual] \ 1 + sigma, 
+                Min[lamdaMax, lamdak]*hk, hk]; \(k++\), 
+            hk = Max[Abs[lamdaMin], Abs[lamdak]]*hk]]; ret]\)], "Input"],
+
+Cell[BoxData[
+    \(PossibleH[l_, n_] := 
+      Module[{ret, xlist, hmin, hmax, 
+          k}, \[IndentingNewLine]xlist = \(Transpose[l]\)[\([1]\)]; 
+        hmin\  = \(hmax = 
+            xlist[\([2]\)] - xlist[\([1]\)]\); \[IndentingNewLine]For[k = 2, 
+          k \[LessEqual] \ Length[xlist], \(k++\), \[IndentingNewLine]If[
+            hmin\  > xlist[\([k]\)] - xlist[\([k - 1]\)], 
+            hmin\  = 
+              xlist[\([k]\)] - xlist[\([k - 1]\)]]; \[IndentingNewLine]If[
+            hmax\  < xlist[\([k]\)] - xlist[\([k - 1]\)], 
+            hmax\  = 
+              xlist[\([k]\)] - xlist[\([k - 1]\)]];\[IndentingNewLine]]; 
+        Range[hmin, hmax, \((hmax - hmin)\)/n]]\)], "Input"],
+
+Cell[BoxData[{
+    \(x0 = 0. ; y0 = 1. ; c = 12. ; eabs = 0.001; erel = 0.0; h = 0.037; 
+    p1 = 2;\), "\[IndentingNewLine]", 
+    \(sigma = 0.5; lamdaMin = 0.2; lamdaMax = 1.6;\), "\[IndentingNewLine]", 
+    \(f[x_, y_] := Cos[x]*y; \[Phi]1[x_, y_, h_] := 
+      1\/2*f[x, y] + 1\/2*f[x + h, y + h*f[x, y]];\), "\[IndentingNewLine]", 
+    \(\(\[Phi]2[x_, y_, h_] := 
+        1\/6*f[x, y] + 1\/6*f[x + h, y + h*f[x, y]] + 
+          2\/3*f[x + h\/2, 
+              y + h\/4*f[x, y] + h\/4*f[x + h, y + h*f[x, y]]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg1 = 
+        Timing[AdaptiveExplizitRungeKuttaTime[x0, y0, c, eabs, erel, 
+            h, \[Phi]1, \[Phi]2, p1, sigma, lamdaMin, 
+            lamdaMax]];\)\), "\[IndentingNewLine]", 
+    \(posh = PossibleH[time1[\([2]\)], 60]; 
+    timeList\  = \ {};\), "\[IndentingNewLine]", 
+    \(\(plot1 = 
+        ListPlot[{{posh[\([1]\)], lsg1[\([1]\)]/Second}}, 
+          DisplayFunction \[Rule] Identity, 
+          PlotStyle \[Rule] {PointSize[0.02], RGBColor[1, 0, 0]}, 
+          PlotRange \[Rule] All];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, i \[LessEqual] \ Length[posh], \(i++\), 
+      AppendTo[timeList, \[IndentingNewLine]{posh[\([i]\)], \(Timing[
+                ExplicitRungeKutta[x0, y0, 
+                  Stuetzstellen[x0, \((x0 + c)\), 
+                    posh[\([i]\)]], \[Phi]1]]\)[\([1]\)]/
+            Second}\[IndentingNewLine]]]; 
+    plot2 = ListPlot[timeList, DisplayFunction \[Rule] Identity, 
+        PlotJoined \[Rule] True, PlotRange \[Rule] All];\), "\n", 
+    \(\(Show[plot1, plot2, DisplayFunction \[Rule] $DisplayFunction, 
+        FrameLabel \[Rule] {"\<h\>", "\<Time\>"}, RotateLabel -> True, 
+        PlotLabel \[Rule] "\<Zeitbetrachtungen\>"];\)\)}], "Input",
+  ShowClosedCellArea->True]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ordnungstabellen\tImplicit Runge-Kutta", "Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  " Mittelpunktregel\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-2\) xy\^2\)]]
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-2\)*x*y[x]\^2, y[0] \[Equal] 1}, y, 
+        x];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.05;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-2\)*x*y\^2\), "\n", 
+    \(\(\[Phi][x_, y_, h_] := 
+        f[x, y];\) (*EulerVerfahren*) \), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = {1/2} // N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Beta] = {{1/2}} // N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Gamma] = {1} // N;\)\), "\[IndentingNewLine]", 
+    \(u[x_] := 1/\((1 + x\^2)\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg1 = ExplicitRungeKutta[x0, y0, st, \[Phi]];\)\), "\n", 
+    \(\(lsg2 = 
+        ImplicitRungeKutta[x0, y0, st, 
+          f, \[Alpha], \[Gamma], \[Beta]];\)\), "\[IndentingNewLine]", 
+    \(\(plot1 = 
+        ListPlot[lsg1, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> {RGBColor[1, 0, 0], 
+              PointSize[0.02]}];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02]];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[plot1, plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Open  ]],
+
+Cell[BoxData[{
+    \(\(data = 
+        OrdnungAuswertungImplicit[x0, y0, c, f, u, 
+          n, \[Alpha], \[Gamma], \[Beta]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(t1 = 
+      FrameBox[GridBox[t1, RowLines \[Rule] {True, False}, 
+          ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] True]]; 
+    Print[t1 // DisplayForm];\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  " Trapezregel\t\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-y\)\)]]
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.05;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-y\)\), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = {0, 1} // N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Beta] = {{0, 0}, {1/2, 1/2}} // N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Gamma] = {1/2, 1/2} // N;\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[\(-x\)];\)\), "\[IndentingNewLine]", 
+    \(\(n = 12. ;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg2 = 
+        ImplicitRungeKutta[x0, y0, st, 
+          f, \[Alpha], \[Gamma], \[Beta]];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02]];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Open  ]],
+
+Cell[BoxData[{
+    \(\(data = 
+        OrdnungAuswertungImplicit[x0, y0, c, f, u, 
+          n, \[Alpha], \[Gamma], \[Beta]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(t1 = 
+      FrameBox[GridBox[t1, RowLines \[Rule] {True, False}, 
+          ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] True]]; 
+    Print[t1 // DisplayForm];\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  " Gau\[SZ] Formel\t\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-3\) \(x\^2\) y\)]]
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-3\)*x\^2*y[x], y[0] \[Equal] 5}, y, 
+        x];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.05;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-3\)*x\^2*y\), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = {1/6*\((3 - \@3)\), 1/6*\((3 + \@3)\)} // 
+          N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Beta] = {{1/4, 1/12*\((3 - 2*\@3)\)}, {1/12*\((3 + 2*\@3)\), 1/4}} // 
+          N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Gamma] = {1/2, 1/2} // N;\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] := 5*Exp[\(-x\^3\)];\)\), "\[IndentingNewLine]", 
+    \(\(n = 14. ;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg2 = 
+        ImplicitRungeKutta[x0, y0, st, 
+          f, \[Alpha], \[Gamma], \[Beta]];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02]];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Open  ]],
+
+Cell[BoxData[{
+    \(\(data = 
+        OrdnungAuswertungImplicit[x0, y0, c, f, u, 
+          n, \[Alpha], \[Gamma], \[Beta]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ordnungstabellen\tAdams-Bashforth / Adams-Moulton", "Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-3\) \(x\^2\) y\)]],
+  "\tm=2\t",
+  "Bashforth"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-2\)*x*y[x]\^2, y[0] \[Equal] 1}, y, 
+        x];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-3\)*x\^2*y\), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = {3/2, \(-1\)/2} // N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, h_] := 
+        0.5*\((f[x, y] + 
+              f[x + h, 
+                y + h*f[x, y]])\);\) (*Heun*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := 5*Exp[\(-x\^3\)];\)\), "\[IndentingNewLine]", 
+    \(\(n = 12. ;\)\), "\[IndentingNewLine]", 
+    \(\(m = 2;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg2 = 
+        AdamsBashforth[x0, y0, st, f, \[Phi], \[Alpha], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02], PlotRange \[Rule] All];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, DisplayFunction \[Rule] Identity, 
+          PlotRange \[Rule] All];\)\), "\n", 
+    \(\(Show[plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        OrdnungAuswertungABM[x0, y0, c, f, \[Phi], u, n, \[Alpha], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-3\) \(x\^2\) y\)]],
+  "\tm=3\t",
+  "Bashforth"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-3\)*x\^2*y[x], y[0] \[Equal] 5}, y, 
+        x];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(c = 2.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.05;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-3\)*x\^2*y\), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = {23/12, \(-16\)/12, 5/12} // 
+          N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, 
+          h_] := \[IndentingNewLine]Module[{k1, k2, 
+            k3}, \[IndentingNewLine]k1 = f[x, y]; \[IndentingNewLine]k2 = 
+            f[x + h\/2, y + h\/2*k1]; \[IndentingNewLine]k3 = 
+            f[x + h, y + h*k2]\[IndentingNewLine]];\) (*Runge\ p = 
+        3*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := 5*Exp[\(-x\^3\)];\)\), "\[IndentingNewLine]", 
+    \(\(n = 12. ;\)\), "\[IndentingNewLine]", 
+    \(\(m = 3;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg2 = 
+        AdamsBashforth[x0, y0, st, f, \[Phi], \[Alpha], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02], PlotRange \[Rule] All];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, DisplayFunction \[Rule] Identity, 
+          PlotRange \[Rule] All];\)\), "\n", 
+    \(\(Show[plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        OrdnungAuswertungABM[x0, y0, c, f, \[Phi], u, n, \[Alpha], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-3\) \(x\^2\) y\)]],
+  "\tm=5\t",
+  "Bashforth"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-3\)*x\^2*y[x], y[0] \[Equal] 5}, y, 
+        x];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(c = 2.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.05;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-3\)*x\^2*y\), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = {1901/720, \(-2774\)/720, 2616/720, \(-1274\)/720, 
+            251/720} // N;\)\), "\[IndentingNewLine]", 
+    \(\[Phi][x_, y_, 
+        h_] := \[IndentingNewLine]Module[{k1, k2, k3, k4, k5, 
+          lsg}, \[IndentingNewLine]k1 = f[x, y]; \[IndentingNewLine]k2 = 
+          f[x + h\/8, y + h\/8*k1]; \[IndentingNewLine]k3 = 
+          f[x + h\/4, y + h\/4*k2]; \[IndentingNewLine]k4 = 
+          f[x + h\/2, y + h\/2*k1 - h*k2 + h*k3]; \[IndentingNewLine]k5 = 
+          f[x + \(3*h\)\/4, 
+            y + \(3*h\)\/16*k1 + \(9*h\)\/16*k4]; \[IndentingNewLine]k6 = 
+          f[x + h, 
+            y - \(5*h\)\/7*k1 + \(4*h\)\/7*k2 + \(12*h\)\/7*k3 - \(12*h\)\/7*
+                k4 + \(8*h\)\/7*k5]; \[IndentingNewLine]lsg = 
+          7\/90*k1 + 16\/45*k3 + 2\/15*k4 + 16\/45*k5 + 
+            7\/90*k6\[IndentingNewLine]\[IndentingNewLine]];  (*Butcher\
+*) \[IndentingNewLine]u[x_] := 5*Exp[\(-x\^3\)];\), "\[IndentingNewLine]", 
+    \(\(n = 12. ;\)\), "\[IndentingNewLine]", 
+    \(\(m = 5;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg2 = 
+        AdamsBashforth[x0, y0, st, f, \[Phi], \[Alpha], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02], PlotRange \[Rule] All];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, DisplayFunction \[Rule] Identity, 
+          PlotRange \[Rule] All];\)\), "\n", 
+    \(\(Show[plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        OrdnungAuswertungABM[x0, y0, c, f, \[Phi], u, n, \[Alpha], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-3\) \(x\^2\) y\)]],
+  "\tm=2\tMoulton"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(c = 2.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-3\)*x\^2*y\), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = {5/12, 8/12, \(-1\)/12} // N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, 
+          h_] := \[IndentingNewLine]Module[{k1, k2, k3, 
+            lsg}, \[IndentingNewLine]k1 = f[x, y]; \[IndentingNewLine]k2 = 
+            f[x + h\/2, y + h\/2*k1]; \[IndentingNewLine]k3 = 
+            f[x + h, y + h*k2]; \[IndentingNewLine]lsg = 
+            k3\[IndentingNewLine]];\) (*Runge*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := 5*Exp[\(-x\^3\)];\)\), "\[IndentingNewLine]", 
+    \(\(n = 12. ;\)\), "\[IndentingNewLine]", 
+    \(\(m = 2;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg2 = 
+        AdamsMoulton[x0, y0, st, f, \[Phi], \[Alpha], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[lsg2, 10] // TableForm\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02], PlotRange \[Rule] All];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, DisplayFunction \[Rule] Identity, 
+          PlotRange \[Rule] All];\)\), "\n", 
+    \(\(Show[plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        OrdnungAuswertungAMM[x0, y0, c, f, \[Phi], u, n, \[Alpha], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-y\)\)]],
+  "\tAufgabe 22 (m=2)"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(x0 = 0. ;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-12\)*y\), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = {5/12, 8/12, \(-1\)/12} // N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Beta] = {3/2, \(-1\)/2};\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, h_] := \(-10\);\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] := Exp[\(-12\)*x];\)\), "\[IndentingNewLine]", 
+    \(\(m = 2;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg1 = 
+        AdamsBashforth[{0. , 1. }, {0.1, u[0.1]}, st, f, \[Phi], \[Beta], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(lsg2 = 
+        AdamsMoulton[{0. , 1. }, {0.1, u[0.1]}, st, f, \[Phi], \[Alpha], 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(lsg3 = 
+        AdamsBashforth[{0. , 1. }, {0.1, u[0.1] + 0.01}, st, 
+          f, \[Phi], \[Beta], m];\)\), "\[IndentingNewLine]", 
+    \(\(lsg4 = 
+        AdamsMoulton[{0. , 1. }, {0.1, u[0.1] + 0.01}, st, 
+          f, \[Phi], \[Alpha], m];\)\), "\[IndentingNewLine]", 
+    \(\(plot1 = 
+        ListPlot[lsg1, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> {RGBColor[1, 0, 0]}, 
+          PlotJoined \[Rule] True];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> {RGBColor[0, 0, 1]}, 
+          PlotJoined \[Rule] True];\)\), "\[IndentingNewLine]", 
+    \(\(plot3 = 
+        ListPlot[lsg3, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> {RGBColor[1, 0.5, 0]}, 
+          PlotJoined \[Rule] True];\)\), "\[IndentingNewLine]", 
+    \(\(plot4 = 
+        ListPlot[lsg4, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> {RGBColor[0, 0.5, 1]}, 
+          PlotJoined \[Rule] True];\)\), "\n", 
+    \(\(plot5 = 
+        Plot[u[x], {x, x0, x0 + c}, DisplayFunction \[Rule] Identity, 
+          PlotRange \[Rule] All];\)\), "\n", 
+    \(\(Show[plot1, plot2, plot3, plot4, plot5, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ordnungstabellen\tBDF", "Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-3\) \(x\^2\) y\)]],
+  "\tm=2"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-2\)*x*y[x]\^2, y[0] \[Equal] 1}, y, 
+        x];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(c = 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-3\)*x\^2*y\), "\[IndentingNewLine]", 
+    \(\(g = {3/2, \(-2\), 1/2} // N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, h_] := 
+        0.5*\((f[x, y] + 
+              f[x + h, 
+                y + h*f[x, y]])\);\) (*Heun*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := 5*Exp[\(-x\^3\)];\)\), "\[IndentingNewLine]", 
+    \(\(n = 9. ;\)\), "\[IndentingNewLine]", 
+    \(\(m = 2;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg2 = BDF[x0, y0, st, f, \[Phi], g, m];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02], PlotRange \[Rule] All];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, DisplayFunction \[Rule] Identity, 
+          PlotRange \[Rule] All];\)\), "\n", 
+    \(\(Show[plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        OrdnungAuswertungBDF[x0, y0, c, f, \[Phi], u, n, g, 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-3\) \(x\^2\) y\)]],
+  "\tm=3"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-3\)*x\^2*y[x], y[0] \[Equal] 5}, y, 
+        x];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(c = 2.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.05;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-3\)*x\^2*y\), "\[IndentingNewLine]", 
+    \(\(g = {11/6, \(-18\)/6, 9/6, \(-2\)/6} // 
+          N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, 
+          h_] := \[IndentingNewLine]Module[{k1, k2, 
+            k3}, \[IndentingNewLine]k1 = f[x, y]; \[IndentingNewLine]k2 = 
+            f[x + h\/2, y + h\/2*k1]; \[IndentingNewLine]k3 = 
+            f[x + h, y + h*k2]\[IndentingNewLine]];\) (*Runge\ p = 
+        3*) \), "\[IndentingNewLine]", 
+    \(\(u[x_] := 5*Exp[\(-x\^3\)];\)\), "\[IndentingNewLine]", 
+    \(\(n = 12. ;\)\), "\[IndentingNewLine]", 
+    \(\(m = 3;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg2 = BDF[x0, y0, st, f, \[Phi], g, m];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02], PlotRange \[Rule] All];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, DisplayFunction \[Rule] Identity, 
+          PlotRange \[Rule] All];\)\), "\n", 
+    \(\(Show[plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        OrdnungAuswertungBDF[x0, y0, c, f, \[Phi], u, n, g, 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "\t",
+  Cell[BoxData[
+      \(TraditionalForm\`y' = \(-3\) \(x\^2\) y\)]],
+  "\tm=4"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(DSolve[{\(y'\)[x] \[Equal] \(-3\)*x\^2*y[x], y[0] \[Equal] 5}, y, 
+        x];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(x0 = 0;\)\), "\n", 
+    \(\(y0 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(c = 2.0;\)\), "\[IndentingNewLine]", 
+    \(\(h = 0.1;\)\), "\[IndentingNewLine]", 
+    \(\(st = Stuetzstellen[x0, x0 + c, h];\)\), "\n", 
+    \(f[x_, y_] := \(-3\)*x\^2*y\), "\[IndentingNewLine]", 
+    \(\(g = {25/12, \(-48\)/12, 36/12, \(-16\)/12, 3/12} // 
+          N;\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][x_, y_, 
+          h_] := \[IndentingNewLine]Module[{k1, k2, k3, k4, 
+            lsg}, \[IndentingNewLine]k1 = f[x, y]; \[IndentingNewLine]k2 = 
+            f[x + h\/2, y + h\/2*k1]; \[IndentingNewLine]k3 = 
+            f[x + h\/2, y + h\/2*k2]; \[IndentingNewLine]k4 = 
+            f[x + h, y + h*k3]; \[IndentingNewLine]lsg = 
+            1/6*k1 + 1/3*k2 + 1/3*k3 + 
+              1/6*k4\[IndentingNewLine]];\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] := 5*Exp[\(-x\^3\)];\)\), "\[IndentingNewLine]", 
+    \(\(n = 10. ;\)\), "\[IndentingNewLine]", 
+    \(\(m = 4;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(lsg2 = BDF[x0, y0, st, f, \[Phi], g, m];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ListPlot[lsg2, DisplayFunction \[Rule] Identity, 
+          PlotStyle -> PointSize[0.02], PlotRange \[Rule] All];\)\), "\n", 
+    \(\(plot3 = 
+        Plot[u[x], {x, x0, x0 + c}, DisplayFunction \[Rule] Identity, 
+          PlotRange \[Rule] All];\)\), "\n", 
+    \(\(Show[plot2, plot3, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(data = 
+        OrdnungAuswertungBDF[x0, y0, c, f, \[Phi], u, n, g, 
+          m];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[
+          NumberForm[data, 
+            8], {"\<k\>", "\<N\>", "\<h\>", "\<appr\>", "\<prec\>", "\<disord\
+\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnAlignments \[Rule] Left, \ \ ColumnLines \[Rule] 
+              True]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t1 // DisplayForm];\)\)}], "Input"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Stabilitaet", "Subtitle",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(g1[z_] := 1 + z + z\^2/2;\)\), "\[IndentingNewLine]", 
+    \(\(g2[z_] := 
+        1 + z + z\^2/2 + z\^3/6 + z\^4/24 + 
+          z\^5/120;\)\), "\[IndentingNewLine]", 
+    \(\(g3[z_] := 1 + z/\((1 - z)\);\)\), "\[IndentingNewLine]", 
+    \(\(g4[
+          z_] := \((1 + z/4)\)/\((1 - 3*z/4 + z\^2/4 - 
+              z\^3/24)\);\)\), "\[IndentingNewLine]", 
+    \(f[g_, x_, y_] := 
+      If[Abs[g[x + \[ImaginaryI]*y]] < 1, Abs[g[x + \[ImaginaryI]*y]], 
+        0. ]\), "\[IndentingNewLine]", 
+    \(a = \(-4\); b = 2;\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(plot1 = 
+        ContourPlot[f[g1, x, y], {x, a, b}, {y, a, \(-a\)}, 
+          Contours \[Rule] 35, ContourShading \[Rule] False, 
+          Axes \[Rule] True, PlotPoints \[Rule] 100, 
+          AspectRatio \[Rule] Automatic, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(plot2 = 
+        ContourPlot[f[g2, x, y], {x, a, b}, {y, a, \(-a\)}, 
+          Contours \[Rule] 35, ContourShading \[Rule] False, 
+          Axes \[Rule] True, PlotPoints \[Rule] 100, 
+          AspectRatio \[Rule] Automatic, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(plot3 = 
+        ContourPlot[f[g3, x, y], {x, a, b}, {y, a, \(-a\)}, 
+          Contours \[Rule] 35, ContourShading \[Rule] False, 
+          Axes \[Rule] True, PlotPoints \[Rule] 100, 
+          AspectRatio \[Rule] Automatic, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(plot4 = 
+        ContourPlot[f[g4, x, y], {x, a*3, b*3}, {y, a*3, \(-a\)*3}, 
+          Contours \[Rule] 35, ContourShading \[Rule] False, 
+          Axes \[Rule] True, PlotPoints \[Rule] 100, 
+          AspectRatio \[Rule] Automatic, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[GraphicsArray[Partition[{plot1, plot2, plot3, plot4}, 2]], 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Closed]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1280}, {0, 717}},
+ScreenStyleEnvironment->"Working",
+PrintingStyleEnvironment->"Working",
+WindowToolbars->"EditBar",
+CellGrouping->Manual,
+WindowSize->{1140, 683},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+Magnification->1,
+StyleDefinitions -> "DemoText.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1717, 49, 59, 0, 56, "Title"],
+
+Cell[CellGroupData[{
+Cell[1801, 53, 65, 1, 41, "Subtitle"],
+Cell[1869, 56, 787, 14, 140, "Input"],
+Cell[2659, 72, 219, 4, 60, "Input"],
+Cell[2881, 78, 540, 10, 120, "Input"],
+Cell[3424, 90, 919, 16, 200, "Input"],
+Cell[4346, 108, 797, 14, 173, "Input"],
+Cell[5146, 124, 997, 17, 213, "Input"],
+Cell[6146, 143, 925, 17, 213, "Input"],
+Cell[7074, 162, 1049, 18, 180, "Input"],
+Cell[8126, 182, 848, 15, 236, "Input"],
+Cell[8977, 199, 865, 15, 222, "Input"],
+Cell[9845, 216, 840, 15, 222, "Input"],
+Cell[10688, 233, 838, 15, 222, "Input"],
+Cell[11529, 250, 848, 15, 242, "Input"],
+Cell[12380, 267, 2148, 37, 423, "Input"],
+Cell[14531, 306, 1673, 29, 393, "Input"],
+Cell[16207, 337, 665, 12, 180, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[16909, 354, 92, 1, 45, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[17026, 359, 77, 1, 54, "Section"],
+
+Cell[CellGroupData[{
+Cell[17128, 364, 409, 9, 180, "Input"],
+Cell[17540, 375, 999, 24, 180, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[18588, 405, 84, 1, 34, "Section"],
+Cell[18675, 408, 458, 10, 180, "Input"],
+Cell[19136, 420, 1000, 24, 180, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[20173, 449, 56, 1, 34, "Section"],
+Cell[20232, 452, 465, 11, 180, "Input"],
+Cell[20700, 465, 1000, 24, 180, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[21737, 494, 71, 1, 34, "Section"],
+Cell[21811, 497, 863, 20, 316, "Input"],
+Cell[22677, 519, 1000, 24, 180, "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[23726, 549, 99, 1, 45, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[23850, 554, 96, 1, 54, "Section"],
+Cell[23949, 557, 822, 19, 295, "Input"],
+Cell[24774, 578, 633, 12, 120, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[25444, 595, 95, 1, 34, "Section"],
+Cell[25542, 598, 1041, 25, 375, "Input"],
+Cell[26586, 625, 725, 14, 120, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[27348, 644, 93, 1, 34, "Section"],
+Cell[27444, 647, 1733, 35, 489, "Input"],
+
+Cell[CellGroupData[{
+Cell[29202, 686, 82, 1, 40, "Input"],
+Cell[29287, 689, 2429, 50, 300, "Input"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[31777, 746, 90, 1, 45, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[31892, 751, 89, 1, 54, "Section"],
+
+Cell[CellGroupData[{
+Cell[32006, 756, 424, 9, 180, "Input"],
+Cell[32433, 767, 1203, 27, 161, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[33685, 800, 168, 5, 34, "Section"],
+Cell[33856, 807, 121, 2, 52, "Input"],
+
+Cell[CellGroupData[{
+Cell[34002, 813, 463, 9, 208, "Input"],
+Cell[34468, 824, 1203, 27, 161, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[35720, 857, 92, 1, 34, "Section"],
+
+Cell[CellGroupData[{
+Cell[35837, 862, 879, 20, 316, "Input"],
+Cell[36719, 884, 1203, 27, 161, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[37971, 917, 83, 1, 34, "Section"],
+
+Cell[CellGroupData[{
+Cell[38079, 922, 1090, 20, 466, "Input"],
+Cell[39172, 944, 1203, 27, 161, "Input"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[40436, 978, 86, 1, 45, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[40547, 983, 150, 5, 54, "Section"],
+Cell[40700, 990, 115, 2, 41, "Input"],
+Cell[40818, 994, 857, 20, 297, "Input"],
+Cell[41678, 1016, 530, 11, 121, "Input"],
+Cell[42211, 1029, 440, 8, 80, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[42688, 1042, 138, 5, 34, "Section"],
+Cell[42829, 1049, 327, 7, 160, "Input"],
+Cell[43159, 1058, 526, 11, 121, "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[43734, 1075, 115, 2, 45, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[43874, 1081, 69, 1, 54, "Section"],
+
+Cell[CellGroupData[{
+Cell[43968, 1086, 64, 1, 40, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[44057, 1091, 103, 2, 40, "Input"],
+Cell[44163, 1095, 80, 1, 49, "Output"]
+}, Open  ]],
+Cell[44258, 1099, 1153, 25, 428, "Input"],
+Cell[45414, 1126, 187, 4, 40, "Input"],
+Cell[45604, 1132, 967, 16, 140, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[46608, 1153, 61, 1, 44, "Subsection"],
+Cell[46672, 1156, 681, 11, 100, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[47390, 1172, 64, 1, 44, "Subsection"],
+Cell[47457, 1175, 1582, 30, 260, "Input"],
+Cell[49042, 1207, 638, 10, 80, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[49717, 1222, 61, 1, 44, "Subsection"],
+Cell[49781, 1225, 960, 17, 160, "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[50790, 1248, 124, 2, 32, "Section"],
+
+Cell[CellGroupData[{
+Cell[50939, 1254, 64, 1, 40, "Subsection"],
+Cell[51006, 1257, 119, 2, 41, "Input"],
+Cell[51128, 1261, 1022, 22, 382, "Input"],
+Cell[52153, 1285, 187, 4, 40, "Input"],
+Cell[52343, 1291, 967, 16, 140, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[53347, 1312, 61, 1, 44, "Subsection"],
+Cell[53411, 1315, 681, 11, 100, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[54129, 1331, 64, 1, 44, "Subsection"],
+Cell[54196, 1334, 1582, 30, 260, "Input"],
+Cell[55781, 1366, 638, 10, 80, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[56456, 1381, 61, 1, 44, "Subsection"],
+Cell[56520, 1384, 960, 17, 160, "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[57529, 1407, 126, 2, 32, "Section"],
+
+Cell[CellGroupData[{
+Cell[57680, 1413, 64, 1, 40, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[57769, 1418, 114, 2, 52, "Input"],
+Cell[57886, 1422, 77, 1, 63, "Output"]
+}, Open  ]],
+Cell[57978, 1426, 1034, 22, 382, "Input"],
+Cell[59015, 1450, 187, 4, 40, "Input"],
+Cell[59205, 1456, 967, 16, 140, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[60209, 1477, 61, 1, 44, "Subsection"],
+Cell[60273, 1480, 681, 11, 100, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[60991, 1496, 64, 1, 44, "Subsection"],
+Cell[61058, 1499, 1582, 30, 260, "Input"],
+Cell[62643, 1531, 638, 10, 80, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[63318, 1546, 61, 1, 44, "Subsection"],
+Cell[63382, 1549, 960, 17, 160, "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[64391, 1572, 87, 1, 34, "Section"],
+Cell[64481, 1575, 1229, 22, 177, "Input"],
+Cell[65713, 1599, 700, 13, 140, "Input"],
+Cell[66416, 1614, 531, 9, 127, "Input"],
+Cell[66950, 1625, 1249, 23, 160, "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[68248, 1654, 90, 1, 45, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[68363, 1659, 150, 5, 54, "Section"],
+Cell[68516, 1666, 115, 2, 41, "Input"],
+
+Cell[CellGroupData[{
+Cell[68656, 1672, 600, 12, 241, "Input"],
+Cell[69259, 1686, 731, 16, 140, "Input"]
+}, Open  ]],
+Cell[70005, 1705, 520, 12, 100, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[70562, 1722, 141, 5, 34, "Section"],
+
+Cell[CellGroupData[{
+Cell[70728, 1731, 581, 11, 240, "Input"],
+Cell[71312, 1744, 476, 11, 100, "Input"]
+}, Open  ]],
+Cell[71803, 1758, 520, 12, 100, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[72360, 1775, 156, 5, 34, "Section"],
+Cell[72519, 1782, 115, 2, 41, "Input"],
+
+Cell[CellGroupData[{
+Cell[72659, 1788, 685, 13, 247, "Input"],
+Cell[73347, 1803, 476, 11, 100, "Input"]
+}, Open  ]],
+Cell[73838, 1817, 586, 14, 100, "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[74473, 1837, 101, 1, 45, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[74599, 1842, 166, 7, 54, "Section"],
+Cell[74768, 1851, 115, 2, 41, "Input"],
+
+Cell[CellGroupData[{
+Cell[74908, 1857, 661, 14, 241, "Input"],
+Cell[75572, 1873, 1084, 26, 180, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[76705, 1905, 166, 7, 34, "Section"],
+Cell[76874, 1914, 115, 2, 41, "Input"],
+
+Cell[CellGroupData[{
+Cell[77014, 1920, 851, 17, 357, "Input"],
+Cell[77868, 1939, 1084, 26, 180, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[79001, 1971, 166, 7, 34, "Section"],
+Cell[79170, 1980, 115, 2, 41, "Input"],
+
+Cell[CellGroupData[{
+Cell[79310, 1986, 1327, 24, 527, "Input"],
+Cell[80640, 2012, 1084, 26, 180, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[81773, 2044, 158, 6, 34, "Section"],
+
+Cell[CellGroupData[{
+Cell[81956, 2054, 868, 16, 377, "Input"],
+Cell[82827, 2072, 1149, 27, 200, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[84025, 2105, 151, 6, 34, "Section"],
+Cell[84179, 2113, 567, 10, 220, "Input"],
+Cell[84749, 2125, 1539, 33, 220, "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[86337, 2164, 73, 1, 45, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[86435, 2169, 149, 6, 54, "Section"],
+Cell[86587, 2177, 115, 2, 41, "Input"],
+
+Cell[CellGroupData[{
+Cell[86727, 2183, 656, 14, 241, "Input"],
+Cell[87386, 2199, 1039, 24, 180, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[88474, 2229, 149, 6, 34, "Section"],
+Cell[88626, 2237, 115, 2, 41, "Input"],
+
+Cell[CellGroupData[{
+Cell[88766, 2243, 851, 17, 357, "Input"],
+Cell[89620, 2262, 1039, 24, 180, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[90708, 2292, 149, 6, 34, "Section"],
+Cell[90860, 2300, 115, 2, 41, "Input"],
+
+Cell[CellGroupData[{
+Cell[91000, 2306, 995, 19, 411, "Input"],
+Cell[91998, 2327, 1039, 24, 180, "Input"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[93098, 2358, 63, 1, 45, "Subtitle"],
+Cell[93164, 2361, 554, 12, 161, "Input"],
+Cell[93721, 2375, 1402, 26, 200, "Input"]
+}, Closed]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

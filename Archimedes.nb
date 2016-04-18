@@ -1,0 +1,332 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 4.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     11504,        282]*)
+(*NotebookOutlinePosition[     12352,        310]*)
+(*  CellTagsIndexPosition[     12308,        306]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell[BoxData[{
+    RowBox[{
+      StyleBox[\(s[n_]\),
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[":=",
+        FontColor->RGBColor[1, 0, 0]], 
+      "\[IndentingNewLine]", \(Module[{s = 1/2*\@3, i, 
+          u}, \[IndentingNewLine]Do[
+          s = \@\(1/2*\((1 - \@\(1 - s\^2\))\)\), \[IndentingNewLine]{i, 3, 
+            n}]; s]\)}], "\[IndentingNewLine]", 
+    RowBox[{
+      StyleBox[\(u[n_]\),
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[":=",
+        FontColor->RGBColor[1, 0, 0]], 
+      "\[IndentingNewLine]", \(Module[{s = 1/2*\@3, i, 
+          u}, \[IndentingNewLine]Do[s = \@\(1/2*\((1 - \@\(1 - s\^2\))\)\); 
+          u = 2\^\(i - 2\)*3*s, {i, 3, n}]; u]\)}], "\[IndentingNewLine]", 
+    RowBox[{
+      StyleBox[\(U[n_]\),
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[":=",
+        FontColor->RGBColor[1, 0, 0]], 
+      "\[IndentingNewLine]", \(Module[{s = 1/2*\@3, i, u, U, 
+          a}, \[IndentingNewLine]Do[s = \@\(1/2*\((1 - \@\(1 - s\^2\))\)\); 
+          u = 2\^\(i - 2\)*3*s; a = \@\(1 - s\^2\); 
+          U = u/a, \[IndentingNewLine]{i, 3, n}]; 
+        U]\)}], "\[IndentingNewLine]", \(SetAttributes[Archimedes, 
+      Listable]\), "\[IndentingNewLine]", \(Archimedes[
+        n_] := {2\^\(n - 2\)*3, u[n], U[n], U[n] - u[n], Pi - u[n], 
+        U[n] - Pi}\), "\[IndentingNewLine]", \(Tab1\  = \ 
+        Table[N[Archimedes[i], 16], {i, 3, 
+            30}];\), "\[IndentingNewLine]", \(TableForm[Tab1]\)}], "Input",
+  CellLabel->"In[72]:="],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        StyleBox[
+          FormBox["k",
+            "TraditionalForm"],
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox["\t\t     ",
+          FontSize->18,
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox[
+          FormBox[\(u\_n\),
+            "TraditionalForm"],
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox["\t               ",
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox[
+          FormBox[\(U\_n\),
+            "TraditionalForm"],
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox["\t  ",
+          FontSize->18,
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox[
+          FormBox[
+            RowBox[{
+              FormBox[\(U\_n\),
+                "TraditionalForm"], "-", \(u\_n\)}],
+            "TraditionalForm"],
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox[
+          StyleBox[
+            RowBox[{"\t                    ", 
+              StyleBox[" ",
+                FontSize->12]}]],
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox["\[Pi]",
+          FontColor->RGBColor[1, 0, 0]]}], 
+      StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox["-",
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[" ",
+        FontSize->12,
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[
+        RowBox[{
+          FormBox[\(u\_n\),
+            "TraditionalForm"], 
+          
+          FormBox[\(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\)\(U\_n\)\),
+            "TraditionalForm"]}],
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[" ",
+        FontSize->18,
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox["-",
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox["\[Pi]",
+        FontColor->RGBColor[1, 0, 0]]}]], "Input",
+  CellLabel->"In[128]:="],
+
+Cell[BoxData[
+    TagBox[GridBox[{
+          {"6.`", "3.`", "3.4641016151377544`", "0.4641016151377544`", 
+            "0.14159265358979312`", "0.32250896154796127`"},
+          {"12.`", "3.1058285412302498`", "3.215390309173473`", 
+            "0.10956176794322303`", "0.035764112359543354`", 
+            "0.07379765558367968`"},
+          {"24.`", "3.132628613281237`", "3.1596599420975`", 
+            "0.027031328816263134`", "0.008964040308556243`", 
+            "0.01806728850770689`"},
+          {"48.`", "3.139350203046872`", "3.14608621513144`", 
+            "0.006736012084568088`", "0.0022424505429210484`", 
+            "0.00449356154164704`"},
+          {"96.`", "3.14103195089053`", "3.142714599645389`", 
+            "0.0016826487548593505`", "0.0005607026992633379`", 
+            "0.0011219460555960126`"},
+          {"192.`", "3.1414524722853443`", "3.141873049979706`", 
+            "0.00042057769436176784`", "0.0001401813044488165`", 
+            "0.00028039638991295135`"},
+          {"384.`", "3.141557607911622`", "3.141662747056613`", 
+            "0.00010513914499110655`", "0.00003504567817103066`", 
+            "0.00007009346682007589`"},
+          {"768.`", "3.141583892148936`", "3.1416101766053073`", 
+            "0.000026284456371428178`", "8.76144085726338`*^-6", 
+            "0.000017523015514164797`"},
+          {"1536.`", "3.1415904632367617`", "3.141597034330238`", 
+            "6.571093476459566`*^-6", "2.1903530313949204`*^-6", 
+            "4.380740445064646`*^-6"},
+          {"3072.`", "3.1415921060430483`", "3.1415937488151284`", 
+            "1.64277208014596`*^-6", "5.475467448334825`*^-7", 
+            "1.0952253353124775`*^-6"},
+          {"6144.`", "3.1415925165881546`", "3.1415929272810947`", 
+            "4.106929401004322`*^-7", "1.3700163847829572`*^-7", 
+            "2.736913016221365`*^-7"},
+          {"12288.`", "3.1415926186407894`", "3.1415927213140193`", 
+            "1.0267322991808214`*^-7", "3.4949003691053804`*^-8", 
+            "6.772422622702834`*^-8"},
+          {"24576.`", "3.1415926453212157`", "3.1415926709895228`", 
+            "2.5668307035431326`*^-8", "8.268577378345299`*^-9", 
+            "1.7399729657086027`*^-8"},
+          {"49152.`", "3.1415926453212157`", "3.141592651738293`", 
+            "6.417077091924739`*^-9", 
+            "8.268577378345299`*^-9", \(-1.8515002864205599`*^-9\)},
+          {"98304.`", "3.1415926453212157`", "3.141592646925485`", 
+            "1.6042691619588823`*^-9", 
+            "8.268577378345299`*^-9", \(-6.6643082163864165`*^-9\)},
+          {"196608.`", "3.1415926453212157`", "3.141592645722283`", 
+            "4.010671794674181`*^-10", 
+            "8.268577378345299`*^-9", \(-7.86751019887788`*^-9\)},
+          {"393216.`", "3.1415923038117377`", "3.141592303912005`", 
+            "1.0026734997836684`*^-10", 
+            "3.497780554084784`*^-7", \(-3.4967778805850003`*^-7\)},
+          {"786432.`", "3.1415923038117377`", "3.1415923038368043`", 
+            "2.5066615449986784`*^-11", 
+            "3.497780554084784`*^-7", \(-3.497529887930284`*^-7\)},
+          {"1.572864`*^6", "3.1415868396550413`", "3.1415868396613083`", 
+            "6.266986929404084`*^-12", 
+            "5.813934751852656`*^-6", \(-5.813928484865727`*^-6\)},
+          {"3.145728`*^6", "3.1415868396550413`", "3.141586839656608`", 
+            "1.566746732351021`*^-12", 
+            "5.813934751852656`*^-6", \(-5.813933185105924`*^-6\)},
+          {"6.291456`*^6", "3.1416742650217575`", "3.1416742650221496`", 
+            "3.921307722976053`*^-13", \(-0.00008161143196439014`\), 
+            "0.00008161143235652091`"},
+          {"1.2582912`*^7", "3.1416742650217575`", "3.141674265021856`", 
+            "9.85878045867139`*^-14", \(-0.00008161143196439014`\), 
+            "0.00008161143206297794`"},
+          {"2.5165824`*^7", "3.1430727401700396`", "3.143072740170064`", 
+            "2.4424906541753444`*^-14", \(-0.0014800865802464536`\), 
+            "0.0014800865802708785`"},
+          {"5.0331648`*^7", "3.137475099502783`", "3.1374750995027894`", 
+            "6.217248937900877`*^-15", 
+            "0.004117554087009978`", \(-0.004117554087003761`\)},
+          {"1.00663296`*^8", "3.181980515339464`", "3.1819805153394656`", 
+            "1.7763568394002505`*^-15", \(-0.040387861749670684`\), 
+            "0.04038786174967246`"},
+          {"2.01326592`*^8", "3.3541019662496847`", "3.3541019662496856`", 
+            "8.881784197001252`*^-16", \(-0.2125093126598916`\), 
+            "0.21250931265989248`"},
+          {"4.02653184`*^8", "3.`", "3.`", "0.`", 
+            "0.14159265358979312`", \(-0.14159265358979312`\)},
+          {"8.05306368`*^8", "0.`", "0.`", "0.`", 
+            "3.141592653589793`", \(-3.141592653589793`\)}
+          },
+        RowSpacings->1,
+        ColumnSpacings->3,
+        RowAlignments->Baseline,
+        ColumnAlignments->{Left}],
+      (TableForm[ #]&)]], "Output",
+  CellLabel->"Out[129]//TableForm="]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\tBeobachtung", "Subsection"],
+
+Cell[TextData[{
+  "\t\n\tAus der Tabelle ist ersichtlich,  dass im Maschinenbereich der Pr\
+\[ADoubleDot]cision 16 eine Berechnung der Zahl \[Pi] nur bis\n\t k = 49152  \
+sinnvoll  ist. Also n\[ADoubleDot]hert  nur das Polygon  vom  Grad 49152  die \
+reelle Zahl \[Pi] in diesem\n\t  Zahlenbereich  sinnvoll  an.\n\t",
+  Cell[BoxData[
+      \(TraditionalForm\`s\_n\)]],
+  " \"kollabiert\",  da ",
+  Cell[BoxData[
+      \(TraditionalForm\`s\_\(2  n\)\)]],
+  "=",
+  Cell[BoxData[
+      \(TraditionalForm\`\@\(1/2*\((1 - \@\(1 - s\_n\))\)\)\)]],
+  " bei steigendem  Polygongrad  gegen Null konvergiert.  Also geht \n\tim \
+Maschinenbereich  der Betrag von  ",
+  Cell[BoxData[
+      \(TraditionalForm\`s\_n\)]],
+  " gegen Null und somit  ",
+  Cell[BoxData[
+      \(TraditionalForm\`\@\(1 - s\_n\)\)]],
+  " gegen 1. Daraus folgt  eine  starke\n\t Ausl\[ODoubleDot]schung \
+(Abschneiden)  im Term  ",
+  Cell[BoxData[
+      \(TraditionalForm\`1 - \@\(1 - s\_n\)\)]],
+  "  , und die dadurch bedingte Ungenauigkeit. \n\tIm Paket ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " sehe ich schnelle  und unkomplizierte  Abhilfe durch die \
+Ver\[ADoubleDot]nderung der $MachinePrecision. \n\tMeine verbesserte \
+Berechnung  folgt.\n\t"
+}], "Text"]
+}, Closed]]
+},
+FrontEndVersion->"4.2 for Microsoft Windows",
+ScreenRectangle->{{0, 800}, {0, 520}},
+WindowToolbars->"EditBar",
+WindowSize->{792, 492},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{2, 2},
+PrintingOptions->{"PrintingMargins"->{{0.0625, 0.0625}, {0.0625, 0.0625}}},
+Magnification->1,
+StyleDefinitions -> "TutorialBook.nb"
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1754, 51, 1502, 33, 481, "Input"],
+
+Cell[CellGroupData[{
+Cell[3281, 88, 1907, 63, 54, "Input"],
+Cell[5191, 153, 4978, 89, 568, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[10206, 247, 35, 0, 44, "Subsection"],
+Cell[10244, 249, 1244, 30, 316, "Text"]
+}, Closed]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

@@ -1,0 +1,269 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[      7875,        203]*)
+(*NotebookOutlinePosition[      8594,        228]*)
+(*  CellTagsIndexPosition[      8550,        224]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Anzahl der Rechenschritte", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Gau\[SZ] mit \"Aufrollen von unten\"", "Subsection"],
+
+Cell[BoxData[
+    \(\(AnzahlDIA[
+          n_] := \(2\/3\) n\^3 + \(3\/2\) n\^2 - \(7\/6\) n;\)\)], "Input",
+  CellLabel->"In[323]:="],
+
+Cell[BoxData[
+    \(\(\(AnzahlDemoDIA[mat_, 
+        rhs_]\)\(:=\)\(Module[{a, b, n, \ k, abbruch\ , l\ , s, M, N}, 
+        a = mat; b = rhs; n = Length[a]; k = 1; l = 1; abbruch = False; 
+        s = 0; M = 0; 
+        N = 0; \[IndentingNewLine]\[IndentingNewLine] (*GEM\ runter\
+*) \[IndentingNewLine]While[\ 
+          k \[LessEqual] n\  && \ \(! abbruch\), \ \ \[IndentingNewLine]If[
+            a[\([k, k]\)] \[Equal] 0, 
+            abbruch = 
+              True, \[IndentingNewLine]\(For[i = k + 1, 
+                i \[LessEqual] n, \(i++\), \[IndentingNewLine]l = 
+                  a[\([i, k]\)]/
+                    a[\([k, k]\)]; \(N++\); \[IndentingNewLine]a[\([i, 
+                      k]\)] = 0; 
+                b[\([i]\)] = 
+                  b[\([i]\)] - 
+                    l*b[\([k]\)]; \(N++\); \(N++\); \[IndentingNewLine]For[
+                  j = k + 1, 
+                  j \[LessEqual] 
+                    n, \(j++\), \[IndentingNewLine]a[\([i, j]\)] = 
+                    a[\([i, j]\)] - 
+                      l*a[\([k, 
+                            j]\)]; \(N++\); \(N++\)\[IndentingNewLine]] \
+(*Ende\ For*) \[IndentingNewLine]] (*Ende\ For*) ;\)\[IndentingNewLine]] \
+(*Ende\ If*) ; \[IndentingNewLine]\(k++\)\[IndentingNewLine]] (*Ende\ \
+While*) ; \[IndentingNewLine]\[IndentingNewLine] (*R\[UDoubleDot]ckw\
+\[ADoubleDot]rtsanalyse*) \[IndentingNewLine]k = n; \[IndentingNewLine]If[
+          abbruch \[Equal] True, , \[IndentingNewLine]b[\([n]\)] = 
+            b[\([n]\)]\/a[\([n, n]\)]; \(M++\); \[IndentingNewLine]For[
+            i = n - 1, 
+            i \[GreaterEqual] 1, \(i--\), \[IndentingNewLine]For[j = i + 1, 
+              j \[LessEqual] n, \(j++\), If[s \[Equal] 0, , \(M++\)]; 
+              s += a[\([i, j]\)]*
+                  b[\([j]\)]; \(M++\)]; \[IndentingNewLine]b[\([i]\)] = 
+              1\/a[\([i, i]\)]*\((b[\([i]\)] - s)\); 
+            s = 0; \(M++\); \(M++\)\[IndentingNewLine]] (*Ende\ For\
+*) \[IndentingNewLine]] (*Ende\ If*) ; \[IndentingNewLine]If[
+          abbruch \[Equal] True, Print["\<STOP\>"], 
+          M + N] (*R\[UDoubleDot]ckgabewert\ M + 
+            N*) \[IndentingNewLine]]\)\( (*Ende\ Modul*) \)\)\)], "Input",
+  CellLabel->"In[324]:="]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Gau\[SZ]-Jordan-Transformation", "Subsection"],
+
+Cell[BoxData[
+    \(\(AnzahlGJT[n_] := \(2\/3\) n\^3 + 2  n\^2 - \(5\/3\) n;\)\)], "Input",
+  CellLabel->"In[321]:="],
+
+Cell[BoxData[
+    \(\(\(AnzahlDemoGJT[mat_, 
+        rhs_]\)\(:=\)\(Module[{a, b, n, \ k, l\ , s, abbruch\ , N}, a = mat; 
+        b = rhs; n = Length[a]; k = 1; l = 0; s = 0; abbruch = False; 
+        N = 0; \[IndentingNewLine]\[IndentingNewLine] (*GEM\ runter\
+*) \[IndentingNewLine]While[\ 
+          k \[LessEqual] n\  && \ \(! abbruch\), \ \ \[IndentingNewLine]If[
+            a[\([k, k]\)] \[Equal] 0, 
+            abbruch = 
+              True, \[IndentingNewLine]\(For[i = k + 1, 
+                i \[LessEqual] n, \(i++\), \[IndentingNewLine]l = 
+                  a[\([i, k]\)]/
+                    a[\([k, k]\)]; \(N++\); \[IndentingNewLine]a[\([i, 
+                      k]\)] = 0; 
+                b[\([i]\)] = 
+                  b[\([i]\)] - 
+                    l*b[\([k]\)]; \(N++\); \(N++\); \[IndentingNewLine]For[
+                  j = k + 1, 
+                  j \[LessEqual] 
+                    n, \(j++\), \[IndentingNewLine]a[\([i, j]\)] = 
+                    a[\([i, j]\)] - 
+                      l*a[\([k, 
+                            j]\)]; \(N++\); \(N++\)\[IndentingNewLine]] \
+(*Ende\ For*) \[IndentingNewLine]] (*Ende\ For*) ;\)\[IndentingNewLine]] \
+(*Ende\ If*) ; \[IndentingNewLine]\(k++\)\[IndentingNewLine]] (*Ende\ \
+While*) ; \[IndentingNewLine]\[IndentingNewLine] (*R\[UDoubleDot]ckw\
+\[ADoubleDot]rtsanalyse*) \[IndentingNewLine]If[
+          abbruch \[Equal] True, , \[IndentingNewLine]For[k = n, 
+            k \[GreaterEqual] 2, \(k--\), \[IndentingNewLine]For[i = k - 1, 
+              i \[GreaterEqual] 1, \(i--\), \[IndentingNewLine]b[\([i]\)] = 
+                b[\([i]\)] - 
+                  b[\([k]\)]*
+                    a[\([i, k]\)]/
+                      a[\([k, k]\)]\[IndentingNewLine] (*\(;\)\(a[\([i, 
+                      k]\)] = 
+                  0\)*) ; \(N++\); \(N++\); \(N++\)\[IndentingNewLine]] \
+(*Ende\ For*) \[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]For[
+            k = 1, k \[LessEqual] n, \(k++\), \[IndentingNewLine]b[\([k]\)] = 
+              b[\([k]\)]/
+                a[\([k, 
+                    k]\)]; \(N++\)\[IndentingNewLine]] (*Ende\ For\
+*) \[IndentingNewLine]] (*Ende\ If*) ; \[IndentingNewLine]If[
+          abbruch \[Equal] True, Print["\<STOP\>"], 
+          N] (*R\[UDoubleDot]ckgabewert\ N*) \[IndentingNewLine]]\)\( (*Ende\ \
+Modul*) \)\)\)], "Input",
+  CellLabel->"In[322]:="]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Beispielrechnung", "Subsection"],
+
+Cell[BoxData[{
+    \(\(Hilbert[n_] := 
+        Table[1/\((i + j - 1)\), {i, 1, n}, {j, 1, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(b[n_] := Table[1, {i, 1, n}];\)\)}], "Input",
+  CellLabel->"In[60]:="],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(Table[
+      AnzahlDemoDIA[Hilbert[i], b[i]], {i, 1, 6}]\), "\[IndentingNewLine]", 
+    \(Table[AnzahlDIA[i], {i, 1, 6}]\), "\[IndentingNewLine]", 
+    \(Table[
+      AnzahlDemoGJT[Hilbert[i], b[i]], {i, 1, 6}]\), "\[IndentingNewLine]", 
+    \(Table[AnzahlGJT[i], {i, 1, 6}]\)}], "Input",
+  CellLabel->"In[325]:="],
+
+Cell[BoxData[
+    \({1, 9, 28, 62, 115, 191}\)], "Output",
+  CellLabel->"Out[325]="],
+
+Cell[BoxData[
+    \({1, 9, 28, 62, 115, 191}\)], "Output",
+  CellLabel->"Out[326]="],
+
+Cell[BoxData[
+    \({1, 10, 31, 68, 125, 206}\)], "Output",
+  CellLabel->"Out[327]="],
+
+Cell[BoxData[
+    \({1, 10, 31, 68, 125, 206}\)], "Output",
+  CellLabel->"Out[328]="]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 695}},
+WindowToolbars->"EditBar",
+WindowSize->{847, 668},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+StyleDefinitions -> "TutorialBook.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1739, 51, 44, 0, 92, "Section"],
+
+Cell[CellGroupData[{
+Cell[1808, 55, 58, 0, 40, "Subsection"],
+Cell[1869, 57, 134, 3, 46, "Input"],
+Cell[2006, 62, 2227, 41, 733, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[4270, 108, 52, 0, 34, "Subsection"],
+Cell[4325, 110, 117, 2, 46, "Input"],
+Cell[4445, 114, 2387, 45, 744, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[6869, 164, 38, 0, 34, "Subsection"],
+Cell[6910, 166, 215, 5, 54, "Input"],
+
+Cell[CellGroupData[{
+Cell[7150, 175, 335, 7, 100, "Input"],
+Cell[7488, 184, 84, 2, 30, "Output"],
+Cell[7575, 188, 84, 2, 30, "Output"],
+Cell[7662, 192, 85, 2, 30, "Output"],
+Cell[7750, 196, 85, 2, 30, "Output"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

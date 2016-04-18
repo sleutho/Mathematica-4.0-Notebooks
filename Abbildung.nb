@@ -1,0 +1,1065 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     39698,        919]*)
+(*NotebookOutlinePosition[     40436,        945]*)
+(*  CellTagsIndexPosition[     40392,        941]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Holomorphe Funktionen
+Zahlenkugel
+konforme Abbildungen\
+\>", "Title"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\(\(\[IndentingNewLine]\)\(Remove["\<Global`*\>"]\)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[
+    \(Remove::"rmnsm" \(\(:\)\(\ \)\) 
+      "There are no symbols matching \"\!\(\"Global`*\"\)\"."\)], "Message"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Graphen,Ansichten,(?Phantasie?)", "Subtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(z\^2\)], "Subsubtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(z = x + y*\[ImaginaryI];\)\), "\n", 
+    \(\(f[z_] := z\^2;\)\), "\n", 
+    \(u[x_, y_] = Re[f[z]] // ComplexExpand\), "\n", 
+    \(v[x_, y_] = Im[f[z]] // ComplexExpand\), "\n", 
+    \(\[PartialD]\_x\ u[x, y] == \[PartialD]\_y\ v[x, y]\), "\n", 
+    \(\[PartialD]\_y\ u[x, y] \[Equal] \(-\[PartialD]\_x\ v[x, y]\)\), "\n", 
+    \(\(Needs["\<Graphics`ComplexMap`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(CartesianMap[# &, {0, 5}, {\(-1\), 0}];\)\), "\n", 
+    \(\(CartesianMap[#\^2 &, {0, 5}, {\(-1\), 
+          0}];\)\), "\[IndentingNewLine]", 
+    \(\(CartesianMap[2*# &, {0, 5}, {\(-1\), 0}];\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[
+    \(x\^2 - y\^2\)], "Output"],
+
+Cell[BoxData[
+    \(2\ x\ y\)], "Output"],
+
+Cell[BoxData[
+    \(True\)], "Output"],
+
+Cell[BoxData[
+    \(True\)], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(z\^3\)], "Subsubtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(z = x + y*\[ImaginaryI];\)\), "\n", 
+    \(\(f[z_] := z\^3;\)\), "\n", 
+    \(u[x_, y_] = Re[f[z]] // ComplexExpand\), "\n", 
+    \(v[x_, y_] = Im[f[z]] // ComplexExpand\), "\n", 
+    \(\[PartialD]\_x\ u[x, y] == \[PartialD]\_y\ v[x, y]\), "\n", 
+    \(\[PartialD]\_y\ u[x, y] \[Equal] \(-\[PartialD]\_x\ v[x, y]\)\), "\n", 
+    \(\(Needs["\<Graphics`ComplexMap`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(CartesianMap[# &, {0, 5}, {\(-1\), 0}];\)\), "\n", 
+    \(\(CartesianMap[#\^3 &, {0, 5}, {\(-1\), 
+          0}];\)\), "\[IndentingNewLine]", 
+    \(\(CartesianMap[3  #\^2 &, {0, 5}, {\(-1\), 0}];\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[
+    \(x\^3 - 3\ x\ y\^2\)], "Output"],
+
+Cell[BoxData[
+    \(3\ x\^2\ y - y\^3\)], "Output"],
+
+Cell[BoxData[
+    \(True\)], "Output"],
+
+Cell[BoxData[
+    \(True\)], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\[ExponentialE]\^z\)], "Subsubtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(z = x + y*\[ImaginaryI];\)\), "\[IndentingNewLine]", 
+    \(\(f[z_] := \[ExponentialE]\^z;\)\), "\[IndentingNewLine]", 
+    \(u[x_, y_] = Re[f[z]] // ComplexExpand\), "\[IndentingNewLine]", 
+    \(v[x_, y_] = Im[f[z]] // ComplexExpand\), "\[IndentingNewLine]", 
+    \(\[PartialD]\_x\ u[x, y] == \[PartialD]\_y\ 
+        v[x, y]\), "\[IndentingNewLine]", 
+    \(\[PartialD]\_y\ 
+        u[x, y] \[Equal] \(-\[PartialD]\_x\ 
+          v[x, y]\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`ComplexMap`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(CartesianMap[# &, {1, 3}, {0, \[Pi]}];\)\), "\[IndentingNewLine]", 
+    \(\(CartesianMap[\[ExponentialE]\^# &, {1, 
+          3}, {0, \[Pi]}];\)\), "\[IndentingNewLine]", 
+    \(\(CartesianMap[\[ExponentialE]\^# &, {1, 3}, {0, \[Pi]}];\)\)}], "Input",\
+
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[
+    \(\[ExponentialE]\^x\ Cos[y]\)], "Output"],
+
+Cell[BoxData[
+    \(\[ExponentialE]\^x\ Sin[y]\)], "Output"],
+
+Cell[BoxData[
+    \(True\)], "Output"],
+
+Cell[BoxData[
+    \(True\)], "Output"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Die Riemannsche Zahlenkugel und der unendlich ferne Punkt", "Subtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40007O0001ga000`40O003
+h00Oogooh7oo003oOooPOol00?moon1oo`00ogooh7oo003oOooPOol00?mo
+on1oo`00JWoo00<007ooOol0ogooLgoo001ZOol2003oOomdOol006]oo`80
+0?moog=oo`00K7oo0P00ogooLWoo001]Ool2003oOomaOol006ioo`800?mo
+og1oo`00Kgoo0P00ogooKgoo001`Ool2003oOom^Ool0075oo`800?moofeo
+o`00LWoo0P00ogooK7oo001cOol2003oOom[Ool007Aoo`800?moofYoo`00
+MGoo0P00ogooJGoo001fOol2003oOomXOol007Moo`800?moofMoo`00N7oo
+0P00ogooIWoo001iOol2003oOomUOol007Yoo`800?moofAoo`00Ngoo0P00
+ogooHgoo001lOol2003oOomROol007eoo`800?moof5oo`00OWoo0P00ogoo
+H7oo001oOol2003oOomOOol0081oo`800?mooeioo`00PGoo0P00ogooGGoo
+0022Ool2003oOomLOol008=oo`800?mooe]oo`00Q7oo0P00ogooFWoo0025
+Ool2003oOomIOol008Ioo`800?mooeQoo`00Qgoo0P00ogooEgoo0028Ool2
+003oOomFOol008Uoo`800?mooeEoo`00RWoo0P00ogooE7oo002;Ool2003o
+OomCOol008aoo`800?mooe9oo`00SGoo0P00ogooDGoo002>Ool2003oOom@
+Ool008moo`800?moodmoo`00T7oo0P00ogooCWoo002AOol2003oOom=Ool0
+099oo`800?moodaoo`00Tgoo0P00ogooBgoo002DOol2003oOom:Ool009Eo
+o`800?moodUoo`00UWoo0P00ogooB7oo002GOol2003oOom7Ool009Qoo`80
+0?moodIoo`00VGoo0P00ogooAGoo002JOol2003oOom4Ool009]oo`800?mo
+od=oo`00W7oo0P00ogoo@Woo002MOol2003oOom1Ool009ioo`800?mood1o
+o`00Wgoo0P00ogoo?goo002POol2003oOolnOol00:5oo`800?mooceoo`00
+XWoo0P00ogoo?7oo002SOol2003oOolkOol00:Aoo`800?moocYoo`00YGoo
+0P00ogoo>Goo002VOol2003oOolhOol00:Moo`800?moocMoo`00Z7oo0P00
+ogoo=Woo002YOol2003oOoleOol00:Yoo`800?moocAoo`00Zgoo0P00ogoo
+<goo002/Ool2003oOolbOol00:eoo`800?mooc5oo`00[Woo0P00ogoo<7oo
+002_Ool2003oOol_Ool00;1oo`800?moobioo`00/Goo0P00ogoo;Goo002b
+Ool2003oOol/Ool00;=oo`800?moob]oo`00]7oo0P00ogoo:Woo002eOol2
+003oOolYOol00;Ioo`800?moobQoo`00]goo0P00ogoo9goo002hOol2003o
+OolVOol00;Uoo`800?moobEoo`00^Woo0P00ogoo97oo002kOol2002VOol4
+001hOol00;aoo`800:Aoo`D007Qoo`00_Goo0P00Xgoo1@000Woo00Mg_E[F
+AS4003F]F]I_F`1_Ool00;ioo`800:9oo`D000Eoo`03000ikWoo071oo`00
+_goo0P00XWoo0`001Woo00<mk`00Ool0L7oo0030Ool2002POol00`00Oomo
+o`07Ool00e[F001cW01`Ool00<5oo`8009moo`03001oogoo00Moo`03JeX0
+05[F071oo`00`Woo0P00WGoo00<007ooOol02Goo00<004HaOol0Kgoo0033
+Ool2002LOol00`00Oomoo`09Ool00cg_7>MJeP03F]H00f<HLkaoo`1YOol0
+0<Aoo`8009Yoo`03001oogoo00Yoo`03DY@007>l00=oo`04HcPe[E:DNmiX
+Ool00<Eoo`8009Uoo`03001oogoo00Yoo`03IcT006<H00Eoo`03?Nla[7oo
+06Moo`00aWoo0P00Ugoo00<007ooOol02goo00=gg@00DY@01Goo00=S>000
+F]H0Igoo0037Ool2002FOol00`00Oomoo`0<Ool2=Jd6Ool00`00?Nmoo`1V
+Ool00<Qoo`8009Aoo`03001oogoo00eoo`03DY@007_N00Eoo`03000ikWoo
+06Ioo`00bGoo0P00Tgoo00<007ooOol03Goo00=Nm`00IcT017oo00=cW000
+IcT0Igoo003:Ool2002AOol00`00Oomoo`0=Ool01EKECW<003F]E]D00U[F
+00=>Ld8`IcT0J7oo003;Ool2002@Ool00`00Oomoo`1oOol00<aoo`8008io
+o`03001oogoo081oo`00cGoo0P00SGoo00<007ooOol0P7oo003>Ool2002;
+Ool00`00Oomoo`21Ool00<moo`8008Yoo`03001oogoo085oo`00d7oo0P00
+R7oo00<007ooOol0PWoo003AOol20027Ool00`00Oomoo`22Ool00=9oo`80
+01Eoo`08>NikgU[FF]IFeE[FDYA[FVQoo`03001oogoo05]oo`06DYA>Le[F
+IcUBU4ic0U[F00=ggGooOol07Goo003COol2000DOol00dHa:DYcW004Ool0
+0dYbHaQoo`1VOol00`00Oomoo`1KOol2AS400gooF]H00002Ool00g_NF]Io
+o`0NOol00=Aoo`8001=oo`03G_M>Lgoo00Eoo`03:DY[FWoo06Aoo`03001o
+ogoo05moo`03Mkd006]J009oo`03JeYg_Goo01eoo`00eGoo0P004Woo00=g
+_E[FOol01Goo00=JeS6/Ool0I7oo00<007ooOol0H7oo00<YBU[FOol08Goo
+003FOol2000BOol00elGOomoo`04Ool00eKE001oo`1SOol00`00Oomoo`1Q
+Ool00dYBAS5oo`0QOol00=Moo`8001Moo`03Lk`]B`0006Aoo`03001oogoo
+05eoo`06MkekgWooOomJeQcW8Woo003HOol2000COol00fmkDY@aS0020000
+0e:DOomoo`1QOol00`00Oomoo`1NOol02W>lF]IoogooJeX006mkOom:DV<H
+7Woo003IOol2000AOol01Tic00000000:DYJeVAoo`03001oogoo05moo`09
+F]IcW7ooIcTa[5[FOom6<Cg_01ioo`00fWoo0P003goo00E[FP00:DYJeW>l
+06Eoo`03001oogoo065oo`9JeP06@S1_VfmkF]I:DVLi7Woo003KOol2000>
+Ool00e[F001g_@05Ool00f<HOomoo`1OOol00`00Oomoo`27Ool00=aoo`80
+00eoo`03HcP007oo00Eoo`03>NikgWoo05ioo`03001oogoo08Qoo`00gGoo
+0P003Goo00<e[F<HOol017oo00<e[FLiOol0GWoo00<007ooOol0R7oo003N
+Ool2000<Ool00g>L<Ha_V`03Ool00f]J7>MBU01NOol00`00Oomoo`29Ool0
+0=moo`8000aoo`03NmiJeU[F00=JeP03Nmi:LWoo05eoo`03001oogoo08Uo
+o`00h7oo0P00L7oo00<007ooOol0RWoo003QOol2001_Ool00`00Oomoo`2:
+Ool00>9oo`8006eoo`03001oogoo08]oo`00hgoo0P00K7oo00<007ooOol0
+Rgoo003TOol2001ZOol00`00Oomoo`1]Ool3000LOol00>Eoo`<006Qoo`03
+001oogoo071oo`@001Qoo`00iWoo0P00Igoo00<007ooOol0MGoo100057oo
+000FOooo002g00000goo001oo`0@Ool00==oo`L000eoo`<000]oo`L0059o
+o`03001oogoo07=oo`@001Moo`00cgoo1@004goo00@007oo0000011oo`D0
+04ioo`03001oogoo06moo`@001]oo`00bgoo1@005goo00<007ooOol00P00
+4goo1@00BGoo00<007ooOol0Sgoo0037Ool5000OOol00`00Oomoo`0EOol5
+0015Ool00`00Oomoo`2?Ool00<Aoo`@003moo`@0045oo`03001oogoo091o
+o`00`Woo0`00AGoo0`00?goo00<007ooOol0T7oo002oOol4000/Ool00`00
+Oomoo`0JOol4000kOol00`00Oomoo`2AOol00;eoo`<002moo`8001ioo`<0
+03Uoo`03001oogoo095oo`00^goo0`00:Goo00<007ooOol01Woo0P007goo
+0`00=Woo00<007ooOol0TWoo002iOol3000[Ool00`00Oomoo`07Ool2000P
+Ool3000dOol00`00Oomoo`2BOol00;Moo`<002eoo`03001oogoo00Qoo`80
+025oo`<0035oo`03001oogoo09=oo`00]Goo0`00;goo00<007ooOol0;Goo
+0`00;goo00<007ooOol0Tgoo002cOol3000aOol00`00Oomoo`0_Ool3000/
+Ool00`00Oomoo`2DOol00;5oo`<003=oo`03001oogoo035oo`<002Yoo`03
+001oogoo09Aoo`00/7oo0P00AGoo00<007ooOol08goo0P00:7oo00<007oo
+Ool0UGoo002^Ool30016Ool2000UOol3000VOol00`00Oomoo`2EOol00:eo
+o`8004Uoo`8002Ioo`8002Aoo`03001oogoo06moo`05IcUJeU[FBU9_V`0R
+Ool00:]oo`<004]oo`8002Ioo`<0029oo`03001oogoo06moo`05Nmioogoo
+Mkdmk`0ROol00:Yoo`8004ioo`8002Moo`80021oo`03001oogoo075oo`04
+LkaJeRU::DXROol00:Qoo`<003aoo`03001oogoo03Yoo`<001ioo`03001o
+ogoo06ioo`03NmiS63g_00800003?NmW>Goo025oo`00Ygoo0P00?Woo00<0
+07ooOol0?7oo0P0077oo00<007ooOol0KWoo00I[FQcW000mkekgNmhTOol0
+0:Ioo`8003moo`03001oogoo03eoo`8001]oo`03001oogoo06ioo`03:DXa
+[6mK02Moo`00YGoo0P00@7oo00<007ooOol05Goo00<007ooOol09Woo0P00
+6Goo00<007ooOol0Kgoo00<007_NOol09goo002SOol30011Ool00`00Oomo
+o`0EOol2000XOol3000GOol00`00Oomoo`1_Ool00dHaMkeoo`0WOol00:9o
+o`8004=oo`03001oogoo01Ioo`8002Uoo`8001Eoo`03001oogoo071oo`03
+Kg]6<Goo02Moo`00XGoo0P00GWoo0P00:Goo0P0057oo00<007ooOol0LGoo
+00=W>EJeNmh09Woo002POol2001POol2000YOol2000BOol00`00Oomoo`1c
+Ool00f]J:DXaS00200000dicOomoo`0POol009moo`8008eoo`80015oo`03
+001oogoo07=oo`03?Nm:LWoo02Eoo`00WWoo0P00Sgoo0P003goo00<007oo
+Ool0M7oo00<005[FOol09Goo002MOol2002AOol2000>Ool00`00Oomoo`1d
+Ool2?NlVOol009aoo`8004Uoo`03001oogoo01aoo`8002Uoo`8000aoo`03
+001oogoo07Eoo`03Kg/LidYB02Eoo`00Vgoo0P00BWoo00<007ooOol07Goo
+0P00:Goo0P002goo00<007ooOol0MWoo00Mc_3g_?Nle[E[FAS5g_@0POol0
+09Yoo`8004]oo`03001oogoo01ioo`8002Uoo`8000Uoo`03001oogoo07Uo
+o`05F]IFeE[FG_MkgP0POol009Uoo`8004aoo`03001oogoo01moo`8002Uo
+o`8000Qoo`03001oogoo07Uoo`03G_Moogoo029oo`00V7oo0P00CGoo00<0
+07ooOol087oo00<007ooOol0:7oo0P001Woo00<007ooOol0Wgoo002GOol2
+001>Ool00`00Oomoo`1<Ool20005Ool00`00Oomoo`2OOol009Moo`03001o
+ogoo09eoo`03001oogoo009oo`03001oogoo0:1oo`00UWoo0P00Wgoo0P00
+0goo00<007ooOol0X7oo002EOol2001gOol2000XOol200000goo001oo`2R
+Ool009Aoo`8007Uoo`8002Qoo`<00:=oo`00Tgoo0P00Ngoo0P00:7oo0P00
+Xgoo002COol00`00Oomoo`1AOol00`00Oomoo`0WOol2000WOol2002SOol0
+099oo`8005=oo`03001oogoo02Qoo`03001oogoo02Aoo`04001oo`00002R
+Ool0095oo`8005Aoo`03001oogoo04moo`03001oogoo00800:5oo`00TGoo
+00<007ooOol0Dgoo00<007ooOol0CWoo00<007ooOol00Woo00<007ooOol0
+Wgoo002@Ool2001EOol00`00Oomoo`1>Ool00`00Oomoo`02Ool2002POol0
+08moo`8005Ioo`03001oogoo02aoo`8001moo`03001oogoo00Aoo`8009mo
+o`00Sgoo00<007ooOol0EGoo00<007ooOol0;Goo0P007Woo00<007ooOol0
+1Goo00<007ooOol0WGoo002>Ool20028Ool2000LOol00`00Oomoo`06Ool2
+002NOol008eoo`8008Yoo`8001]oo`03001oogoo00Moo`8009eoo`00SGoo
+00<007ooOol0RWoo00<007ooOol067oo00<007ooOol02Goo00<007ooOol0
+Vgoo002<Ool2002WOol00`00Oomoo`09Ool2002LOol008aoo`03001oogoo
+05Qoo`03001oogoo04Yoo`03001oogoo00]oo`03001oogoo09Yoo`00Rgoo
+0P00FWoo00<007ooOol0BWoo00<007ooOol02goo0P00Vgoo002;Ool00`00
+Oomoo`1IOol00`00Oomoo`0dOol2000COol00`00Oomoo`0=Ool00`00Oomo
+o`2IOol008Yoo`8005]oo`03001oogoo03Eoo`80019oo`03001oogoo00eo
+o`8009Yoo`00RWoo00<007ooOol0FWoo00<007ooOol0=Woo0P0047oo00<0
+07ooOol03goo00<007ooOol0V7oo0029Ool2001LOol00`00Oomoo`0gOol2
+000?Ool00`00Oomoo`0?Ool2002IOol008Uoo`03001oogoo05]oo`03001o
+ogoo03Qoo`03001oogoo00aoo`03001oogoo015oo`03001oogoo09Moo`00
+R7oo0P00Ygoo00<007ooOol04Goo0P00V7oo0028Ool00`00Oomoo`2UOol0
+0`00Oomoo`0COol00`00Oomoo`2FOol008Moo`800:Moo`03001oogoo01=o
+o`8009Moo`00Qgoo00<007ooOol0W7oo0P001goo00<007ooOol05Goo00<0
+07ooOol0UGoo0026Ool2001OOol00`00Oomoo`0mOol20006Ool00`00Oomo
+o`0EOol2002FOol008Ioo`03001oogoo05ioo`03001oogoo03ioo`8000Ao
+o`03001oogoo01Moo`03001oogoo09Aoo`00QWoo00<007ooOol0GWoo00<0
+07ooOol0?goo0P000goo00<007ooOol05goo00<007ooOol0U7oo0025Ool2
+001POol00`00Oomoo`10Ool01000Oomoo`006Woo0P00UGoo0025Ool00`00
+Oomoo`1OOol00`00Oomoo`13Ool00`00Oomoo`0IOol00`00Oomoo`2COol0
+08Eoo`03001oogoo05moo`03001oogoo049oo`03001oogoo01Yoo`8009Ao
+o`00Q7oo0P00HGoo00<007ooOol0@Woo00<007oo00006goo00<007ooOol0
+TWoo0024Ool00`00Oomoo`2TOol00`00Oomoo`02000JOol00`00Oomoo`2B
+Ool008Aoo`03001oogoo0:Aoo`04001oogooOol2000IOol2002COol008=o
+o`800:Eoo`03001oogoo00=oo`8001Uoo`03001oogoo095oo`00Pgoo00<0
+07ooOol0Y7oo00<007ooOol017oo0P0067oo00<007ooOol0TGoo0023Ool0
+0`00Oomoo`1QOol00`00Oomoo`0oOol00`00Oomoo`0OOol00`00Oomoo`2A
+Ool0089oo`8006=oo`03001oogoo03moo`03001oogoo01moo`80099oo`00
+PWoo00<007ooOol0HWoo00<007ooOol0?Woo00<007ooOol08Goo00<007oo
+Ool0T7oo0022Ool00`00Oomoo`1ROol00`00Oomoo`0nOol00`00Oomoo`0;
+Ool00`00Oomoo`0COol00`00Oomoo`2@Ool0089oo`03001oogoo069oo`03
+001oogoo03eoo`03001oogoo00aoo`8001Aoo`03001oogoo091oo`00PGoo
+0P00I7oo00<007ooOol0?Goo00<007ooOol03Goo0P004goo0P00TGoo0021
+Ool00`00Oomoo`1SOol00`00Oomoo`0lOol00`00Oomoo`0?Ool2000COol0
+0`00Oomoo`2?Ool0085oo`03001oogoo0:9oo`03001oogoo011oo`80019o
+o`03001oogoo08moo`00PGoo00<007ooOol0XGoo00<007ooOol09Goo00<0
+07ooOol0Sgoo0021Ool00`00Oomoo`2QOol00`00Oomoo`0UOol2002@Ool0
+081oo`800:9oo`03001oogoo02Moo`03001oogoo08ioo`00P7oo00<007oo
+Ool0XGoo00<007ooOol05goo00<007ooOol03Goo00<007ooOol0SWoo0020
+Ool00`00Oomoo`1TOol00`00Oomoo`0iOol00`00Oomoo`0HOol2000>Ool0
+0`00Oomoo`2>Ool0081oo`03001oogoo06Aoo`03001oogoo03Uoo`03001o
+ogoo01Uoo`8000eoo`03001oogoo08ioo`00P7oo00<007ooOol0I7oo00<0
+07ooOol0>7oo00<007ooOol06goo0P0037oo00<007ooOol0SWoo0020Ool0
+0`00Oomoo`1TOol00`00Oomoo`0hOol00`00Oomoo`0LOol2000;Ool00`00
+Oomoo`2>Ool007moo`8006Ioo`03001oogoo03Moo`03001oogoo02Yoo`80
+08moo`00Ogoo00<007ooOol0IGoo00<007ooOol0=goo00<007ooOol0:goo
+00<007ooOol0SGoo001oOol00`00Oomoo`2NOol00`00Oomoo`0/Ool00`00
+Oomoo`2=Ool007moo`03001oogoo09ioo`03001oogoo029oo`8000Qoo`03
+001oogoo08eoo`00Ogoo00<007ooOol0WGoo00<007ooOol097oo0P001goo
+00<007ooOol0SGoo001oOol00`00Oomoo`2MOol00`00Oomoo`0UOol20006
+Ool00`00Oomoo`2=Ool007moo`03001oogoo09aoo`03001oogoo02Moo`80
+00Eoo`03001oogoo08eoo`00Ogoo00<007ooOol0IGoo00<007ooOol0=7oo
+00<007ooOol0:7oo00<007ooOol00goo00<007ooOol0SGoo001oOol00`00
+Oomoo`1UOol00`00Oomoo`0cOol00`00Oomoo`0_Ool00`00Oomoo`2=Ool0
+07moo`03001oogoo06Eoo`03001oogoo03=oo`03001oogoo02moo`03001o
+ogoo08eoo`00Ogoo00<007ooOol0IGoo00<007ooOol0<Woo00<007ooOol0
+<7oo00<007ooOol0SGoo001oOol00`00Oomoo`1UOol00`00Oomoo`0bOol0
+0`00Oomoo`0^Ool3002?Ool007moo`03001oogoo06Eoo`03001oogoo035o
+o`03001oogoo031oo`8008moo`00Ogoo00<007ooOol0VGoo00<007ooOol0
+<Goo0P00SWoo001oOol00`00Oomoo`2HOol00`00Oomoo`0bOol3002=Ool0
+07moo`03001oogoo09Qoo`03001oogoo039oo`04001oo`00002<Ool007mo
+o`03001oogoo09Moo`03001oogoo03=oo`03001oogoo008008]oo`00Ogoo
+00<007ooOol0Ugoo00<007ooOol0<goo00@007ooOomoo`8008Yoo`00Ogoo
+00<007ooOol0IGoo00<007ooOol0;Woo00<007ooOol0=7oo00<007ooOol0
+0Woo0P00RGoo001oOol00`00Oomoo`1UOol00`00Oomoo`0^Ool00`00Oomo
+o`0dOol00`00Oomoo`03Ool20028Ool007moo`03001oogoo06Eoo`03001o
+ogoo02eoo`03001oogoo03Eoo`03001oogoo00Aoo`8008Moo`00Ogoo00<0
+07ooOol0IGoo00<007ooOol0;Goo00<007ooOol0=Goo00<007ooOol01Goo
+0P00QWoo001oOol00`00Oomoo`1UOol00`00Oomoo`0/Ool00`00Oomoo`0f
+Ool00`00Oomoo`06Ool20025Ool007moo`03001oogoo06Eoo`03001oogoo
+02aoo`03001oogoo03Ioo`03001oogoo00Moo`8008Aoo`00Ogoo00<007oo
+Ool0Tgoo00<007ooOol0=goo00<007ooOol027oo0P00Pgoo001oOol00`00
+Oomoo`2COol00`00Oomoo`0gOol00`00Oomoo`09Ool20022Ool007moo`80
+09=oo`03001oogoo03Moo`8000aoo`80085oo`00P7oo00<007ooOol0TGoo
+00<007ooOol0=goo00<007ooOol037oo0P00P7oo0020Ool00`00Oomoo`2@
+Ool00`00Oomoo`0hOol00`00Oomoo`0=Ool2000NOol01ElGF]IJeU:DJeX0
+G7oo0020Ool00`00Oomoo`1TOol00`00Oomoo`0YOol00`00Oomoo`0hOol0
+0`00Oomoo`0>Ool2000LOol00g_N:DY[FP02Ool00dHaHaQoo`1JOol0081o
+o`03001oogoo06Aoo`03001oogoo02Qoo`03001oogoo00aoo`04G_L003W^
+NmhYOol00`00Oomoo`0?Ool2000LOol01cF]BU9oogooNmhLif]J05Yoo`00
+P7oo00<007ooOol0I7oo00<007ooOol0:7oo00<007ooOol037oo00@YBP00
+000e[BUoo`03001oogoo011oo`80021oo`03CW=6<Goo05Uoo`00P7oo0P00
+IGoo00<007ooOol09Goo10003Woo00D005[FMme>Lekg02Moo`8001=oo`80
+01=oo`03E]D0000000800009JeYoogooKg]6<E:DF]I6<@0005Yoo`00PGoo
+00<007ooOol0Hgoo00<007ooOol09Goo1@003Goo00DLigooOomooeJe02Mo
+o`8001Aoo`8001=oo`03JeX0000000Aoo`07=JeNmgooOomS6000Ke/0FGoo
+0021Ool00`00Oomoo`1SOol00`00Oomoo`0UOol50008Ool01elGBU8e[EKE
+F]HaS7>L009oo`03JeYoogoo02Eoo`03001oogoo01Aoo`80019oo`03JeX0
+000000Aoo`03001W>Goo009oo`03=JeBU7oo05Qoo`00PGoo00<007ooOol0
+Hgoo00<007ooOol09Goo1@001goo00A>LdHaNmiJeP9oo`04E[EBU4HaNmhX
+Ool00`00Oomoo`0EOol2000AOol00f]J00000004Ool00cF]CW=oo`02Ool0
+0e:D=Jeoo`1HOol0085oo`03001oogoo08]oo`@000Moo`05GaL007_NOom[
+FP02F]H01FmkOomJeSF]Mmd09goo00<007ooOol05Woo0P0047oo00=[FP00
+000017oo00=BU1cWMmd00Woo00=W>@00Nmh0F7oo0021Ool2002<Ool00`00
+Oomoo`08Ool00cF]?Nmoo`07Ool00cg_=JekgP0UOol2000IOol2000?Ool0
+0f]J00000002Ool01GNmOomcW000HaP00Woo00=kgP00IcT0F7oo0022Ool0
+0`00Oomoo`2:Ool00`00Oomoo`08Ool00`00>Nioo`07Ool00gNm001BU00U
+Ool00`00Oomoo`0IOol2000>Ool00f]J00000002Ool01EkgMkeoobU:<H`0
+0goo00<aS5:DOol0Egoo0022Ool00`00Oomoo`2EOol00`00=Jeoo`08Ool0
+0dHa001kgP0TOol00`00Oomoo`0JOol2000=Ool00f]J00000002Ool01G_N
+DYAoofLi00000goo00=F]C6/Ool0Egoo0022Ool00`00Oomoo`1ROol00`00
+Oomoo`0SOol2000;Ool00cF]001kgP08Ool00ekg001JeP0TOol00`00Oomo
+o`0KOol2000;Ool015kg:DX000000goo00A_Ve[FCW=Nm`=oo`03Kg]6<Goo
+05Moo`00PWoo0P00Hgoo00<007ooOol08goo00<007ooOol02Woo00=BU000
+IcT027oo00=cW000AS408goo0P007Woo0P00LWoo0023Ool00`00Oomoo`1Q
+Ool00`00Oomoo`0ROol00`00Oomoo`0;Ool00gNm0016<@09Ool00`00>Nio
+o`0ROol00`00Oomoo`0NOol2000;Ool00fmkOomoo`1SOol008=oo`03001o
+ogoo065oo`03001oogoo029oo`03001oogoo00aoo`03F]H006]J00Qoo`03
+000mkgoo029oo`03001oogoo01moo`8000Uoo`03AS4003F]06Aoo`00Pgoo
+0P00HWoo00<007ooOol0<Woo00<mkc6<Nmh01Woo00=gg@00F]H08Woo0P00
+8Woo0P000Woo0P0017oo0`0000=ggGooOol0HGoo0024Ool00`00Oomoo`1P
+Ool00`00Oomoo`0QOol00`00Oomoo`0>Ool00g_N=Je>L`06Ool00f<H7>Mg
+_@0ROol00`00Oomoo`0ROol20002Ool00`00Oomoo`02Ool00e[F7>MBU01T
+Ool008Aoo`03001oogoo061oo`03001oogoo021oo`03001oogoo015oo`03
+DY@ikWNm00=oo`03Ki/Lif<H02=oo`03001oogoo02=oo`80009oo`03001o
+ogoo06Qoo`00Q7oo0P00Q7oo00<007ooOol04Woo00Mg_E:DF]IJeUJeCW=[
+FP0SOol2000VOol200000goo001oo`1YOol008Eoo`03001oogoo089oo`03
+001oogoo03aoo`03001oogoo029oo`<00005Ool00000Ool0001YOol008Eo
+o`03001oogoo0<5oo`03001oogoo02Aoo`03001oogoo00800003Ool007oo
+06Moo`00QGoo0P00PGoo0P00?Woo0P0077oo00=W>GOMOol027oo0P0000Ao
+o`00000006Qoo`00QWoo00<007ooOol0GWoo00<007ooOol07Woo00<007oo
+Ool0?Goo00<007ooOol06goo00<mkdicOol02Woo1@00Igoo0026Ool00`00
+Oomoo`1NOol00`00Oomoo`0MOol00`00Oomoo`0nOol00`00Oomoo`0KOol0
+0e[F:DYoo`0<Ool3001WOol008Ioo`8005moo`03001oogoo01eoo`03001o
+ogoo03eoo`8001eoo`03JeX007_N00eoo`<006Ioo`00Qgoo00<007ooOol0
+GGoo00<007ooOol0GGoo00<007ooOol05goo00=ggFnKOol00goo00<006Li
+Ool03Woo00<007ooOol0I7oo0027Ool2001NOol00`00Oomoo`0LOol00`00
+Oomoo`0mOol2000IOol00fmK001kgP03Ool00cg_DYAoo`0?Ool00`00Oomo
+o`1SOol008Qoo`03001oogoo05aoo`03001oogoo01]oo`03001oogoo03io
+o`03001oogoo01Qoo`03Mmd006<h00=oo`03E]De[Goo07Eoo`00R7oo0P00
+GGoo00<007ooOol06goo00<007ooOol0?Goo0P006goo00<a[5[FOol00Woo
+00=_F`00Nmh0MGoo0029Ool00`00Oomoo`1iOol00`00Oomoo`0mOol00`00
+Oomoo`0JOol00e:D?Nmoo`03Ool00`00HcQoo`1dOol008Uoo`800;Uoo`80
+01aoo`03IcT007oo00=oo`03?NmF]Goo07Aoo`00RWoo00<007ooOol0MWoo
+0P00?goo00<007ooOol06Goo00EkgWOMNmh006]J00=oo`03F]Hmkgoo07Ao
+o`00RWoo0P00Mgoo00<007ooOol0?Goo0P006goo00E_Nf<HOole[DHa00=o
+o`03IcT007oo07Aoo`00Rgoo00<007ooOol0FGoo00<007ooOol067oo00<0
+07ooOol0?Woo00<007ooOol06goo00EBU7oo?Nm6<F<h009oo`03IcTYBWoo
+07Aoo`00Rgoo0P00FWoo00<007ooOol067oo00<007ooOol0?Goo0P007Goo
+00E_Fe[FAS5kgW>L009JeP03AS5_Fgoo07Aoo`00S7oo00<007ooOol0F7oo
+00<007ooOol0F7oo00<007ooOol0VWoo002<Ool2001IOol00`00Oomoo`0G
+Ool00`00Oomoo`0mOol2002LOol008eoo`03001oogoo05Moo`03001oogoo
+01Ioo`03001oogoo03ioo`03001oogoo09]oo`00SGoo0P00F7oo00<007oo
+Ool05Woo00<007ooOol0?Goo0P00WGoo002>Ool2001GOol00`00Oomoo`1E
+Ool2002NOol008moo`03001oogoo0:eoo`03001oogoo09eoo`00Sgoo0P00
+KGoo0P00?Woo0P00Wgoo002@Ool2001/Ool00`00Oomoo`0lOol2002POol0
+095oo`03001oogoo06Uoo`8003ioo`03001oogoo09moo`00TGoo0P00E7oo
+00<007ooOol0DWoo0P00XGoo002BOol2001COol00`00Oomoo`1AOol2002R
+Ool009=oo`80059oo`03001oogoo019oo`03001oogoo03aoo`03001oogoo
+0:5oo`00U7oo00<007ooOol0D7oo00<007ooOol04Goo00<007ooOol0?7oo
+0P00Xgoo002DOol2001AOol00`00Oomoo`0AOol00`00Oomoo`0kOol2002T
+Ool009Eoo`80051oo`03001oogoo04ioo`800:Eoo`00UWoo0P00Cgoo00<0
+07ooOol0CGoo0P00YWoo002GOol2001POol2000lOol00`00Oomoo`2UOol0
+09Qoo`03001oogoo05ioo`03001oogoo03Yoo`800:Moo`00V7oo0P00GWoo
+0P00>goo0P00Z7oo002IOol2002IOol2002YOol009Yoo`8009Moo`800:Yo
+o`00Vgoo0P00BWoo00<007ooOol03Goo00<007ooOol0>7oo0P00Zgoo002L
+Ool20019Ool00`00Oomoo`0<Ool00`00Oomoo`0hOol2002/Ool009eoo`80
+04Qoo`03001oogoo00aoo`03001oogoo03Moo`800:eoo`00WWoo0P00Agoo
+00<007ooOol0AGoo0P00[Woo002OOol20016Ool00`00Oomoo`14Ool2002_
+Ool00:1oo`8004Eoo`03001oogoo00Yoo`8003Moo`800;1oo`00XGoo0P00
+DGoo00<007ooOol0=Goo0P00/Goo002ROol3001>Ool2000eOol3002bOol0
+0:Aoo`8008=oo`800;Aoo`00YGoo0P00PGoo0P00]Goo002VOol2001:Ool0
+0`00Oomoo`0bOol2002fOol00:Moo`<003eoo`03001oogoo00Moo`03001o
+ogoo035oo`<00;Moo`00ZGoo0P00?7oo00<007ooOol01goo00<007ooOol0
+<7oo0P00^Goo002ZOol2000kOol00`00Oomoo`0iOol2002jOol00:]oo`<0
+03Uoo`03001oogoo03Moo`<00;]oo`00[Goo0P00>7oo00<007ooOol01Goo
+0P00;goo0P00_Goo002^Ool3000fOol00`00Oomoo`05Ool00`00Oomoo`0/
+Ool3002nOol00;1oo`8003aoo`8002eoo`800<1oo`00/Goo0`00Igoo0`00
+`Goo002cOol3001SOol30033Ool00;Eoo`<003Eoo`03001oogoo02Moo`<0
+0<Eoo`00]goo0`00<Woo00<007ooOol09Woo0`00agoo002iOol3000[Ool0
+0`00Oomoo`02Ool00`00Oomoo`0TOol30039Ool00;]oo`<002Uoo`03001o
+ogoo02Moo`<00<]oo`00_Goo0`009goo00<007ooOol09Goo0`00cGoo002o
+Ool4000TOol00`00Oomoo`02000POol4003?Ool00<9oo`@0025oo`04001o
+ogoo000NOol4003BOol00<Eoo`@001ioo`04001oogoo000KOol4003EOol0
+0<Qoo`@003Moo`@00=Qoo`00bgoo1@00;goo1@00fgoo003?Ool6000COol0
+0`00Oomoo`0?Ool6003OOol00=Aoo`L000aoo`03001oogoo00Yoo`L00>Ao
+o`00fWoo6`00jWoo003WOol00`00Oomoo`3eOol00>Moo`03001oogoo0?Eo
+o`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Moo`03001o
+ogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Mo
+o`03001oogoo0?Eoo`00cgoo00Ic_5[F:DX005:DJeX5Ool00elGF]Ioo`0:
+Ool00`00Oomoo`3eOol00=5oo`03Nmi>Lgoo00Ioo`03:DY>Lgoo00Yoo`03
+001oogoo0?Eoo`00dWoo00=>LgooOol017oo00=[FP00:DX02goo00<007oo
+Ool0mGoo003BOol00ekgKe]oo`04Ool014ic001F]GNm2Woo00<007ooOol0
+mGoo003BOol00gNmF]Ioo`03Ool01G_N0016<FmkHaP02Woo00<007ooOol0
+mGoo003COol00eJeOomoo`02Ool01E[F001W>GooDY@02Woo00<007ooOol0
+mGoo003COol00e:DOomoo`02Ool2:DX2Ool00e:DOomoo`08Ool00`00Oomo
+o`3eOol00==oo`07F]I_NgooOom_F`00F]H00Woo00=JeWNmOol027oo00<0
+07ooOol0mGoo003COol01fmkF]IoogooBU8007>l009oo`03JeYS>7oo00Qo
+o`03001oogoo0?Eoo`00e7oo00EBU7ooMkd004Ha00Aoo`03E[Eoogoo00Mo
+o`03001oogoo0?Eoo`00e7oo00EBU7ooF]H006]J00Aoo`03DYAoogoo00Mo
+o`03001oogoo0?Eoo`00e7oo00AJeWNm:DX]B`Eoo`03F]IkgWoo00Moo`03
+001oogoo0?Eoo`00e7oo00A[FT8`001JePEoo`03JeYO5goo00Moo`03001o
+ogoo0?Eoo`00dgoo0U[F00<001cWNmh017oo00EJeSF]7>M>LfLi00Ioo`03
+001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol0
+0>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomo
+o`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol0
+0`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo
+003WOol00`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<007oo
+Ool0mGoo003WOol00`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo
+00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Moo`03001oogoo0?Eo
+o`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Moo`03001o
+ogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Mo
+o`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3e
+Ool00>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00
+Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003W
+Ool00`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0
+mGoo003WOol00`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<0
+07ooOol0mGoo003WOol00`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00
+igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Moo`03001oogoo
+0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Moo`03
+001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol0
+0>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomo
+o`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol0
+0`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo
+003WOol00`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<007oo
+Ool0mGoo003WOol00`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo
+00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Moo`03001oogoo0?Eo
+o`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Moo`03001o
+ogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3eOol00>Mo
+o`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00Oomoo`3e
+Ool00>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003WOol00`00
+Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00igoo00<007ooOol0mGoo003W
+Ool00`00Oomoo`3eOol00>Moo`03001oogoo0?Eoo`00cgoo00Ec_5[FF]IB
+U6mk01=oo`03001oogoo0?Eoo`00cgoo00EkgWooOomkgSg_01=oo`03001o
+ogoo0?Eoo`00dWoo00=JeP00Ool04Woo00<007ooOol0mGoo003?Ool01F]J
+BW8Li`00E[D04goo00<007ooOol0mGoo003=Ool01WOM?Nl002U:DYAcW1Ao
+o`03001oogoo0?Eoo`00cGoo00=>LbU:Ke/05goo00<007ooOol0mGoo003=
+Ool00acWJeYoo`0GOol00`00Oomoo`3eOol00<eoo`03001oogoo01Moo`03
+001oogoo0?Eoo`00cGoo00<mkgooOol05goo00<007ooOol0mGoo003=Ool0
+0dicJeYoo`0GOol00`00Oomoo`3eOol00<eoo`03JeY>Lgoo01Moo`03001o
+ogoo0?Eoo`00cWoo00=6<G_NOol05Woo00<007ooOol0mGoo003>Ool00f]J
+@S1oo`0COol01000Oomoo`000Woo00<007ooOol0lWoo003?Ool00e[FG_Mo
+o`0BOol01000Oomoo`000Woo00<007ooOol0lWoo003@Ool00dicG_Moo`0B
+Ool01@00Ool007oo0000mGoo003AOol00e[F=Je6<@02F]H?Ool01@00Ool0
+07oo0000mGoo003BOol014icG_MJeW>l3goo00D007oo001oo`000?Eoo`00
+dWoo00=JeWooOol047oo00D007oo001oo`000?Eoo`00iWoo0`00mWoo003V
+Ool3003fOol00>Ioo`<00?Ioo`00iWoo0`00mWoo003WOol00`00Oomoo`3e
+Ool00>Moo`03001oogoo0?Eoo`00ogooh7oo003oOooPOol00?moon1oo`00
+ogooh7oo003oOooPOol00?moon1oo`00ogooh7oo003oOooPOol00?moon1o
+o`00ogooh7oo003oOooPOol00?moon1oo`00ogooh7oo003oOooPOol00001
+\
+\>"], "Graphics",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1,
+  ImageSize->{479, 479},
+  ImageMargins->{{0, 0}, {0, 0}},
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        StyleBox["Def",
+          FontWeight->"Bold"], 
+        StyleBox[":",
+          FontWeight->"Bold"], 
+        "\[IndentingNewLine]", \(Die\ stereografische\ Projektion\ Q\ eines\ \
+Punktes\ P\ \((x, y)\)\ bzw . \ der\ komplexen\ Zahl\)}], " "}], "\n", 
+    RowBox[{
+      "  ", \(z\  = \(x\  + \ 
+            y\[ImaginaryI]\ ist\ definiert\ als\ der\ Schnittpunkt\ der\ \
+Strecke\ PN\&_\ mit\ K . \n\ \ K\  = \ {\((\[Xi], \[Eta], \[Zeta])\) \
+\[Element] \(\(\[DoubleStruckCapitalR]\^3\) : \[Xi]\^2 + \[Eta]\^2 + \((\
+\[Zeta] - 1\/2)\)\^2\) = 1\/4}\), \ Kugeloberflaeche\)}], "\n", 
+    RowBox[{"  ", 
+      RowBox[{
+        RowBox[{"N", "=", 
+          RowBox[{"(", GridBox[{
+                {GridBox[{
+                      {"0"},
+                      {"0"}
+                      }]},
+                {"1"}
+                }], ")"}]}], ",", " ", \(Nordpol;\)}]}], "\n", 
+    RowBox[{"  ", 
+      RowBox[{
+        RowBox[{"S", "=", 
+          RowBox[{"(", GridBox[{
+                {"0"},
+                {"0"},
+                {"0"}
+                }], ")"}]}], ",", " ", \(Suedpol;\)}]}], "\n", 
+    RowBox[{"  ", \(z = x\  + \ \[ImaginaryI]*y, \ \(\[Xi]\[Eta] - Ebene;\)\),
+       "\[IndentingNewLine]"}], "\n", 
+    RowBox[{
+      "  ", \(I\ \  : \ \[Xi]\^2 + \[Eta]\^2 + \((\[Zeta] - 1\/2)\)\^2 = 
+        1\/4\)}], "\n", 
+    RowBox[{
+      "  ", \(II : \ \(x - \[Xi]\)\/x = \(\(y - \[Eta]\)\/y = \
+\(-\[Zeta]\)\/\(-1\)\)\)}]}], "Text",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1,
+  FontSize->18],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(Solve[{\[Xi]\^2 + \[Eta]\^2 + \((\[Zeta] - 1\/2)\)\^2 == 
+          1\/4, \(y - \[Eta]\)\/y == \(-\[Zeta]\)\/\(-1\), \(x - \[Xi]\)\/x == \
+\(-\[Zeta]\)\/\(-1\)}, {\[Xi], \[Eta], \[Zeta]}]\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[
+    \({{\[Xi] \[Rule] 0, \[Eta] \[Rule] 0, \[Zeta] \[Rule] 1}, {\[Xi] \[Rule] 
+          x\/\(1 + x\^2 + y\^2\), \[Eta] \[Rule] 
+          y\/\(1 + x\^2 + y\^2\), \[Zeta] \[Rule] \(x\^2 + y\^2\)\/\(1 + x\^2 \
++ y\^2\)}}\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(Solve[{\[Xi]\^2 + \[Eta]\^2 + \((\[Zeta] - 1\/2)\)\^2 == 
+          1\/4, \(y - \[Eta]\)\/y == \(-\[Zeta]\)\/\(-1\), \(x - \[Xi]\)\/x == \
+\(-\[Zeta]\)\/\(-1\)}, {x, y}]\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[
+    \({{x \[Rule] \(-\(\[Xi]\/\(\(-1\) + \[Zeta]\)\)\), 
+        y \[Rule] \(-\(\[Eta]\/\(\(-1\) + \[Zeta]\)\)\)}}\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Parametrische Bildkurve (kleiner Mann)", "Subsubtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[{
+    \(\(m = 3;\)\), "\n", 
+    \(\(q = \(-3\);\)\), "\n", 
+    \(\(r = \(-5\);\)\), "\n", 
+    \(\(esx[t_] = \(-Sin[t]\)\  + \ Sin[m*Sin[r*t]]/2;\)\), "\n", 
+    \(\(esy[t_] = \(-Cos[t]\)\  + \ Cos[m*Sin[q*t]]/2;\)\n\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Prozedur zur stereographischen Projektion (bzw.chordaler Abbildung) \
+von[p(t),q(t),0] auf c=[c1(t),c2(t),c3(t)]\
+\>", "Subsubtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[
+    \(\(\(chord[p_, q_]\)\(\ \)\(:=\)\(\ \)\(Module[{c}, 
+        c\  = \ Table[0, {i, 1, 3}]; \[IndentingNewLine]c[\([1]\)]\  = \ 
+          p/\((1 + p\^2 + q\^2)\); c[\([2]\)]\  = \ q/\((1 + p\^2 + q\^2)\); 
+        c[\([3]\)]\  = \ \((p\^2 + q\^2)\)/\((1 + p\^2 + 
+                q\^2)\); \[IndentingNewLine]c]\)\( (*End\ Module*) \)\)\)], \
+"Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Visualisieriung", "Subsubtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[{
+    \(\(shere\  = \ 
+        ParametricPlot3D[{0.5*Cos[u]*Cos[v], 0.5*Cos[u]*Sin[v], 
+            0.5 + 0.5*Sin[u]}, {v, 0, 2  \[Pi]}, {u, \(-\[Pi]\)/2, \[Pi]/2}, 
+          Shading \[Rule] False];\)\), "\[IndentingNewLine]", 
+    \(\(men2 = 
+        ParametricPlot[{0.5 + esx[t]/3, 0.75 + esy[t]/2}, {t, 0, 2  \[Pi]}, 
+          AspectRatio \[Rule] Automatic];\)\), "\[IndentingNewLine]", 
+    \(\(men1 = 
+        ParametricPlot3D[{0.5 + esx[t]/3, 0.75 + esy[t]/2, 0}, {t, 0, 
+            2  \[Pi]}, AspectRatio \[Rule] Automatic, 
+          PlotPoints\  \[Rule] 1000];\)\), "\n", 
+    \(\(sheremen\  = \ 
+        ParametricPlot3D[
+          chord[0.5 + esx[t]/3, 0.75 + esy[t]/2], {t, 0, 2  \[Pi]}, 
+          PlotPoints\  \[Rule] 1000, Compiled \[Rule] False];\)\), "\n", 
+    \(\(Show[shere, sheremen, men1, 
+        ViewPoint -> {1.629, \ 2.843, \ 0.845}];\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Konforme Abbildungen", "Subtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[TextData[{
+  StyleBox["Def:",
+    FontWeight->"Bold"],
+  "\nEine Abbildung f hei\[SZ]t konform(winkeltreu) im Punkt ",
+  Cell[BoxData[
+      \(TraditionalForm\`z\_0\)]],
+  ",falls f in ",
+  Cell[BoxData[
+      \(TraditionalForm\`z\_0\)]],
+  " holomorph ist und f'(",
+  Cell[BoxData[
+      \(TraditionalForm\`z\_0\)]],
+  ")\[NotEqual]0 gilt. \nMan nennt f konform in einem Gebiet D, falls f in \
+jedem Punkt ",
+  Cell[BoxData[
+      \(TraditionalForm\`z\_0\)]],
+  "\[Element]D konform ist.\n\n",
+  StyleBox["Riemannscher Abbildungssatz:",
+    FontWeight->"Bold"],
+  "\nSeien D und D* einfach zusammenh\[ADoubleDot]ngende echte Teilgebiete \
+von \[DoubleStruckCapitalC], dann gibt es eine konforme Abbildung f, die D \
+umkehrbar eindeutig auf D* abbildet."
+}], "Text",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1,
+  FontFamily->"Courier",
+  FontSize->18]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["gebrochen lineare Abbildung, Moebiustransformation", "Subtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            StyleBox["Def",
+              FontWeight->"Bold"], 
+            StyleBox[":",
+              FontWeight->"Bold"], "\[IndentingNewLine]", 
+            "  ", \(Eine\ Abbildung\ der\ Form\ \ w\)}], 
+          "=", \(f \((z)\) = \(a*z + b\)\/\(c*z + d\)\)}], ",", " ", 
+        "\[IndentingNewLine]", 
+        "      ", \(z \[Element] \[DoubleStruckCapitalC]\), ",", " ", "a", 
+        ",", "b", ",", "c", ",", "d", ",", " ", \(komplexe\ Konstanten\), ",",
+         " ", \(c \[NotEqual] 0\ oder\ d \[NotEqual] 0\)}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{"      ", 
+      RowBox[{
+        RowBox[{
+        "wird", " ", "gebrochen", " ", "lineare", " ", "Abbildung", 
+          " ", \(genannt . \ \[IndentingNewLine]Mit\), " ", "det", 
+          RowBox[{"(", GridBox[{
+                {"a", "b"},
+                {"c", "d"}
+                }], ")"}]}], 
+        "\[NotEqual]", \(0\ nennt\ man\ f\ eine\ \
+\(\(M\[ODoubleDot]biustransformation\)\(.\)\)\)}]}]}], "Text",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1,
+  FontSize->18],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        StyleBox["Satz",
+          FontWeight->"Bold"], 
+        StyleBox[":",
+          FontWeight->"Bold"], "\[IndentingNewLine]", 
+        "    ", \(Durch\ eine\ M\[ODoubleDot]biustransformation\ wird\ \
+die\)}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      "      ", \(abgeschlossene\ komplexe\ Zahlenebene\)}], "\
+\[IndentingNewLine]", 
+    RowBox[{
+      "       ", \(\[DoubleStruckCapitalC]\&_ = \[DoubleStruckCapitalC] \
+\[Union] {z\_\[Infinity]}\ umkehrbar\ eindeutig\ auf\ sich\ \
+\(\(abgebildet\)\(.\)\(\[IndentingNewLine]\)\)\)}]}], "Text",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1,
+  FontSize->18],
+
+Cell[BoxData[
+    \(\(\(\ \ \ \ \ \ \ \)\(Es\ gilt\ f\[UDoubleDot]r\ z\  \[NotEqual] \(-\(d\
+\/c\)\)\ die\ Umkehrabbildung\ z = \(\(f\^\(-1\)\) \((w)\) = \(\(-d\)*w + b\)\
+\/\(c*w - a\)\), 
+    w \[NotEqual] \(a\/c\) . \[IndentingNewLine]Damit\ \(folgt : \
+\[IndentingNewLine]\t
+            f \((z)\)\) = \(\(a*z + b\)\/\(c*z + d\) = \(\(a*\(\(-d\)*w + b\)\
+\/\(c*w - a\) + b\)\/\(c*\(\(-d\)*w + b\)\/\(c*w - a\) + d\) = 
+          w\)\)\[IndentingNewLine]
+    \ \ \ \ \ \ \ Wir\ erweitern\ die\ z - 
+      Ebene\ und\ w - \(\(Ebene\)\(\ \)\(um\)\(\ \)\(z\_\[Infinity]\)\(\ \
+\)\(und\)\(\ \)\(w\_\[Infinity]\)\(\ \)\(und\)\(\ \)\(definieren\)\(\ \)\)\
+\[IndentingNewLine]
+    \t\t\(z\_\[Infinity] = \(w\_\[Infinity] = \[Infinity]\);\)\
+\[IndentingNewLine]
+    \t\tf \((\[Infinity])\)\  = \ \[Infinity]\ , \ \(falls\ c\  = \ 
+        0;\)\[IndentingNewLine]
+    \t\tf \((\(-\(d\/c\)\))\) = \ \[Infinity], \ 
+    f \((\[Infinity])\) = a\/c, \ \(falls\ c \[NotEqual] 0;\)\)\)\)], "Text",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1,
+  FontSize->18],
+
+Cell[CellGroupData[{
+
+Cell["Beispiel", "Subsubtitle",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[{
+    \(\(m = 3;\)\), "\n", 
+    \(\(q = \(-3\);\)\), "\n", 
+    \(\(r = \(-5\);\)\), "\n", 
+    \(\(esx[t_] = \(-Sin[t]\)\  + \ Sin[m*Sin[r*t]]/2;\)\), "\n", 
+    \(\(esy[t_] = \(-Cos[t]\)\  + \ Cos[m*Sin[q*t]]/2;\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[{
+    \(\(a\  = \ 1\/3 + \ \(1\/4\) \[ImaginaryI];\)\), "\[IndentingNewLine]", 
+    \(\(b\  = \ 
+        1\/6\  - \ \(1\/3\) \[ImaginaryI];\)\), "\[IndentingNewLine]", 
+    \(\(c\  = \ 3\/4 + \(5\/6\) \[ImaginaryI];\)\), "\[IndentingNewLine]", 
+    \(\(d\  = \ 1\/4 + \ \(5\/6\) \[ImaginaryI];\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(z = u + v*\[ImaginaryI];\)\), "\[IndentingNewLine]", 
+    \(w = \((a*z + b)\)/\((c*z + d)\)\), "\[IndentingNewLine]", 
+    \(fx[u_, v_] = \(Re[w] // ComplexExpand\) // 
+        Simplify\), "\[IndentingNewLine]", 
+    \(fy[u_, v_] = \(Im[w] // ComplexExpand\) // 
+        FullSimplify\), "\[IndentingNewLine]", 
+    \(Det[{{a, b}, {c, d}}]\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1],
+
+Cell[BoxData[
+    \(\(\((1\/6 - \[ImaginaryI]\/3)\) + \((1\/3 + \[ImaginaryI]\/4)\)\ \((u + \
+\[ImaginaryI]\ v)\)\)\/\(\((1\/4 + \(5\ \[ImaginaryI]\)\/6)\) + \((3\/4 + \(5\
+\ \[ImaginaryI]\)\/6)\)\ \((u + \[ImaginaryI]\ v)\)\)\)], "Output"],
+
+Cell[BoxData[
+    \(\(\(-34\) + 20\ u + 66\ u\^2 - 25\ v + 66\ v\^2\)\/Abs[\((3 + 10\ \
+\[ImaginaryI])\) + \((9 + 10\ \[ImaginaryI])\)\ \((u + \[ImaginaryI]\ \
+v)\)]\^2\)], "Output"],
+
+Cell[BoxData[
+    \(\(\(-32\) - u\ \((87 + 13\ u)\) + \((64 - 13\ v)\)\ v\)\/Abs[\((3 + 10\ \
+\[ImaginaryI])\) + \((9 + 10\ \[ImaginaryI])\)\ \((u + \[ImaginaryI]\ \
+v)\)]\^2\)], "Output"],
+
+Cell[BoxData[
+    \(\(-\(19\/36\)\) + \(65\ \[ImaginaryI]\)\/144\)], "Output"]
+}, Open  ]],
+
+Cell[BoxData[{
+    \(\(ParametricPlot[{0.5 + esx[t]/3, 0.75 + esy[t]/2}, {t, 0, 2  \[Pi]}, 
+        AspectRatio \[Rule] Automatic];\)\), "\[IndentingNewLine]", 
+    \(\(ParametricPlot[{fx[0.5 + esx[t]/3, 0.75 + esy[t]/2], 
+          fy[0.5 + esx[t]/3, 0.75 + esy[t]/2]}, {t, 0, 2  \[Pi]}, 
+        AspectRatio \[Rule] Automatic];\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  TextAlignment->Left,
+  TextJustification->1]
+}, Open  ]]
+}, Closed]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1152}, {0, 781}},
+WindowToolbars->"EditBar",
+CellGrouping->Manual,
+WindowSize->{1016, 666},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+StyleDefinitions -> "DemoText.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1739, 51, 79, 4, 136, "Title"],
+
+Cell[CellGroupData[{
+Cell[1843, 59, 165, 4, 70, "Input"],
+Cell[2011, 65, 129, 2, 70, "Message"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[2189, 73, 130, 3, 45, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[2344, 80, 122, 4, 59, "Subsubtitle"],
+
+Cell[CellGroupData[{
+Cell[2491, 88, 715, 14, 221, "Input"],
+Cell[3209, 104, 45, 1, 49, "Output"],
+Cell[3257, 107, 41, 1, 49, "Output"],
+Cell[3301, 110, 38, 1, 49, "Output"],
+Cell[3342, 113, 38, 1, 49, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[3429, 120, 122, 4, 53, "Subsubtitle"],
+
+Cell[CellGroupData[{
+Cell[3576, 128, 719, 14, 222, "Input"],
+Cell[4298, 144, 51, 1, 49, "Output"],
+Cell[4352, 147, 51, 1, 49, "Output"],
+Cell[4406, 150, 38, 1, 49, "Output"],
+Cell[4447, 153, 38, 1, 49, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[4534, 160, 136, 4, 53, "Subsubtitle"],
+
+Cell[CellGroupData[{
+Cell[4695, 168, 905, 18, 222, "Input"],
+Cell[5603, 188, 60, 1, 49, "Output"],
+Cell[5666, 191, 60, 1, 49, "Output"],
+Cell[5729, 194, 38, 1, 49, "Output"],
+Cell[5770, 197, 38, 1, 49, "Output"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[5869, 205, 156, 3, 45, "Subtitle"],
+Cell[6028, 210, 22000, 365, 495, 21829, 359, "GraphicsData", "Bitmap", \
+"Graphics"],
+Cell[28031, 577, 1589, 44, 415, "Text"],
+
+Cell[CellGroupData[{
+Cell[29645, 625, 299, 6, 55, "Input"],
+Cell[29947, 633, 247, 4, 67, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[30231, 642, 281, 6, 55, "Input"],
+Cell[30515, 650, 142, 2, 64, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[30694, 657, 140, 3, 58, "Subsubtitle"],
+Cell[30837, 662, 324, 8, 140, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[31198, 675, 222, 6, 58, "Subsubtitle"],
+Cell[31423, 683, 447, 9, 83, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[31907, 697, 117, 3, 58, "Subsubtitle"],
+Cell[32027, 702, 971, 20, 140, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[33047, 728, 119, 3, 45, "Subtitle"],
+Cell[33169, 733, 891, 27, 264, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[34097, 765, 149, 3, 45, "Subtitle"],
+Cell[34249, 770, 1159, 30, 168, "Text"],
+Cell[35411, 802, 695, 19, 132, "Text"],
+Cell[36109, 823, 1079, 22, 251, "Text"],
+
+Cell[CellGroupData[{
+Cell[37213, 849, 110, 3, 58, "Subsubtitle"],
+Cell[37326, 854, 322, 8, 120, "Input"],
+Cell[37651, 864, 401, 8, 154, "Input"],
+
+Cell[CellGroupData[{
+Cell[38077, 876, 454, 10, 120, "Input"],
+Cell[38534, 888, 240, 3, 81, "Output"],
+Cell[38777, 893, 182, 3, 67, "Output"],
+Cell[38962, 898, 188, 3, 64, "Output"],
+Cell[39153, 903, 78, 1, 62, "Output"]
+}, Open  ]],
+Cell[39246, 907, 424, 8, 60, "Input"]
+}, Open  ]]
+}, Closed]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

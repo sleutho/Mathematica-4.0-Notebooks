@@ -1,0 +1,576 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     13197,        409]*)
+(*NotebookOutlinePosition[     13933,        435]*)
+(*  CellTagsIndexPosition[     13889,        431]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Temperaturausgleich in einem Stab (Rekursiv)", "Subtitle"],
+
+Cell[CellGroupData[{
+
+Cell["Initialisierung", "Section"],
+
+Cell[BoxData[{
+    \(Off[General::spell]\), "\[IndentingNewLine]", 
+    \(\(SetOptions[{Graphics, GraphicsArray, Plot, ListPlot}, 
+        Frame \[Rule] True, AspectRatio \[Rule] 1, 
+        TextStyle \[Rule] {FontSlant \[Rule] "\<Italic\>", 
+            FontSize \[Rule] 12}, 
+        FormatType \[Rule] TraditionalForm];\)\), "\[IndentingNewLine]", 
+    \(px[i_] := {PointSize[0.05], Point[{i, 0}]}\), "\[IndentingNewLine]", 
+    \(\(g1[u_, k_, n_] := 
+        ListPlot[Evaluate[Table[{i, Evaluate[u[i, k]]}, {i, 0, n}]], 
+          PlotStyle \[Rule] {PointSize[0.1]}, PlotRange \[Rule] {0, 1}, 
+          PlotLabel \[Rule] SequenceForm["\<k= \>", k], Frame \[Rule] True, 
+          AspectRatio \[Rule] 1];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Modellierung", "Section"],
+
+Cell[BoxData[{
+    \(n = 4; m = 8;\), "\[IndentingNewLine]", 
+    \(\(Gitter = Table[px[i], {i, 0, n}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[Graphics[Gitter], AspectRatio \[Rule] 1/6, 
+        FrameTicks \[Rule] {Automatic, None}, 
+        PlotLabel \[Rule] SequenceForm["\<Gitterpunkte\>"]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Temperaturn", "Section"],
+
+Cell[BoxData[
+    \(\(Remove["\<u\>"];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["Anfangstemperaturen", "Subsection"],
+
+Cell[BoxData[{
+    \(\(f[x_] := 0. ;\)\), "\[IndentingNewLine]", 
+    \(\(u[i_, 0] := f[i/n];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Randtemperaturen", "Subsection"],
+
+Cell[BoxData[{
+    \(\(lr[t_] := 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(rr[t_] := 0. ;\)\), "\[IndentingNewLine]", 
+    \(\(u[0, k_] := lr[k];\)\), "\[IndentingNewLine]", 
+    \(\(u[n, k_] := rr[k];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Temperaturausgleich", "Subsection"],
+
+Cell[BoxData[{
+    \(\(c = 0.5;\)\), "\[IndentingNewLine]", 
+    \(\(u[i_, k_] := \(u[i, k] = 
+          c*u[i - 1, k - 1] + \((1 - 2*c)\)*u[i, k - 1] + 
+            c*u[i + 1, k - 1]\);\)\)}], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Berechnung und Auswertung", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Berechnung", "Subsection"],
+
+Cell[BoxData[
+    \(\(temperatur = Table[u[i, k], {k, 0, m}, {i, 0, n}];\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Tabellarische Auswertung", "Subsection"],
+
+Cell[BoxData[{
+    \(\(t1 = 
+        Prepend[temperatur, 
+          Table[SequenceForm["\<u\>", i], {i, 0, 
+              n}]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        Prepend[Transpose[t1], Flatten[{k, Range[0, m]}]] // 
+          Transpose;\)\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(\(t2 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnLines \[Rule] True]];\)\), "\[IndentingNewLine]", 
+    \(\(StylePrint[
+        SequenceForm["\<Tmeperaturenausgleich f\[UDoubleDot]r c = \>", 
+          c], "\<Text\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[t2 // DisplayForm];\)\), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["Tmeperaturenausgleich f\[UDoubleDot]r c = 0.5", "Text",
+  GeneratedCell->True,
+  CellAutoOverwrite->True]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Graphische Auswertung", "Subsection"],
+
+Cell[BoxData[{
+    \(\(graph1 = Table[g1[u, k, n], {k, 0, m}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[GraphicsArray[Partition[graph1, 3]], 
+        PlotLabel \[Rule] 
+          SequenceForm["\<Temperaturausgleich f\[UDoubleDot]r c = \>", 
+            c]];\)\)}], "Input"]
+}, Closed]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Temperaturausgleich in einem Stab (Iterativ)", "Subtitle"],
+
+Cell[BoxData[
+    \(Remove["\<Global`*\>"]\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["Initialisierung", "Section"],
+
+Cell[BoxData[{
+    \(Off[General::spell]\), "\[IndentingNewLine]", 
+    \(\(SetOptions[{Graphics, GraphicsArray, Plot, ListPlot}, 
+        Frame \[Rule] True, AspectRatio \[Rule] 1, 
+        TextStyle \[Rule] {FontSlant \[Rule] "\<Italic\>", 
+            FontSize \[Rule] 12}, 
+        FormatType \[Rule] TraditionalForm];\)\), "\[IndentingNewLine]", 
+    \(px[i_] := {PointSize[0.05], Point[{i, 0}]}\), "\[IndentingNewLine]", 
+    \(\(g1[u_, k_, n_] := 
+        ListPlot[Evaluate[Table[{i, Evaluate[u[i, k]]}, {i, 0, n}]], 
+          PlotStyle \[Rule] {PointSize[0.1]}, PlotRange \[Rule] {0, 1}, 
+          PlotLabel \[Rule] SequenceForm["\<k= \>", k], Frame \[Rule] True, 
+          AspectRatio \[Rule] 1];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Modellierung", "Section"],
+
+Cell[BoxData[{
+    \(n = 5; m = 20;\), "\[IndentingNewLine]", 
+    \(\(Gitter = Table[px[i], {i, 0, n}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[Graphics[Gitter], AspectRatio \[Rule] 1/6, 
+        FrameTicks \[Rule] {Automatic, None}, 
+        PlotLabel \[Rule] SequenceForm["\<Gitterpunkte\>"]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Temperaturen", "Section"],
+
+Cell[BoxData[
+    \(\(Remove["\<u\>"];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Anfangstemperaturen (im iterativen Verfahren noch nicht \
+ber\[UDoubleDot]cksichtigt)\
+\>", "Subsection"],
+
+Cell[BoxData[{
+    \(\(f[x_] := 0. ;\)\), "\[IndentingNewLine]", 
+    \(\(u[i_, 0] := f[i/n];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Randtemperaturen", "Subsection"],
+
+Cell[BoxData[{
+    \(\(lr[t_] := 1. ;\)\), "\[IndentingNewLine]", 
+    \(\(rr[t_] := 0. ;\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Temperaturausgleich", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["Iteration (Einzelschrittverfahren)", "Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(AusgleichEinzel[k_, Anzahl_, lRand_, 
+        rRand_]\)\(:=\)\(Module[{u, d, n, I, x}, I = Anzahl; n = k; 
+        u = Table[0, {i, 1, n + 2}]; 
+        d = 0.5; \[IndentingNewLine]u[\([1]\)] = lRand; 
+        u[\([n + 2]\)] = rRand; 
+        x = {}; \[IndentingNewLine]For[j = 1, 
+          j \[LessEqual] I, \(j++\), \[IndentingNewLine]u[\([2]\)] = 
+            1\/2*u[\([3]\)] + d*u[\([1]\)]; \[IndentingNewLine]For[i = 3, 
+            i \[LessEqual] n, \(i++\), \[IndentingNewLine]u[\([i]\)] = 
+              1\/2*u[\([i - 1]\)] + 
+                1\/2*u[\([i + 
+                        1]\)]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]u[\([n + 1]\)] = 
+            1\/2*u[\([n]\)] + d*u[\([n + 2]\)]; \[IndentingNewLine]AppendTo[
+            x, u]\[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]x\
+\[IndentingNewLine]]\)\( (*Ende\ Module*) \)\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(AusgleichEinzel[3, 5, lr[t] + 19, rr[t]]\)], "Input"],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"20.`", "10.`", "5.`", "2.5`", "0.`"},
+            {"20.`", "12.5`", "7.5`", "3.75`", "0.`"},
+            {"20.`", "13.75`", "8.75`", "4.375`", "0.`"},
+            {"20.`", "14.375`", "9.375`", "4.6875`", "0.`"},
+            {"20.`", "14.6875`", "9.6875`", "4.84375`", "0.`"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Iteration (Gesamtschrittverfahren)", "Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(AusgleichGesamt[k_, Anzahl_, lRand_, 
+        rRand_]\)\(:=\)\(Module[{u, d, n, I, U, x}, I = Anzahl; n = k; 
+        u = Table[0, {i, 1, n + 2}]; U = Table[0, {i, 1, n + 2}]; d = 0.5; 
+        x = {}; \[IndentingNewLine]U[\([1]\)] = lRand; 
+        U[\([n + 2]\)] = rRand; \[IndentingNewLine]u = 
+          U; \[IndentingNewLine]For[j = 1, 
+          j \[LessEqual] I, \(j++\), \[IndentingNewLine]U[\([2]\)] = 
+            1\/2*u[\([3]\)] + d*u[\([1]\)]; \[IndentingNewLine]For[i = 3, 
+            i \[LessEqual] n, \(i++\), \[IndentingNewLine]U[\([i]\)] = 
+              1\/2*u[\([i - 1]\)] + 
+                1\/2*u[\([i + 
+                        1]\)]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]U[\([n + 1]\)] = 
+            1\/2*u[\([n]\)] + d*u[\([n + 2]\)]; \[IndentingNewLine]u = U; 
+          AppendTo[x, 
+            U]\[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]x\
+\[IndentingNewLine]]\)\( (*Ende\ Module*) \)\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(AusgleichGesamt[3, 7, lr[t] + 19, rr[t]]\)], "Input"],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"20.`", "10.`", "0", "0.`", "0.`"},
+            {"20.`", "10.`", "5.`", "0.`", "0.`"},
+            {"20.`", "12.5`", "5.`", "2.5`", "0.`"},
+            {"20.`", "12.5`", "7.5`", "2.5`", "0.`"},
+            {"20.`", "13.75`", "7.5`", "3.75`", "0.`"},
+            {"20.`", "13.75`", "8.75`", "3.75`", "0.`"},
+            {"20.`", "14.375`", "8.75`", "4.375`", "0.`"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output"]
+}, Open  ]]
+}, Closed]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Berechnung und Auswertung", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Berechnung", "Subsection"],
+
+Cell[BoxData[{
+    \(\(temperatur1 = 
+        AusgleichGesamt[n, m, lr[t], rr[t]];\)\), "\[IndentingNewLine]", 
+    \(\(temperatur2 = AusgleichEinzel[n, m, lr[t], rr[t]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Tabellarische Auswertung ", "Subsection"],
+
+Cell[BoxData[{
+    \(\(t1 = 
+        PrependTo[temperatur1, 
+          Table[SequenceForm["\<u\>", i], {i, 0, 
+              n + 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = Transpose[t1];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[t1, 
+          Flatten[{k, Range[0, m - 1]}]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = Transpose[t1];\)\), "\[IndentingNewLine]", 
+    \(\(t2 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnLines \[Rule] True]];\)\), "\[IndentingNewLine]", 
+    \(\(StylePrint[
+        SequenceForm["\<Temperaturenausgleich f\[UDoubleDot]r c = \>", 
+          c], "\<Text\>"];\)\), "\[IndentingNewLine]", 
+    \(Print[t2 // DisplayForm]\), "\[IndentingNewLine]", 
+    \(\(t1 = {};\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[temperatur2, 
+          Table[SequenceForm["\<u\>", i], {i, 0, 
+              n + 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = Transpose[t1];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[t1, 
+          Flatten[{k, Range[0, m - 1]}]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = Transpose[t1];\)\), "\[IndentingNewLine]", 
+    \(\(t2 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnLines \[Rule] True]];\)\), "\[IndentingNewLine]", 
+    \(\(StylePrint[
+        SequenceForm["\<Temperaturenausgleich f\[UDoubleDot]r c = \>", 
+          c], "\<Text\>"];\)\), "\[IndentingNewLine]", 
+    \(Print[t2 // DisplayForm]\[IndentingNewLine]\)}], "Input"],
+
+Cell["Temperaturenausgleich f\[UDoubleDot]r c = c", "Text",
+  GeneratedCell->True,
+  CellAutoOverwrite->True],
+
+Cell["Temperaturenausgleich f\[UDoubleDot]r c = c", "Text",
+  GeneratedCell->True,
+  CellAutoOverwrite->True]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Graphische Auswertung (noch nicht fertig)", "Subsection"],
+
+Cell[BoxData[{
+    \(\(graph1 = Table[g1[u, k, n], {k, 0, m}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[GraphicsArray[Partition[graph1, 3]], 
+        PlotLabel \[Rule] 
+          SequenceForm["\<Temperaturausgleich f\[UDoubleDot]r c = \>", 
+            c]];\)\)}], "Input"]
+}, Closed]]
+}, Closed]]
+}, Closed]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1152}, {0, 781}},
+WindowToolbars->"EditBar",
+WindowSize->{1016, 664},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Magnification->1.25,
+StyleDefinitions -> "Default.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1739, 51, 64, 0, 80, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[1828, 55, 34, 0, 66, "Section"],
+Cell[1865, 57, 724, 12, 161, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[2626, 74, 31, 0, 40, "Section"],
+Cell[2660, 76, 313, 5, 98, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[3010, 86, 30, 0, 40, "Section"],
+Cell[3043, 88, 53, 1, 36, "Input"],
+
+Cell[CellGroupData[{
+Cell[3121, 93, 41, 0, 57, "Subsection"],
+Cell[3165, 95, 109, 2, 61, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[3311, 102, 38, 0, 37, "Subsection"],
+Cell[3352, 104, 217, 4, 111, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[3606, 113, 41, 0, 37, "Subsection"],
+Cell[3650, 115, 202, 4, 61, "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[3901, 125, 44, 0, 40, "Section"],
+
+Cell[CellGroupData[{
+Cell[3970, 129, 32, 0, 57, "Subsection"],
+Cell[4005, 131, 87, 1, 35, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[4129, 137, 46, 0, 36, "Subsection"],
+Cell[4178, 139, 689, 16, 161, "Input"],
+Cell[4870, 157, 111, 2, 38, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[5018, 164, 43, 0, 36, "Subsection"],
+Cell[5064, 166, 274, 5, 77, "Input"]
+}, Closed]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[5399, 178, 64, 0, 66, "Subtitle"],
+Cell[5466, 180, 55, 1, 35, "Input"],
+
+Cell[CellGroupData[{
+Cell[5546, 185, 34, 0, 66, "Section"],
+Cell[5583, 187, 724, 12, 161, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[6344, 204, 31, 0, 40, "Section"],
+Cell[6378, 206, 314, 5, 98, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[6729, 216, 31, 0, 40, "Section"],
+Cell[6763, 218, 53, 1, 35, "Input"],
+
+Cell[CellGroupData[{
+Cell[6841, 223, 115, 3, 57, "Subsection"],
+Cell[6959, 228, 109, 2, 56, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[7105, 235, 38, 0, 36, "Subsection"],
+Cell[7146, 237, 105, 2, 56, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[7288, 244, 41, 0, 36, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[7354, 248, 59, 0, 51, "Subsubsection"],
+Cell[7416, 250, 908, 16, 358, "Input"],
+
+Cell[CellGroupData[{
+Cell[8349, 270, 73, 1, 35, "Input"],
+Cell[8425, 273, 431, 9, 103, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[8905, 288, 59, 0, 33, "Subsubsection"],
+Cell[8967, 290, 986, 17, 400, "Input"],
+
+Cell[CellGroupData[{
+Cell[9978, 311, 73, 1, 35, "Input"],
+Cell[10054, 314, 520, 11, 139, "Output"]
+}, Open  ]]
+}, Closed]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[10647, 333, 44, 0, 40, "Section"],
+
+Cell[CellGroupData[{
+Cell[10716, 337, 32, 0, 57, "Subsection"],
+Cell[10751, 339, 186, 3, 56, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[10974, 347, 47, 0, 36, "Subsection"],
+Cell[11024, 349, 1532, 35, 350, "Input"],
+Cell[12559, 386, 109, 2, 38, "Text"],
+Cell[12671, 390, 109, 2, 38, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[12817, 397, 63, 0, 36, "Subsection"],
+Cell[12883, 399, 274, 5, 77, "Input"]
+}, Closed]]
+}, Closed]]
+}, Closed]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

@@ -1,0 +1,756 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     19729,        591]*)
+(*NotebookOutlinePosition[     20467,        617]*)
+(*  CellTagsIndexPosition[     20423,        613]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell["Lineare Interpolation", "Title"],
+
+Cell[BoxData[
+    \(Remove["\<Global`*\>"]\)], "Input",
+  ShowGroupOpenCloseIcon->True],
+
+Cell["Aufgabenstellung", "Subtitle"],
+
+Cell["\<\
+Zu einem gegebenen Datensatz (Stuetzpunkte, Basisfunktionen) ist die lineare \
+interpolierende Funktion zu bestimmen, und eine angemessene Auswertung \
+vorzunehmen.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Temp", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(\(vanInterp[x_, sp_]\)\(:=\)\(\ \)\(Module[{p, n, vanLGS}, \ p = sp; 
+        n = Length[p]; \[IndentingNewLine]vanLGS\  = \ 
+          Table[p[\([i, 1]\)]\^j, {i, 1, n}, {j, 1, 
+              n - 1}]; \[IndentingNewLine]vanLGS\  = \ 
+          Transpose[
+            Prepend[Transpose[vanLGS], 
+              Table[1, {i, 1, n}]]]; \[IndentingNewLine]lsg = 
+          LinearSolve[vanLGS, 
+            Table[p[\([i, 2]\)], {i, 1, n}]]; \[IndentingNewLine]Sum[
+          lsg[\([i]\)]*x\^\(i - 1\), {i, 1, 
+            n}]\[IndentingNewLine]]\)\( (*end\ module*) \)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(SP\  = \ {{0, 1}, {1, 3}, {3, 2}};\)\), "\[IndentingNewLine]", 
+    \(vanInterp[x, SP]\[IndentingNewLine]\)}], "Input",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(1 + \(17\ x\)\/6 - \(5\ x\^2\)\/6\)], "Output",
+  ShowGroupOpenCloseIcon->True]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Util", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(\(aquiKnoten[A_, B_, N_, f_]\)\(:=\)\(Module[{h, ret}, \ 
+        h = \((B - A)\)/\((N - 1)\); \[IndentingNewLine]ret\  = \ 
+          Table[{A + \((i - 1)\)*h, f[A + \((i - 1)\)*h]}, {i, 1, 
+              N}]; \[IndentingNewLine]ret\[IndentingNewLine]]\)\( (*end\ \
+module*) \)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(\(TschebyKnoten[a_, b_, N_, f_]\)\(:=\)\(Module[{xm, ret}, \ 
+        xm = \((b + a)\)/2; \[IndentingNewLine]ret\  = \ 
+          Table[{xm\  + \ \((b - a)\)/2*
+                  Cos[\((2*\((N - i)\) + 1)\)/N*\[Pi]/2], 
+              f[xm\  + \ \((b - a)\)/2*
+                    Cos[\((2*\((N - i)\) + 1)\)/N*\[Pi]/2]]}, {i, 1, 
+              N}]; \[IndentingNewLine]ret\[IndentingNewLine]]\)\( (*end\ \
+module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Monome[
+        N_]\)\(:=\)\(Module[{ret}, \[IndentingNewLine]ret\  = \ 
+          Table[x\^i, {i, 0, 
+              N - 1}]; \[IndentingNewLine]ret\[IndentingNewLine]]\)\( (*end\ \
+module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Report[Knoten_, basis_, f_, A_, 
+        B_]\)\(:=\)\(Module[{g, grafik1, grafik2, grafik3, 
+          grafik4}, \[IndentingNewLine]g\  = \ 
+          interpol[Knoten, basis, x]; \[IndentingNewLine]grafik1\  = \ 
+          Plot[f, {x, A, B}, 
+            DisplayFunction \[Rule] 
+              Identity, \ \ PlotStyle \[Rule] {RGBColor[1, 0, 0]}]; 
+        grafik2\  = \ 
+          Plot[g, {x, A, B}, DisplayFunction \[Rule] Identity, \ 
+            PlotStyle \[Rule] {RGBColor[0, 1, 
+                  0]}]; \[IndentingNewLine]grafik3\  = \ 
+          ListPlot[Knoten, DisplayFunction \[Rule] Identity, \ 
+            PlotStyle \[Rule] {PointSize[0.015], 
+                RGBColor[0, 0, 1]}]; \[IndentingNewLine]grafik4\  = \ \ Plot[
+            f - g, {x, A, B}, DisplayFunction \[Rule] Identity, \ 
+            PlotStyle \[Rule] {RGBColor[0, 0, 0]}]; \[IndentingNewLine]Show[
+          grafik4, grafik1, grafik2, grafik3, 
+          DisplayFunction \[Rule] $DisplayFunction]; \
+\[IndentingNewLine]Print["\<max=\>", 
+          Max[\(f /. x \[Rule] Table[x, {x, A, B, 0.1}] - g\) /. 
+              x \[Rule] 
+                Table[x, {x, A, B, 
+                    0.1}]]]; \[IndentingNewLine]1\[IndentingNewLine]]\)\( \
+(*end\ module*) \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Interpolationsfunktion", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(\(\(interpol[stuetzP_, Basis_, 
+        x_]\)\(:=\)\(\ \)\(Module[{cond, vanLGS, lsg, g, n}, 
+        n = Length[stuetzP]; 
+        vanLGS\  = \ 
+          Table[Basis[\([j]\)] /. x \[Rule] stuetzP[\([i, 1]\)], {i, 1, 
+              n}, {j, 1, n}]; \[IndentingNewLine]lsg = \ 
+          LinearSolve[vanLGS, Table[stuetzP[\([i, 2]\)], {i, 1, n}]]; 
+        cond\  = \ 
+          Max[Abs[Eigenvalues[
+                vanLGS]]]; \[IndentingNewLine]Print["\<cond=\>", 
+          cond]; \[IndentingNewLine]g = 
+          Sum[lsg[\([i]\)]*Basis[\([i]\)], {i, 1, 
+              n}]; \[IndentingNewLine]g\[IndentingNewLine]]\)\( (*end\ module*) \
+\)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "Beispiel\tf(x)=",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/\(1 + x\^2\)\)]],
+  "\tx\[Element][-5,5]\t\tvariable Basis"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(a = \(-5\);\)\), "\[IndentingNewLine]", 
+    \(\(b = 5;\)\), "\[IndentingNewLine]", 
+    \(\(n = 8;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_] := 1/\((1 + x\^2)\);\)\), "\[IndentingNewLine]", 
+    \(\(basis\  = \ {Sin[x], Cos[x], Sinh[x], Cosh[x], Sin[2*x], Cos[2*x], 
+          Sinh[2*x], Cosh[2*x]};\)\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(aqK\  = \ aquiKnoten[a, b, n, f] // N\), "\[IndentingNewLine]", 
+    \(Report[aqK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    \({{\(-5.`\), 0.038461538461538464`}, {\(-3.5714285714285716`\), 
+        0.07270029673590504`}, {\(-2.142857142857143`\), 
+        0.17883211678832117`}, {\(-0.7142857142857143`\), 
+        0.6621621621621622`}, {0.7142857142857143`, 
+        0.6621621621621622`}, {2.142857142857143`, 
+        0.17883211678832117`}, {3.5714285714285716`, 
+        0.07270029673590504`}, {5.`, 0.038461538461538464`}}\)], "Output"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]11644.822872162153`\),
+      SequenceForm[ "cond=", 11644.822872162153],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]0.999974239121285`\),
+      SequenceForm[ "max=", .99997423912128502],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(tK\  = \ TschebyKnoten[a, b, n, f] // N;\)\), "\[IndentingNewLine]", 
+    \(Report[tK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]2.4670229657896245`*^8\),
+      SequenceForm[ "cond=", 246702296.57896245],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]1.`\),
+      SequenceForm[ "max=", 1.0],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "Beispiel\tf(x)=",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/\(1 + x\^2\)\)]],
+  "\tx\[Element][-5,5]"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(a = \(-5\);\)\), "\[IndentingNewLine]", 
+    \(\(b = 5;\)\), "\[IndentingNewLine]", 
+    \(\(n = 13;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_] := 1/\((1 + x\^2)\);\)\), "\[IndentingNewLine]", 
+    \(\(basis\  = \ Monome[n];\)\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(aqK\  = \ aquiKnoten[a, b, n, f] // N\), "\[IndentingNewLine]", 
+    \(Report[aqK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    \({{\(-5.`\), 0.038461538461538464`}, {\(-4.166666666666667`\), 
+        0.05446293494704992`}, {\(-3.3333333333333335`\), 
+        0.08256880733944955`}, {\(-2.5`\), 
+        0.13793103448275862`}, {\(-1.6666666666666667`\), 
+        0.2647058823529412`}, {\(-0.8333333333333334`\), 
+        0.5901639344262295`}, {0.`, 1.`}, {0.8333333333333334`, 
+        0.5901639344262295`}, {1.6666666666666667`, 
+        0.2647058823529412`}, {2.5`, 
+        0.13793103448275862`}, {3.3333333333333335`, 
+        0.08256880733944955`}, {4.166666666666667`, 
+        0.05446293494704992`}, {5.`, 0.038461538461538464`}}\)], "Output"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]2.4971851115020603`*^8\),
+      SequenceForm[ "cond=", 249718511.15020603],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]1.`\),
+      SequenceForm[ "max=", 1.0],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(tK\  = \ TschebyKnoten[a, b, n, f] // N;\)\), "\[IndentingNewLine]", 
+    \(Report[tK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]2.4670229657896245`*^8\),
+      SequenceForm[ "cond=", 246702296.57896245],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]1.`\),
+      SequenceForm[ "max=", 1.0],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "Beispiel\tf(x)=",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/\(1 + x\^2\)\)]],
+  "\tx\[Element][-1,1]"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(a = \(-1\);\)\), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\), "\[IndentingNewLine]", 
+    \(\(n = 13;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_] := 1/\((1 + x\^2)\);\)\), "\[IndentingNewLine]", 
+    \(\(basis\  = \ Monome[n];\)\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(aqK\  = \ aquiKnoten[a, b, n, f] // N\), "\[IndentingNewLine]", 
+    \(Report[aqK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    \({{\(-1.`\), 0.5`}, {\(-0.8333333333333334`\), 
+        0.5901639344262295`}, {\(-0.6666666666666666`\), 
+        0.6923076923076923`}, {\(-0.5`\), 0.8`}, {\(-0.3333333333333333`\), 
+        0.9`}, {\(-0.16666666666666666`\), 0.972972972972973`}, {0.`, 
+        1.`}, {0.16666666666666666`, 
+        0.972972972972973`}, {0.3333333333333333`, 0.9`}, {0.5`, 
+        0.8`}, {0.6666666666666666`, 
+        0.6923076923076923`}, {0.8333333333333334`, 
+        0.5901639344262295`}, {1.`, 0.5`}}\)], "Output"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]2.9811795873168974`\),
+      SequenceForm[ "cond=", 2.9811795873168974],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]\(\(-1.`\) - 
+          3.936867277332138`*^-16\ x + 0.9999659179986946`\ x\^2 + 
+          9.325873406851315`*^-15\ x\^3 - 0.9981360553489611`\ x\^4 - 
+          7.05254036988249`*^-14\ x\^5 + 0.9728901537084941`\ x\^6 + 
+          2.0366254137694433`*^-13\ x\^7 - 0.8364745577825117`\ x\^8 - 
+          2.448002514984588`*^-13\ x\^9 + 0.5048662281408897`\ x\^10 + 
+          1.0273092714122128`*^-13\ x\^11 - 0.1431116867166055`\ x\^12 + 
+          1\/\(1 + x\^2\)\)\),
+      SequenceForm[ "max=", 
+        Plus[ -1.0, 
+          Times[ -.3936867277332138*^-15, x], 
+          Times[ .99996591799869461, 
+            Power[ x, 2]], 
+          Times[ .93258734068513149*^-14, 
+            Power[ x, 3]], 
+          Times[ -.9981360553489611, 
+            Power[ x, 4]], 
+          Times[ -.70525403698824895*^-13, 
+            Power[ x, 5]], 
+          Times[ .97289015370849408, 
+            Power[ x, 6]], 
+          Times[ .20366254137694433*^-12, 
+            Power[ x, 7]], 
+          Times[ -.83647455778251167, 
+            Power[ x, 8]], 
+          Times[ -.2448002514984588*^-12, 
+            Power[ x, 9]], 
+          Times[ .50486622814088966, 
+            Power[ x, 10]], 
+          Times[ .10273092714122128*^-12, 
+            Power[ x, 11]], 
+          Times[ -.14311168671660551, 
+            Power[ x, 12]], 
+          Power[ 
+            Plus[ 1, 
+              Power[ x, 2]], -1]]],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(tK\  = \ TschebyKnoten[a, b, n, f] // N;\)\), "\[IndentingNewLine]", 
+    \(Report[tK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]2.8176558324250967`\),
+      SequenceForm[ "cond=", 2.8176558324250967],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]\(\(-0.9999999999999999`\) + 
+          3.527421075386709`*^-17\ x + 0.9997252805308409`\ x\^2 - 
+          1.2271316705181603`*^-15\ x\^3 - 0.9920331353944055`\ x\^4 + 
+          3.920429513267326`*^-15\ x\^5 + 0.9304959743030061`\ x\^6 - 
+          1.9180076392433635`*^-15\ x\^7 - 0.7195114219898725`\ x\^8 - 
+          4.203581331235424`*^-15\ x\^9 + 0.3678705014683252`\ x\^10 + 
+          3.4073007249102835`*^-15\ x\^11 - 0.08655776505132311`\ x\^12 + 
+          1\/\(1 + x\^2\)\)\),
+      SequenceForm[ "max=", 
+        Plus[ -.99999999999999989, 
+          Times[ .35274210753867089*^-16, x], 
+          Times[ .99972528053084087, 
+            Power[ x, 2]], 
+          Times[ -.12271316705181603*^-14, 
+            Power[ x, 3]], 
+          Times[ -.99203313539440552, 
+            Power[ x, 4]], 
+          Times[ .3920429513267326*^-14, 
+            Power[ x, 5]], 
+          Times[ .93049597430300612, 
+            Power[ x, 6]], 
+          Times[ -.19180076392433635*^-14, 
+            Power[ x, 7]], 
+          Times[ -.7195114219898725, 
+            Power[ x, 8]], 
+          Times[ -.42035813312354241*^-14, 
+            Power[ x, 9]], 
+          Times[ .36787050146832517, 
+            Power[ x, 10]], 
+          Times[ .34073007249102835*^-14, 
+            Power[ x, 11]], 
+          Times[ -.086557765051323107, 
+            Power[ x, 12]], 
+          Power[ 
+            Plus[ 1, 
+              Power[ x, 2]], -1]]],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "Beispiel\tf(x)=",
+  Cell[BoxData[
+      \(TraditionalForm\`Abs[x]\)]],
+  "\tx\[Element][-5,5]"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(a = \(-5\);\)\), "\[IndentingNewLine]", 
+    \(\(b = 5;\)\), "\[IndentingNewLine]", 
+    \(\(n = 13;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_] := Abs[x];\)\), "\[IndentingNewLine]", 
+    \(\(basis\  = \ Monome[n];\)\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(aqK\  = \ aquiKnoten[a, b, n, f] // N\), "\[IndentingNewLine]", 
+    \(Report[aqK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    \({{\(-5.`\), 5.`}, {\(-4.166666666666667`\), 
+        4.166666666666667`}, {\(-3.3333333333333335`\), 
+        3.3333333333333335`}, {\(-2.5`\), 2.5`}, {\(-1.6666666666666667`\), 
+        1.6666666666666667`}, {\(-0.8333333333333334`\), 
+        0.8333333333333334`}, {0.`, 0.`}, {0.8333333333333334`, 
+        0.8333333333333334`}, {1.6666666666666667`, 
+        1.6666666666666667`}, {2.5`, 2.5`}, {3.3333333333333335`, 
+        3.3333333333333335`}, {4.166666666666667`, 4.166666666666667`}, {5.`, 
+        5.`}}\)], "Output"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]2.4971851115020603`*^8\),
+      SequenceForm[ "cond=", 249718511.15020603],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]17.545280567041118`\),
+      SequenceForm[ "max=", 17.545280567041118],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(tK\  = \ TschebyKnoten[a, b, n, f] // N;\)\), "\[IndentingNewLine]", 
+    \(Report[tK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]2.4670229657896245`*^8\),
+      SequenceForm[ "cond=", 246702296.57896245],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]9.953959771066735`\),
+      SequenceForm[ "max=", 9.9539597710667351],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "Beispiel\tf(x)=",
+  Cell[BoxData[
+      \(TraditionalForm\`Exp[\(-x\)]\)]],
+  "\tx\[Element][-1,1]"
+}], "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(a = \(-1\);\)\), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\), "\[IndentingNewLine]", 
+    \(\(n = 13;\)\), "\[IndentingNewLine]", 
+    \(\(f[x_] := Exp[\(-x\)];\)\), "\[IndentingNewLine]", 
+    \(\(basis\  = \ Monome[n];\)\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(aqK\  = \ aquiKnoten[a, b, n, f] // N\), "\[IndentingNewLine]", 
+    \(Report[aqK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    \({{\(-1.`\), 2.718281828459045`}, {\(-0.8333333333333334`\), 
+        2.3009758908928237`}, {\(-0.6666666666666666`\), 
+        1.947734041054676`}, {\(-0.5`\), 
+        1.6487212707001282`}, {\(-0.3333333333333333`\), 
+        1.3956124250860895`}, {\(-0.16666666666666666`\), 
+        1.1813604128656459`}, {0.`, 1.`}, {0.16666666666666666`, 
+        0.8464817248906141`}, {0.3333333333333333`, 
+        0.7165313105737893`}, {0.5`, 
+        0.6065306597126334`}, {0.6666666666666666`, 
+        0.513417119032592`}, {0.8333333333333334`, 
+        0.4345982085070784`}, {1.`, 0.36787944117144233`}}\)], "Output"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]2.9811795873168974`\),
+      SequenceForm[ "cond=", 2.9811795873168974],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]41.19355567471611`\),
+      SequenceForm[ "max=", 41.193555674716109],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(tK\  = \ TschebyKnoten[a, b, n, f] // N;\)\), "\[IndentingNewLine]", 
+    \(Report[tK, basis, f[x], a, b]\)}], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[\("cond="\[InvisibleSpace]2.8176558324250967`\),
+      SequenceForm[ "cond=", 2.8176558324250967],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("max="\[InvisibleSpace]41.19355567471433`\),
+      SequenceForm[ "max=", 41.193555674714332],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    \(1\)], "Output"]
+}, Open  ]]
+}, Closed]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1152}, {0, 781}},
+WindowToolbars->"EditBar",
+CellGrouping->Manual,
+WindowSize->{1144, 747},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+StyleDefinitions -> "DemoText.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1717, 49, 38, 0, 56, "Title"],
+Cell[1758, 51, 87, 2, 40, "Input"],
+Cell[1848, 55, 36, 0, 41, "Subtitle"],
+Cell[1887, 57, 188, 4, 29, "Text"],
+
+Cell[CellGroupData[{
+Cell[2100, 65, 55, 1, 54, "Section"],
+Cell[2158, 68, 632, 12, 144, "Input"],
+
+Cell[CellGroupData[{
+Cell[2815, 84, 174, 3, 80, "Input"],
+Cell[2992, 89, 99, 2, 65, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[3140, 97, 55, 1, 34, "Section"],
+Cell[3198, 100, 347, 6, 100, "Input"],
+Cell[3548, 108, 453, 8, 100, "Input"],
+Cell[4004, 118, 232, 5, 103, "Input"],
+Cell[4239, 125, 1279, 24, 220, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[5555, 154, 73, 1, 34, "Section"],
+Cell[5631, 157, 708, 15, 160, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[6376, 177, 187, 6, 39, "Section"],
+Cell[6566, 185, 340, 6, 121, "Input"],
+
+Cell[CellGroupData[{
+Cell[6931, 195, 136, 2, 60, "Input"],
+Cell[7070, 199, 434, 7, 68, "Output"],
+Cell[7507, 208, 168, 3, 25, "Print"],
+Cell[7678, 213, 165, 3, 25, "Print"],
+Cell[7846, 218, 35, 1, 49, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[7918, 224, 142, 2, 60, "Input"],
+Cell[8063, 228, 171, 3, 25, "Print"],
+Cell[8237, 233, 135, 3, 25, "Print"],
+Cell[8375, 238, 35, 1, 49, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[8459, 245, 169, 6, 39, "Section"],
+Cell[8631, 253, 263, 5, 121, "Input"],
+
+Cell[CellGroupData[{
+Cell[8919, 262, 136, 2, 60, "Input"],
+Cell[9058, 266, 640, 11, 68, "Output"],
+Cell[9701, 279, 171, 3, 25, "Print"],
+Cell[9875, 284, 135, 3, 25, "Print"],
+Cell[10013, 289, 35, 1, 49, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[10085, 295, 142, 2, 60, "Input"],
+Cell[10230, 299, 171, 3, 25, "Print"],
+Cell[10404, 304, 135, 3, 25, "Print"],
+Cell[10542, 309, 35, 1, 49, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[10626, 316, 169, 6, 39, "Section"],
+Cell[10798, 324, 263, 5, 121, "Input"],
+
+Cell[CellGroupData[{
+Cell[11086, 333, 136, 2, 60, "Input"],
+Cell[11225, 337, 524, 9, 68, "Output"],
+Cell[11752, 348, 168, 3, 25, "Print"],
+Cell[11923, 353, 1496, 37, 58, "Print"],
+Cell[13422, 392, 35, 1, 49, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[13494, 398, 142, 2, 60, "Input"],
+Cell[13639, 402, 168, 3, 25, "Print"],
+Cell[13810, 407, 1532, 37, 58, "Print"],
+Cell[15345, 446, 35, 1, 49, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[15429, 453, 160, 6, 34, "Section"],
+Cell[15592, 461, 253, 5, 120, "Input"],
+
+Cell[CellGroupData[{
+Cell[15870, 470, 136, 2, 60, "Input"],
+Cell[16009, 474, 548, 9, 68, "Output"],
+Cell[16560, 485, 171, 3, 25, "Print"],
+Cell[16734, 490, 166, 3, 25, "Print"],
+Cell[16903, 495, 35, 1, 49, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[16975, 501, 142, 2, 60, "Input"],
+Cell[17120, 505, 171, 3, 25, "Print"],
+Cell[17294, 510, 165, 3, 25, "Print"],
+Cell[17462, 515, 35, 1, 49, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[17546, 522, 165, 6, 34, "Section"],
+Cell[17714, 530, 258, 5, 120, "Input"],
+
+Cell[CellGroupData[{
+Cell[17997, 539, 136, 2, 60, "Input"],
+Cell[18136, 543, 632, 11, 68, "Output"],
+Cell[18771, 556, 168, 3, 25, "Print"],
+Cell[18942, 561, 165, 3, 25, "Print"],
+Cell[19110, 566, 35, 1, 49, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[19182, 572, 142, 2, 60, "Input"],
+Cell[19327, 576, 168, 3, 25, "Print"],
+Cell[19498, 581, 165, 3, 25, "Print"],
+Cell[19666, 586, 35, 1, 49, "Output"]
+}, Open  ]]
+}, Closed]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

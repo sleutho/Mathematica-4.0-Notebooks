@@ -1,0 +1,249 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[      6251,        177]*)
+(*NotebookOutlinePosition[      6989,        203]*)
+(*  CellTagsIndexPosition[      6945,        199]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell["Themenvorschlag", "Subtitle"],
+
+Cell[CellGroupData[{
+
+Cell["Util", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(<< RealTime3D`\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(DFT[
+        l_]\)\(:=\)\(Module[{axis, dft, i, j, res}, \[IndentingNewLine]axis = 
+          Table[\(i - 1\)\/\(Length[l]*\((l[\([2, 1]\)] - l[\([1, 1]\)])\)\), \
+{i, 1, Length[l]}]; \[IndentingNewLine]dft = 
+          2*Abs[Fourier[
+                  l[\([All, 
+                      2]\)]]]/\@Length[axis]; \[IndentingNewLine]res = {}; \
+\[IndentingNewLine]For[j = 1, j \[LessEqual] \ Length[axis]/2, \(j++\), 
+          AppendTo[
+            res, {axis[\([j]\)], 
+              dft[\([j]\)]}\ ]] (*end\ for*) ; \[IndentingNewLine]res\
+\[IndentingNewLine]]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(STFT[l_, n_]\)\(:=\)\(Module[{ret, m}, m = 1; 
+        ret = {}; \[IndentingNewLine]While[
+          m + n < Length[l], \[IndentingNewLine]AppendTo[
+            ret, \(DFT[l[\([Range[m, m + n]]\)]]\)[\([All, 2]\)]]; 
+          m += n\[IndentingNewLine]] (*end\ while*) ; \[IndentingNewLine]ret]\
+\)\( (*end\ module*) \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Example 2D", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[{
+    \(\(k = 1000;\)\), "\[IndentingNewLine]", 
+    \(\(T = 0.01;\)\), "\[IndentingNewLine]", 
+    \(\(f[t_] := 
+        1 + Sin[20*2*\[Pi]*t] + Sin[10*2*\[Pi]*t] + 2*\((Random[] - 1/2)\) // 
+          N;\)\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\(data = Table[{i*T, f[i*T]}, {i, 1, k}];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(signal = 
+        ListPlot[data, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(dftgraph = 
+        ListPlot[DFT[data], PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[GraphicsArray[Partition[{signal, dftgraph}, 2]], 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Open  ]],
+
+Cell[BoxData[{
+    \(\(newData1 = DFT[data];\)\), "\[IndentingNewLine]", 
+    \(\(newData1[\([All, 1]\)] = 
+        newData1[\([All, 1]\)]/10;\)\), "\[IndentingNewLine]", 
+    \(\(newData1[\([All, 2]\)] = 
+        newData1[\([All, 2]\)] + 0.01;\)\), "\[IndentingNewLine]", 
+    \(\(dftgraph1 = 
+        ListPlot[newData1, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+          DisplayFunction \[Rule] Identity, 
+          PlotStyle \[Rule] {RGBColor[0, 0, 1]}];\)\), "\n", 
+    \(\(newData2 = data;\)\), "\[IndentingNewLine]", 
+    \(\(newData2[\([All, 1]\)] = 
+        newData2[\([All, 1]\)]*10;\)\), "\[IndentingNewLine]", 
+    \(\(dftgraph2 = 
+        ListPlot[DFT[newData2], PlotJoined \[Rule] True, 
+          PlotRange \[Rule] All, DisplayFunction \[Rule] Identity, 
+          PlotStyle \[Rule] {RGBColor[1, 0, 0]}];\)\), "\n", 
+    \(\(dftgraph3 = 
+        Show[dftgraph1, dftgraph2, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[GraphicsArray[Partition[{dftgraph1, dftgraph2, dftgraph3}, 3]], 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Example 3D", "Section",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(k = 5000;\)\), "\[IndentingNewLine]", 
+    \(\(T = 0.01;\)\), "\[IndentingNewLine]", 
+    \(g[t_] := \[Integral]\_0\%t\((20 + Exp[0.05*x])\) \[DifferentialD]x; 
+    Print[g[t]];\), "\[IndentingNewLine]", 
+    \(\(f[t_] := 
+        Sin[0.5*t*2*\[Pi]*t] + Sin[g[t]*2*\[Pi]] + 
+          2*\((Random[] - 1/2)\);\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(-20.`\) + 
+      20.`\ \((1.`\ \[ExponentialE]\^\(0.05`\ t\) + 1.`\ t)\)\)], "Print"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\(data = Table[{i*T, f[i*T] // N}, {i, 1, k}];\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(signal = 
+        ListPlot[data, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(dftgraph = 
+        ListPlot[DFT[data], PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[GraphicsArray[Partition[{signal, dftgraph}, 2]], 
+        DisplayFunction \[Rule] $DisplayFunction];\)\)}], "Input"]
+}, Open  ]],
+
+Cell[BoxData[{
+    \(\(Data3D = STFT[data, 100];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot3D[Data3D, Boxed \[Rule] False, Shading \[Rule] False, 
+        Mesh \[Rule] False];\)\)}], "Input"]
+}, Closed]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1152}, {0, 781}},
+WindowToolbars->"EditBar",
+CellGrouping->Manual,
+WindowSize->{1144, 747},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+StyleDefinitions -> "DemoText.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1717, 49, 35, 0, 41, "Subtitle"],
+
+Cell[CellGroupData[{
+Cell[1777, 53, 55, 1, 54, "Section"],
+Cell[1835, 56, 47, 1, 40, "Input"],
+Cell[1885, 59, 621, 12, 185, "Input"],
+Cell[2509, 73, 358, 6, 120, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[2904, 84, 61, 1, 34, "Section"],
+Cell[2968, 87, 234, 5, 80, "Input"],
+
+Cell[CellGroupData[{
+Cell[3227, 96, 76, 1, 40, "Input"],
+Cell[3306, 99, 445, 8, 80, "Input"]
+}, Open  ]],
+Cell[3766, 110, 1114, 21, 200, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[4917, 136, 61, 1, 34, "Section"],
+
+Cell[CellGroupData[{
+Cell[5003, 141, 347, 7, 113, "Input"],
+Cell[5353, 150, 107, 2, 25, "Print"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[5497, 157, 81, 1, 40, "Input"],
+Cell[5581, 160, 445, 8, 80, "Input"]
+}, Open  ]],
+Cell[6041, 171, 194, 3, 60, "Input"]
+}, Closed]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

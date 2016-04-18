@@ -1,0 +1,1818 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 4.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     60358,       1670]*)
+(*NotebookOutlinePosition[     61146,       1697]*)
+(*  CellTagsIndexPosition[     61102,       1693]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell["Sascha Leuthold, MatrNr.: 716193", "Text",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell["Temperaturausgleich in einer Platte", "Subtitle",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(Remove["\<Global`*\>"]\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[CellGroupData[{
+
+Cell["Aufgabenstellung", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell["\<\
+Man entwickle ein Programm zur Berechnung und graphischen Auswertung des \
+Temperaturausgleiches in einer homogenen d\[UDoubleDot]nnen quadratischen \
+Platte von konstanter Dicke, die bis auf die R\[ADoubleDot]nder vollst\
+\[ADoubleDot]ndig isoliert ist.\
+\>", "Text",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Arial"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Modell-Verfahren (incl. Beschreibung)", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(Nach\ der\ \(Ausgleichsregel\ \ \[IndentingNewLine]
+      u\_m = \(\(1\/4\) \((u\_s + u\_w + u\_n + 
+              u\_o)\)\(\ \)\)\[IndentingNewLine]
+      ergibt\ sich\ eine\ Randwertaufgabe\ f\[UDoubleDot]r\ eine\ \
+explizite\ \ Differenzengleichung . \[IndentingNewLine]Mit\ Hilfe\ eines\ \
+regelm\[ADoubleDot]\[SZ]igen\ \ Gitters\ \ l\[ODoubleDot]sen\ wir\ \
+diese\ \ Randwertaufgabe . \[IndentingNewLine]Die\ inneren\ Punkte\ des\ \
+Gitters\ fassen\ wir\ in\ einem\ Vektor\ der\ L\[ADoubleDot]nge\ n\^2\ \
+zusammen . \ 
+          Die\ vier\ Seiten\ fassen\ wir\ in\ einem\ Randvektor\ der\ L\
+\[ADoubleDot]nge\ 4*
+        n\ zusammen . \ 
+          Anschlie\[SZ]end\ wird\ jeder\ Vektorkomponente\ nach\ \
+Ausgleichsregel\ \ das\ Viertel\ der\ Funktionswerte\ seiner\ Nachbarn\ \
+\(\(zugewiesen\)\(.\)\)\)\)], "Text",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Arial"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Aufwand", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[TextData[{
+  StyleBox["Die Hauptberechnung wird von der Funktion \
+uDemoGesamt[Schritte_,SeitenPkt_,rVek_,AnfangVek_] ausgef\[UDoubleDot]hrt. \n\
+Daf\[UDoubleDot]r sind  ",
+    FontFamily->"Arial"],
+  Cell[BoxData[
+      \(TraditionalForm\`4*n\^2*m\)],
+    FontFamily->"Arial",
+    FontSize->12],
+  StyleBox["  Additionen und Multiplikationen notwendig \n(n - Anzahl der \
+Gitterpunkte pro L\[ADoubleDot]nge, m - Anzahl der Iterationen).\nDie o.g. \
+Funktionen n\[ADoubleDot]hert sich der L\[ODoubleDot]sungsverteilung \
+iterativ, doch der Sourcecode entspricht der anschaulichen Berechnungsregel.",
+    
+    FontFamily->"Arial"]
+}], "Text",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Arial"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Initialisierung", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[{
+    \(Off[General::spell]\), "\n", 
+    \(\(SetOptions[{Graphics, GraphicsArray, Plot, ListPlot}, 
+        Frame \[Rule] True, AspectRatio \[Rule] 1, 
+        TextStyle \[Rule] {FontSlant \[Rule] "\<Italic\>", 
+            FontSize \[Rule] 12}, 
+        FormatType \[Rule] TraditionalForm];\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(Unprotect[NumberForm]\), "\[IndentingNewLine]", 
+    \(SetAttributes[NumberForm, Listable]\), "\[IndentingNewLine]", 
+    \(Attributes[NumberForm]\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \({"NumberForm"}\)], "Output",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \({Listable}\)], "Output",
+  ShowGroupOpenCloseIcon->True]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Modellierung", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(\(\(\(n = 3;\)\ \[IndentingNewLine]
+    \(m = 10;\)\)\(\ \)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Temperaturen", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[CellGroupData[{
+
+Cell["Anfangstemperaturen ", "Subsubsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    RowBox[{
+    "Mittelfunktion", " ", "f\[UDoubleDot]r", " ", "die", " ", "Startwerte", 
+      " ", "der", " ", "Innenpunkte", " ", 
+      RowBox[{"auf", "[", 
+        RowBox[{
+          FormBox[\(1\/n\),
+            "TraditionalForm"], " ", ",", "1"}], "]"}], " ", 
+      RowBox[{"x", "[", 
+        RowBox[{
+          FormBox[\(1\/n\),
+            "TraditionalForm"], " ", ",", "1"}], "]"}]}]], "Text",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(\(Mid[x_, y_] := 0;\)\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Randtemperaturen", "Subsubsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[TextData[{
+  "Seitenfunktionen f\[UDoubleDot]r die const. Randbedingungen auf  [ ",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/n\)]],
+  " , 1 ]"
+}], "Text",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[{
+    \(\(South[x_] := 1;\)\), "\[IndentingNewLine]", 
+    \(\(East[x_] := 0;\)\), "\[IndentingNewLine]", 
+    \(\(West[x_] := 0;\)\), "\[IndentingNewLine]", 
+    \(\(North[x_] := 0;\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Code", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[CellGroupData[{
+
+Cell["rVektor[SeitenPkt_,South[x],East[x],West[x],North[x]]", "Subsubsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell["\<\
+Hier wird ein Randvektor aus den vier Randfunktionen diskretisiert.\
+\>", "Text",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(rVektor[SeitenPkt_, South[x], East[x], West[x], North[x]] := 
+      Module[{r, n}, n = SeitenPkt; 
+        r = Table[0, {i, 1, 4*n}]; \[IndentingNewLine]For[i = 1, 
+          i \[LessEqual] n, \(i++\), 
+          r[\([i]\)] = South[i\/n]]; \[IndentingNewLine]For[i = n + 1, 
+          i \[LessEqual] 2*n, \(i++\), 
+          r[\([i]\)] = East[\(i - n\)\/n]]; \[IndentingNewLine]For[
+          i = 2*n + 1, i \[LessEqual] 3*n, \(i++\), 
+          r[\([i]\)] = North[\(i - 2  n\)\/n]]; \[IndentingNewLine]For[
+          i = 3*n + 1, i \[LessEqual] 4  n, \(i++\), 
+          r[\([i]\)] = 
+            West[\(i - 3  n\)\/n]]; \[IndentingNewLine]r]\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["uAnfang[SeitenPkt_,Mid[x]]", "Subsubsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(uAnfang[SeitenPkt_, Mid[x]] := 
+      Module[{u, n}, n = SeitenPkt; 
+        u = Table[0, {i, 1, n\^2}]; \[IndentingNewLine]For[i = 1, 
+          i \[LessEqual] n, \(i++\), \[IndentingNewLine]For[j = 0, 
+            j \[LessEqual] n - 1, \(j++\), \[IndentingNewLine]Index = 
+              j*n + i; \[IndentingNewLine]u[\([Index]\)] = 
+              Mid[i\/n, \(j + 1\)\/n]\[IndentingNewLine]]]; \
+\[IndentingNewLine]u]\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["uDemoGesamt[Schritte_,SeitenPkt_,rVek_,AnfangVek_]", "Subsubsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(\(\(uDemoGesamt[Schritte_, SeitenPkt_, rVek_, 
+        AnfangVek_]\)\(:=\)\(Module[{k, n, x, u, U, r, N}, k = Schritte; 
+        n = SeitenPkt; x = {}; 
+        u = AnfangVek; \[IndentingNewLine]U = Table[0, {j, 1, n\^2}]; 
+        r = rVek; 
+        x = AppendTo[x, u]; \[IndentingNewLine]\[IndentingNewLine]For[j = 1, 
+          j \[LessEqual] k, \(j++\), \[IndentingNewLine]U[\([1]\)] = 
+            1\/4*\((u[\([2]\)] + u[\([n + 1]\)] + r[\([1]\)] + 
+                  r[\([4*n]\)])\); \[IndentingNewLine]U[\([n]\)] = 
+            1\/4*\((u[\([n - 1]\)] + u[\([2*n]\)] + r[\([n]\)] + 
+                  r[\([n + 1]\)])\); \[IndentingNewLine]U[\([n\^2 - n + 
+                  1]\)] = 
+            1\/4*\((u[\([n\^2 - 2  n + 1]\)] + u[\([n\^2 - n + 2]\)] + 
+                  r[\([3*n]\)] + 
+                  r[\([3*n + 1]\)])\); \[IndentingNewLine]U[\([n\^2]\)] = 
+            1\/4*\((u[\([n\^2 - 1]\)] + u[\([n\^2 - n]\)] + r[\([2*n]\)] + 
+                  r[\([2*n + 
+                        1]\)])\); \[IndentingNewLine]\[IndentingNewLine]For[
+            i = 2, i \[LessEqual] 
+              n - 1, \(i++\), \[IndentingNewLine]U[\([i]\)] = 
+              1\/4*\((u[\([i - 1]\)] + u[\([i + 1]\)] + u[\([n + i]\)] + 
+                    r[\([i]\)])\)\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]N = 1; \[IndentingNewLine]For[i = n\^2 - n + 2, 
+            i \[LessEqual] n\^2 - 1, \(i++\), \[IndentingNewLine]U[\([i]\)] = 
+              1\/4*\((u[\([i - n]\)] + u[\([i - 1]\)] + u[\([i + 1]\)] + 
+                    r[\([3*n - 
+                          N]\)])\); \(N++\)\[IndentingNewLine]] (*Ende\ \
+For*) ; \[IndentingNewLine]For[w = 2, 
+            w \[LessEqual] n - 1, \(w++\), \[IndentingNewLine]i = 
+              n*w; \[IndentingNewLine]U[\([i]\)] = 
+              1\/4*\((u[\([\((w - 1)\)*n]\)] + u[\([i - 1]\)] + 
+                    u[\([\((w + 1)\)*n]\)] + 
+                    r[\([n + w]\)])\); \[IndentingNewLine]i = 
+              n*\((w - 1)\) + 1; \[IndentingNewLine]U[\([i]\)] = 
+              1\/4*\((u[\([i - n]\)] + u[\([i + 1]\)] + u[\([i + n]\)] + 
+                    r[\([4*n - w + 
+                          1]\)])\)\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]For[s = 1, 
+            s \[LessEqual] n - 2, \(s++\), \[IndentingNewLine]For[w = 2, 
+              w \[LessEqual] n - 1, \(w++\), \[IndentingNewLine]i = 
+                n*s + w; \[IndentingNewLine]U[\([i]\)] = 
+                1\/4*\((u[\([i - 1]\)] + u[\([i + 1]\)] + u[\([i - n]\)] + 
+                      u[\([i + 
+                            n]\)])\)\[IndentingNewLine]] (*Ende\ For\
+*) \[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]u = 
+            U; \[IndentingNewLine]x = 
+            AppendTo[x, 
+              u]\[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]x\
+\[IndentingNewLine]]\)\( (*Ende\ Module*) \)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["uDemoEinzel[Schritte_,SeitenPkt_,rVek_,AnfangVek_]", "Subsubsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(\(\(uDemoEinzel[Schritte_, SeitenPkt_, rVek_, 
+        AnfangVek_]\)\(:=\)\(Module[{k, n, x, u, r, N}, k = Schritte; 
+        n = SeitenPkt; x = {}; u = AnfangVek; \[IndentingNewLine]r = rVek; 
+        x = AppendTo[x, u]; \[IndentingNewLine]For[j = 1, 
+          j \[LessEqual] 
+            k, \(j++\), \[IndentingNewLine]\[IndentingNewLine] (*\ 
+            vier\ GiTTERRANDPUNKTE\ werden\ bearbeitet\ \
+*) \[IndentingNewLine]\[IndentingNewLine]u[\([1]\)] = 
+            1\/4*\((u[\([2]\)] + u[\([n + 1]\)] + r[\([1]\)] + 
+                  r[\([4*n]\)])\); \[IndentingNewLine]u[\([n]\)] = 
+            1\/4*\((u[\([n - 1]\)] + u[\([2*n]\)] + r[\([n]\)] + 
+                  r[\([n + 1]\)])\); \[IndentingNewLine]u[\([n\^2 - n + 
+                  1]\)] = 
+            1\/4*\((u[\([n\^2 - 2  n + 1]\)] + u[\([n\^2 - n + 2]\)] + 
+                  r[\([3*n]\)] + 
+                  r[\([3*n + 1]\)])\); \[IndentingNewLine]u[\([n\^2]\)] = 
+            1\/4*\((u[\([n\^2 - 1]\)] + u[\([n\^2 - n]\)] + r[\([2*n]\)] + 
+                  r[\([2*n + 1]\)])\); \[IndentingNewLine]For[i = 2, 
+            i \[LessEqual] 
+              n - 1, \(i++\), \[IndentingNewLine]\[IndentingNewLine] (*\ 
+              S\[CapitalUDoubleDot]DSEITE\ wird\ bearbeitet\ \
+*) \[IndentingNewLine]\[IndentingNewLine]u[\([i]\)] = 
+              1\/4*\((u[\([i - 1]\)] + u[\([i + 1]\)] + u[\([n + i]\)] + 
+                    r[\([i]\)])\)\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]N = 1; \[IndentingNewLine]For[i = n\^2 - n + 2, 
+            i \[LessEqual] 
+              n\^2 - 1, \(i++\), \[IndentingNewLine]\[IndentingNewLine] (*\ 
+              NORDSEITE\ wird\ bearbeitet\ *) \[IndentingNewLine]\
+\[IndentingNewLine]u[\([i]\)] = 
+              1\/4*\((u[\([i - n]\)] + u[\([i - 1]\)] + u[\([i + 1]\)] + 
+                    r[\([3*n - 
+                          N]\)])\); \(N++\)\[IndentingNewLine]] (*Ende\ \
+For*) ; \[IndentingNewLine]For[w = 2, 
+            w \[LessEqual] n - 1, \(w++\), \[IndentingNewLine]i = 
+              n*w; \[IndentingNewLine]\[IndentingNewLine] (*\ 
+              OST/WEST - 
+                Seiten\ werden\ bearbeitet\ *) \[IndentingNewLine]\
+\[IndentingNewLine]u[\([i]\)] = 
+              1\/4*\((u[\([\((w - 1)\)*n]\)] + u[\([i - 1]\)] + 
+                    u[\([\((w + 1)\)*n]\)] + 
+                    r[\([n + w]\)])\); \[IndentingNewLine]i = 
+              n*\((w - 1)\) + 1; \[IndentingNewLine]u[\([i]\)] = 
+              1\/4*\((u[\([i - n]\)] + u[\([i + 1]\)] + u[\([i + n]\)] + 
+                    r[\([4*n - w + 
+                          1]\)])\)\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]For[s = 1, 
+            s \[LessEqual] n - 2, \(s++\), \[IndentingNewLine]For[w = 2, 
+              w \[LessEqual] n - 1, \(w++\), \[IndentingNewLine]i = 
+                n*s + w; \[IndentingNewLine]\[IndentingNewLine] (*\ 
+                INNENPUNKTE\ werden\ bearbeitet\ *) \[IndentingNewLine]\
+\[IndentingNewLine]u[\([i]\)] = 
+                1\/4*\((u[\([i - 1]\)] + u[\([i + 1]\)] + u[\([i - n]\)] + 
+                      u[\([i + 
+                            n]\)])\)\[IndentingNewLine]] (*Ende\ For\
+*) \[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]x = 
+            AppendTo[x, 
+              u]\[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]x\
+\[IndentingNewLine]]\)\( (*Ende\ Module*) \)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Berechnung", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[{
+    \(\(Rand = 
+        rVektor[n, South[x], East[x], West[x], 
+          North[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Anfang = uAnfang[n, Mid[x]];\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(\(temperatur1 = uDemoGesamt[m, n, N[Rand], N[Anfang]];\)\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(\(temperatur2 = uDemoEinzel[m, n, N[Rand], N[Anfang]];\)\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Tabellarische Auswertung ", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[{
+    \(\(t1 = NumberForm[temperatur1, 3];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[t1, 
+          Table[SequenceForm["\<u\>", i], {i, 1, 
+              n\^2}]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = Transpose[t1];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[t1, 
+          Flatten[{k, Range[0, m]}]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = Transpose[t1];\)\), "\[IndentingNewLine]", 
+    \(\(t2 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnLines \[Rule] True]];\)\), "\[IndentingNewLine]", 
+    \(\(StylePrint[
+        SequenceForm["\<Temperaturenausgleich mit \
+Gesamtschritt-Verfahren\>"], "\<Text\>"];\)\), "\[IndentingNewLine]", 
+    \(Print[t2 // DisplayForm]\), "\[IndentingNewLine]", 
+    \(\(t1 = {};\)\), "\[IndentingNewLine]", 
+    \(\(t1 = NumberForm[temperatur2, 3];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[t1, 
+          Table[SequenceForm["\<u\>", i], {i, 1, 
+              n\^2}]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = Transpose[t1];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = 
+        PrependTo[t1, 
+          Flatten[{k, Range[0, m]}]];\)\), "\[IndentingNewLine]", 
+    \(\(t1 = Transpose[t1];\)\), "\[IndentingNewLine]", 
+    \(\(t2 = 
+        FrameBox[
+          GridBox[t1, RowLines \[Rule] {True, False}, 
+            ColumnLines \[Rule] True]];\)\), "\[IndentingNewLine]", 
+    \(\(StylePrint[
+        SequenceForm["\<Temperaturenausgleich mit \
+Einzelschritt-Verfahren\>"], "\<Text\>"];\)\), "\[IndentingNewLine]", 
+    \(Print[t2 // DisplayForm]\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell["Temperaturenausgleich mit Gesamtschritt-Verfahren", "Text",
+  ShowGroupOpenCloseIcon->True,
+  GeneratedCell->True,
+  CellAutoOverwrite->True],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"k", 
+              InterpretationBox[\("u"\[InvisibleSpace]1\),
+                SequenceForm[ "u", 1],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]2\),
+                SequenceForm[ "u", 2],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]3\),
+                SequenceForm[ "u", 3],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]4\),
+                SequenceForm[ "u", 4],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]5\),
+                SequenceForm[ "u", 5],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]6\),
+                SequenceForm[ "u", 6],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]7\),
+                SequenceForm[ "u", 7],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]8\),
+                SequenceForm[ "u", 8],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]9\),
+                SequenceForm[ "u", 9],
+                Editable->False]},
+            {"0", 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"1", 
+              TagBox[
+                InterpretationBox["\<\"0.25\"\>",
+                  .25,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.25\"\>",
+                  .25,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.25\"\>",
+                  .25,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"2", 
+              TagBox[
+                InterpretationBox["\<\"0.313\"\>",
+                  .3125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.375\"\>",
+                  .375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.313\"\>",
+                  .3125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0625\"\>",
+                  .0625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0625\"\>",
+                  .0625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0625\"\>",
+                  .0625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"3", 
+              TagBox[
+                InterpretationBox["\<\"0.359\"\>",
+                  .359375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.422\"\>",
+                  .421875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.359\"\>",
+                  .359375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0938\"\>",
+                  .09375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.125\"\>",
+                  .125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0938\"\>",
+                  .09375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0156\"\>",
+                  .015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0156\"\>",
+                  .015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0156\"\>",
+                  .015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"4", 
+              TagBox[
+                InterpretationBox["\<\"0.379\"\>",
+                  .37890625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.461\"\>",
+                  .4609375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.379\"\>",
+                  .37890625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.125\"\>",
+                  .125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.156\"\>",
+                  .15625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.125\"\>",
+                  .125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0273\"\>",
+                  .02734375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0391\"\>",
+                  .0390625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0273\"\>",
+                  .02734375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"5", 
+              TagBox[
+                InterpretationBox["\<\"0.396\"\>",
+                  .396484375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.479\"\>",
+                  .478515625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.396\"\>",
+                  .396484375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.141\"\>",
+                  .140625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.188\"\>",
+                  .1875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.141\"\>",
+                  .140625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.041\"\>",
+                  .041015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0527\"\>",
+                  .052734375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.041\"\>",
+                  .041015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"6", 
+              TagBox[
+                InterpretationBox["\<\"0.405\"\>",
+                  .40478515625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.495\"\>",
+                  .4951171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.405\"\>",
+                  .40478515625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.156\"\>",
+                  .15625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.203\"\>",
+                  .203125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.156\"\>",
+                  .15625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0483\"\>",
+                  .04833984375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0674\"\>",
+                  .0673828125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0483\"\>",
+                  .04833984375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"7", 
+              TagBox[
+                InterpretationBox["\<\"0.413\"\>",
+                  .412841796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.503\"\>",
+                  .503173828125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.413\"\>",
+                  .412841796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.164\"\>",
+                  .1640625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.219\"\>",
+                  .21875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.164\"\>",
+                  .1640625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0559\"\>",
+                  .055908203125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.075\"\>",
+                  .074951171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0559\"\>",
+                  .055908203125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"8", 
+              TagBox[
+                InterpretationBox["\<\"0.417\"\>",
+                  .41680908203125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.511\"\>",
+                  .5111083984375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.417\"\>",
+                  .41680908203125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.172\"\>",
+                  .171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.227\"\>",
+                  .2265625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.172\"\>",
+                  .171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0598\"\>",
+                  .05975341796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0826\"\>",
+                  .0826416015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0598\"\>",
+                  .05975341796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"9", 
+              TagBox[
+                InterpretationBox["\<\"0.421\"\>",
+                  .420745849609375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.515\"\>",
+                  .515045166015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.421\"\>",
+                  .420745849609375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.176\"\>",
+                  .17578125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.234\"\>",
+                  .234375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.176\"\>",
+                  .17578125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0636\"\>",
+                  .063629150390625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0865\"\>",
+                  .086517333984375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0636\"\>",
+                  .063629150390625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"10", 
+              TagBox[
+                InterpretationBox["\<\"0.423\"\>",
+                  .42270660400390625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.519\"\>",
+                  .5189666748046875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.423\"\>",
+                  .42270660400390625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.18\"\>",
+                  .1796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.238\"\>",
+                  .23828125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.18\"\>",
+                  .1796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0656\"\>",
+                  .06557464599609375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0904\"\>",
+                  .0904083251953125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0656\"\>",
+                  .06557464599609375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print",
+  ShowGroupOpenCloseIcon->True],
+
+Cell["Temperaturenausgleich mit Einzelschritt-Verfahren", "Text",
+  ShowGroupOpenCloseIcon->True,
+  GeneratedCell->True,
+  CellAutoOverwrite->True],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"k", 
+              InterpretationBox[\("u"\[InvisibleSpace]1\),
+                SequenceForm[ "u", 1],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]2\),
+                SequenceForm[ "u", 2],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]3\),
+                SequenceForm[ "u", 3],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]4\),
+                SequenceForm[ "u", 4],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]5\),
+                SequenceForm[ "u", 5],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]6\),
+                SequenceForm[ "u", 6],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]7\),
+                SequenceForm[ "u", 7],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]8\),
+                SequenceForm[ "u", 8],
+                Editable->False], 
+              InterpretationBox[\("u"\[InvisibleSpace]9\),
+                SequenceForm[ "u", 9],
+                Editable->False]},
+            {"0", 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"1", 
+              TagBox[
+                InterpretationBox["\<\"0.25\"\>",
+                  .25,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.375\"\>",
+                  .375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.25\"\>",
+                  .25,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0625\"\>",
+                  .0625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.125\"\>",
+                  .125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0625\"\>",
+                  .0625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"2", 
+              TagBox[
+                InterpretationBox["\<\"0.359\"\>",
+                  .359375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.461\"\>",
+                  .4609375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.359\"\>",
+                  .359375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.125\"\>",
+                  .125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.188\"\>",
+                  .1875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.125\"\>",
+                  .125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0156\"\>",
+                  .015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0391\"\>",
+                  .0390625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0156\"\>",
+                  .015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"3", 
+              TagBox[
+                InterpretationBox["\<\"0.396\"\>",
+                  .396484375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.495\"\>",
+                  .4951171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.396\"\>",
+                  .396484375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.156\"\>",
+                  .15625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.219\"\>",
+                  .21875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.156\"\>",
+                  .15625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.041\"\>",
+                  .041015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0674\"\>",
+                  .0673828125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.041\"\>",
+                  .041015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"4", 
+              TagBox[
+                InterpretationBox["\<\"0.413\"\>",
+                  .412841796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.511\"\>",
+                  .5111083984375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.413\"\>",
+                  .412841796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.172\"\>",
+                  .171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.234\"\>",
+                  .234375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.172\"\>",
+                  .171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0559\"\>",
+                  .055908203125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0826\"\>",
+                  .0826416015625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0559\"\>",
+                  .055908203125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"5", 
+              TagBox[
+                InterpretationBox["\<\"0.421\"\>",
+                  .420745849609375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.519\"\>",
+                  .5189666748046875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.421\"\>",
+                  .420745849609375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.18\"\>",
+                  .1796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.242\"\>",
+                  .2421875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.18\"\>",
+                  .1796875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0636\"\>",
+                  .063629150390625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0904\"\>",
+                  .0904083251953125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0636\"\>",
+                  .063629150390625,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"6", 
+              TagBox[
+                InterpretationBox["\<\"0.425\"\>",
+                  .42466354370117188,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.523\"\>",
+                  .52287864685058594,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.425\"\>",
+                  .42466354370117188,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.184\"\>",
+                  .18359375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.246\"\>",
+                  .24609375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.184\"\>",
+                  .18359375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0675\"\>",
+                  .067523956298828125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0943\"\>",
+                  .094308853149414063,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0675\"\>",
+                  .067523956298828125,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"7", 
+              TagBox[
+                InterpretationBox["\<\"0.427\"\>",
+                  .42661809921264648,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.525\"\>",
+                  .52483248710632324,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.427\"\>",
+                  .42661809921264648,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.186\"\>",
+                  .185546875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.248\"\>",
+                  .248046875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.186\"\>",
+                  .185546875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0695\"\>",
+                  .069475650787353516,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0963\"\>",
+                  .096261262893676758,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0695\"\>",
+                  .069475650787353516,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"8", 
+              TagBox[
+                InterpretationBox["\<\"0.428\"\>",
+                  .42759484052658081,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.526\"\>",
+                  .52580913901329041,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.428\"\>",
+                  .42759484052658081,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.187\"\>",
+                  .1865234375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.249\"\>",
+                  .2490234375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.187\"\>",
+                  .1865234375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0705\"\>",
+                  .070452034473419189,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0972\"\>",
+                  .097237735986709595,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0705\"\>",
+                  .070452034473419189,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"9", 
+              TagBox[
+                InterpretationBox["\<\"0.428\"\>",
+                  .4280831441283226,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.526\"\>",
+                  .5262974314391613,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.428\"\>",
+                  .4280831441283226,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.187\"\>",
+                  .18701171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.25\"\>",
+                  .24951171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.187\"\>",
+                  .18701171875,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0709\"\>",
+                  .070940293371677399,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0977\"\>",
+                  .097726006060838699,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0709\"\>",
+                  .070940293371677399,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {"10", 
+              TagBox[
+                InterpretationBox["\<\"0.428\"\>",
+                  .42832728754729033,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.527\"\>",
+                  .52654157346114516,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.428\"\>",
+                  .42832728754729033,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.187\"\>",
+                  .187255859375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.25\"\>",
+                  .249755859375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.187\"\>",
+                  .187255859375,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0712\"\>",
+                  .071184431202709675,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.098\"\>",
+                  .097970145288854837,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0712\"\>",
+                  .071184431202709675,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print",
+  ShowGroupOpenCloseIcon->True]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Animation zum Gesamtschrittverfahren", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Animation`\>"];\)\), "\n", 
+    \(\(col[t_] := RGBColor[t, 0.3 - 0.1*t, 1 - 0.9*t];\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(\(For[i = 1, i \[LessEqual] m, \(i++\), 
+        Liste = {}; \[IndentingNewLine]For[w = 0, 
+          w \[LessEqual] n - 1, \(w++\), 
+          AppendTo[Liste, 
+            Table[temperatur1[\([i, j]\)], {j, 
+                w*n + 1, \((w + 1)\)*
+                  n}]]]; \[IndentingNewLine]ListDensityPlot[Liste, 
+          ColorFunctionScaling \[Rule] False, Mesh \[Rule] False, 
+          ColorFunction \[Rule] col, 
+          PlotLabel \[Rule] 
+            SequenceForm["\<k= \>", i - 1]]; \[IndentingNewLine] (*Print[
+            MatrixForm[Liste]]*) ];\)\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Animation zum Einzelschrittverfahren", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m, \(i++\), \[IndentingNewLine]Liste = {}; \[IndentingNewLine]For[
+          w = 0, w \[LessEqual] n - 1, \(w++\), \[IndentingNewLine]AppendTo[
+            Liste, Table[
+              temperatur2[\([i, j]\)], {j, 
+                w*n + 1, \((w + 1)\)*
+                  n}]]\[IndentingNewLine]]; \
+\[IndentingNewLine]ListDensityPlot[Liste, ColorFunctionScaling \[Rule] False, 
+          Mesh \[Rule] False, ColorFunction \[Rule] col, 
+          PlotLabel \[Rule] 
+            SequenceForm["\<k= \>", i - 1]]; \[IndentingNewLine] (*\(Print[
+              MatrixForm[Liste]];\)*) \[IndentingNewLine]];\)\)], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Grafik-Zusammenfassung (Gesamtschrittverfahren)", "Subsection",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"],
+
+Cell[BoxData[{
+    \(\(Grafik = {};\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, i \[LessEqual] m, \(i++\), 
+      Liste = {}; \[IndentingNewLine]For[w = 0, 
+        w \[LessEqual] n - 1, \(w++\), 
+        AppendTo[Liste, 
+          Table[temperatur1[\([i, j]\)], {j, 
+              w*n + 1, \((w + 1)\)*n}]]]; \[IndentingNewLine]Grafik = 
+        AppendTo[Grafik, 
+          ListDensityPlot[Liste, ColorFunctionScaling \[Rule] False, 
+            Mesh \[Rule] False, ColorFunction \[Rule] GrayLevel, 
+            PlotLabel \[Rule] SequenceForm["\<k= \>", i - 1], 
+            DisplayFunction \[Rule] Identity]]]\), "\[IndentingNewLine]", 
+    \(\(Show[GraphicsArray[Partition[Grafik, 3]], 
+        Frame \[Rule] True];\)\)}], "Input",
+  ShowGroupOpenCloseIcon->True,
+  FontFamily->"Courier New"]
+}, Closed]]
+}, Closed]]
+},
+FrontEndVersion->"4.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1280}, {0, 948}},
+ScreenStyleEnvironment->"Working",
+WindowToolbars->"EditBar",
+WindowSize->{887, 656},
+WindowMargins->{{0, Automatic}, {Automatic, 3}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+Magnification->1.25
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1754, 51, 80, 1, 38, "Text"],
+
+Cell[CellGroupData[{
+Cell[1859, 56, 116, 2, 78, "Subtitle"],
+Cell[1978, 60, 116, 3, 35, "Input"],
+
+Cell[CellGroupData[{
+Cell[2119, 67, 99, 2, 58, "Subsection"],
+Cell[2221, 71, 333, 7, 59, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[2591, 83, 120, 2, 37, "Subsection"],
+Cell[2714, 87, 897, 17, 186, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[3648, 109, 90, 2, 37, "Subsection"],
+Cell[3741, 113, 701, 17, 122, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[4479, 135, 98, 2, 37, "Subsection"],
+Cell[4580, 139, 382, 8, 98, "Input"],
+
+Cell[CellGroupData[{
+Cell[4987, 151, 242, 5, 77, "Input"],
+Cell[5232, 158, 80, 2, 35, "Output"],
+Cell[5315, 162, 76, 2, 35, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[5440, 170, 95, 2, 37, "Subsection"],
+Cell[5538, 174, 155, 4, 56, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[5730, 183, 95, 2, 37, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[5850, 189, 106, 2, 51, "Subsubsection"],
+Cell[5959, 193, 480, 13, 51, "Text"],
+Cell[6442, 208, 115, 3, 35, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[6594, 216, 102, 2, 51, "Subsubsection"],
+Cell[6699, 220, 223, 7, 40, "Text"],
+Cell[6925, 229, 272, 6, 98, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[7246, 241, 87, 2, 37, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[7358, 247, 139, 2, 51, "Subsubsection"],
+Cell[7500, 251, 123, 3, 38, "Text"],
+Cell[7626, 256, 737, 14, 235, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[8400, 275, 112, 2, 51, "Subsubsection"],
+Cell[8515, 279, 512, 10, 214, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[9064, 294, 136, 2, 33, "Subsubsection"],
+Cell[9203, 298, 2958, 51, 926, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[12198, 354, 136, 2, 33, "Subsubsection"],
+Cell[12337, 358, 3454, 60, 1178, "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[15840, 424, 93, 2, 37, "Subsection"],
+Cell[15936, 428, 242, 6, 56, "Input"],
+Cell[16181, 436, 150, 3, 35, "Input"],
+Cell[16334, 441, 150, 3, 35, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[16521, 449, 108, 2, 37, "Subsection"],
+Cell[16632, 453, 1676, 39, 415, "Input"],
+Cell[18311, 494, 147, 3, 38, "Text"],
+Cell[18461, 499, 19261, 541, 232, "Print"],
+Cell[37725, 1042, 147, 3, 38, "Text"],
+Cell[37875, 1047, 19569, 541, 232, "Print"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[57481, 1593, 119, 2, 37, "Subsection"],
+Cell[57603, 1597, 201, 4, 56, "Input"],
+Cell[57807, 1603, 654, 14, 140, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[58498, 1622, 119, 2, 37, "Subsection"],
+Cell[58620, 1626, 743, 15, 203, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[59400, 1646, 130, 2, 37, "Subsection"],
+Cell[59533, 1650, 797, 16, 182, "Input"]
+}, Closed]]
+}, Closed]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

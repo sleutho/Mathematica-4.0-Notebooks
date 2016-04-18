@@ -1,0 +1,291 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[      9161,        229]*)
+(*NotebookOutlinePosition[      9880,        254]*)
+(*  CellTagsIndexPosition[      9836,        250]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[" LR - Zerlegung\t\tDoolittle / Crout", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Doolittle[mat_]\t ", "Subsection"],
+
+Cell[BoxData[
+    \(\(\(Doolittle[mat_]\)\(:=\)\(Module[{a, n, l\ , r, s, abbruch\ }, 
+        a = mat; n = Length[a]; abbruch = False; 
+        l = Table[0, {m, 1, n}, {m, 1, n}]; 
+        r = Table[0, {m, 1, n}, {m, 1, n}]; \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] n, \(k++\), \[IndentingNewLine]l[\([k, k]\)] = 
+            1\[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]For[
+          k = 1, k \[LessEqual] n, \(k++\), \[IndentingNewLine]For[j = k, 
+            j \[LessEqual] n, \(j++\), \[IndentingNewLine]For[s = 1, 
+              s \[LessEqual] k - 1, \(s++\), \[IndentingNewLine]c += 
+                l[\([k, s]\)]*
+                  r[\([s, 
+                      j]\)]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]r[\([k, j]\)] = a[\([k, j]\)] - c; \[IndentingNewLine]c = 
+              0;\[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]If[
+            r[\([k, k]\)] \[Equal] 0, 
+            abbruch = True, \[IndentingNewLine]For[i = k + 1, 
+              i \[LessEqual] n, \(i++\), \[IndentingNewLine]For[s = 1, 
+                s \[LessEqual] k - 1, \(s++\), \[IndentingNewLine]c += 
+                  l[\([i, s]\)]*
+                    r[\([s, 
+                        k]\)]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]l[\([i, k]\)] = \((a[\([i, k]\)] - c)\)/
+                  r[\([k, k]\)]; \[IndentingNewLine]c = 
+                0\[IndentingNewLine]] (*Ende\ For*) \[IndentingNewLine]] \
+(*Ende\ If*) \[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]If[
+          abbruch \[Equal] True, 
+          Print["\<STOP\>"], {l, 
+            r}]\[IndentingNewLine]]\)\( (*Ende\ Module*) \)\)\)], "Input",
+  CellLabel->"In[1]:="]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Crout[mat_]\t ", "Subsection"],
+
+Cell[BoxData[
+    \(\(\(Crout[mat_]\)\(:=\)\(Module[{a, n, l\ , r, s, abbruch\ }, a = mat; 
+        n = Length[a]; abbruch = False; l = Table[0, {m, 1, n}, {m, 1, n}]; 
+        r = Table[0, {m, 1, n}, {m, 1, n}]; \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] n, \(k++\), \[IndentingNewLine]r[\([k, k]\)] = 
+            1\[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]For[
+          k = 1, k \[LessEqual] n, \(k++\), \[IndentingNewLine]For[i = k, 
+            i \[LessEqual] n, \(i++\), \[IndentingNewLine]For[s = 1, 
+              s \[LessEqual] k - 1, \(s++\), \[IndentingNewLine]c += 
+                l[\([i, s]\)]*
+                  r[\([s, 
+                      k]\)]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]l[\([i, k]\)] = a[\([i, k]\)] - c; \[IndentingNewLine]c = 
+              0;\[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]If[
+            l[\([k, k]\)] \[Equal] 0, 
+            abbruch = True, \[IndentingNewLine]For[j = k + 1, 
+              j \[LessEqual] n, \(j++\), \[IndentingNewLine]For[s = 1, 
+                s \[LessEqual] k - 1, \(s++\), \[IndentingNewLine]c += 
+                  l[\([k, s]\)]*
+                    r[\([s, 
+                        j]\)]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]r[\([k, j]\)] = \((a[\([k, j]\)] - c)\)/
+                  l[\([k, k]\)]; \[IndentingNewLine]c = 
+                0\[IndentingNewLine]] (*Ende\ For*) \[IndentingNewLine]] \
+(*Ende\ If*) \[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]If[
+          abbruch \[Equal] True, 
+          Print["\<STOP\>"], {l, 
+            r}]\[IndentingNewLine]]\)\( (*Ende\ Module*) \)\)\)], "Input",
+  CellLabel->"In[2]:="]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Beispiel ", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(A = {{2, \(-2\), \(-2\)}, {0, \(-2\), 2}, {\(-1\), 5, 
+            2}};\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[A]\), "\[IndentingNewLine]", 
+    \(\(luCr = Crout[A];\)\), "\[IndentingNewLine]", 
+    \(\(luDo = Doolittle[A];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Doolittle \>"\ , "\< L = \>", 
+        MatrixForm[luDo[\([1]\)]], "\< R = \>", 
+        MatrixForm[luDo[\([2]\)]], "\< LR = \>", 
+        MatrixForm[
+          luDo[\([1]\)] . luDo[\([2]\)]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Crout \>", "\< L = \>", 
+        MatrixForm[luCr[\([1]\)]], "\< R = \>", 
+        MatrixForm[luCr[\([2]\)]], "\< LR = \>", 
+        MatrixForm[luCr[\([1]\)] . luCr[\([2]\)]]\ ];\)\)}], "Input",
+  CellLabel->"In[3]:="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"2", \(-2\), \(-2\)},
+            {"0", \(-2\), "2"},
+            {\(-1\), "5", "2"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[4]//MatrixForm="],
+
+Cell[BoxData[
+    InterpretationBox[
+      RowBox[{"\<\" Doolittle \"\>", "\[InvisibleSpace]", "\<\" L = \"\>", 
+        "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", "0", "0"},
+                {"0", "1", "0"},
+                {\(-\(1\/2\)\), \(-2\), "1"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)], "\[InvisibleSpace]", "\<\" R = \"\>", 
+        "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"2", \(-2\), \(-2\)},
+                {"0", \(-2\), "2"},
+                {"0", "0", "5"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)], "\[InvisibleSpace]", "\<\" LR = \"\>", 
+        "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"2", \(-2\), \(-2\)},
+                {"0", \(-2\), "2"},
+                {\(-1\), "5", "2"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)]}],
+      SequenceForm[ " Doolittle ", " L = ", 
+        MatrixForm[ {{1, 0, 0}, {0, 1, 0}, {
+          Rational[ -1, 2], -2, 1}}], " R = ", 
+        MatrixForm[ {{2, -2, -2}, {0, -2, 2}, {0, 0, 5}}], " LR = ", 
+        MatrixForm[ {{2, -2, -2}, {0, -2, 2}, {-1, 5, 2}}]],
+      Editable->False]], "Print",
+  CellLabel->"From In[3]:="],
+
+Cell[BoxData[
+    InterpretationBox[
+      RowBox[{"\<\" Crout \"\>", "\[InvisibleSpace]", "\<\" L = \"\>", 
+        "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"2", "0", "0"},
+                {"0", \(-2\), "0"},
+                {\(-1\), "4", "5"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)], "\[InvisibleSpace]", "\<\" R = \"\>", 
+        "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", \(-1\), \(-1\)},
+                {"0", "1", \(-1\)},
+                {"0", "0", "1"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)], "\[InvisibleSpace]", "\<\" LR = \"\>", 
+        "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"2", \(-2\), \(-2\)},
+                {"0", \(-2\), "2"},
+                {\(-1\), "5", "2"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)]}],
+      SequenceForm[ " Crout ", " L = ", 
+        MatrixForm[ {{2, 0, 0}, {0, -2, 0}, {-1, 4, 5}}], " R = ", 
+        MatrixForm[ {{1, -1, -1}, {0, 1, -1}, {0, 0, 1}}], " LR = ", 
+        MatrixForm[ {{2, -2, -2}, {0, -2, 2}, {-1, 5, 2}}]],
+      Editable->False]], "Print",
+  CellLabel->"From In[3]:="]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 695}},
+WindowToolbars->"EditBar",
+WindowSize->{859, 618},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+StyleDefinitions -> "TutorialBook.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1739, 51, 55, 0, 92, "Section"],
+
+Cell[CellGroupData[{
+Cell[1819, 55, 40, 0, 40, "Subsection"],
+Cell[1862, 57, 1704, 29, 606, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[3603, 91, 36, 0, 34, "Subsection"],
+Cell[3642, 93, 1691, 28, 606, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[5370, 126, 31, 0, 34, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[5426, 130, 760, 15, 192, "Input"],
+Cell[6189, 147, 276, 8, 76, "Output"],
+Cell[6468, 157, 1345, 33, 64, "Print"],
+Cell[7816, 192, 1305, 32, 56, "Print"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

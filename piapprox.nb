@@ -1,0 +1,1732 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     56020,       1687]*)
+(*NotebookOutlinePosition[     56735,       1712]*)
+(*  CellTagsIndexPosition[     56691,       1708]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell[BoxData[{
+    \(\(Unprotect[NumberForm];\)\), "\[IndentingNewLine]", 
+    \(\(SetAttributes[NumberForm, Listable];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Xo = \@2 // N;\)\), "\[IndentingNewLine]", 
+    \(\(Pio = 2 + Xo;\)\), "\[IndentingNewLine]", 
+    \(\(Yo = \@2\%4 // N;\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(piproc[x_, y_, p_, n_] := 
+        Module[{ret, k, xi, pi, 
+            yi}, \[IndentingNewLine]ret = {{x, y, p}}; \[IndentingNewLine]For[
+            k = 1, k < n, \(k++\), \[IndentingNewLine]xi = 
+              1\/2*\((\@ret[\([k, 1]\)] + 
+                    1\/\@ret[\([k, 1]\)])\); \[IndentingNewLine]pi = 
+              ret[\([k, 
+                    3]\)]*\((\(xi + 1\)\/\(ret[\([k, 2]\)] + 1\))\); \
+\[IndentingNewLine]yi = \(ret[\([k, 2]\)]*\@xi + 1/\@\(\(xi\)\(\ \
+\)\)\)\/\(ret[\([k, 2]\)] + 1\); \[IndentingNewLine]AppendTo[
+              ret, {xi, yi, pi}]\[IndentingNewLine]]; 
+          ret\[IndentingNewLine]];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(NumberForm[piproc[Xo, Yo, Pio, 100], 200] // TableForm\)], "Input"],
+
+Cell[BoxData[
+    TagBox[GridBox[{
+          {
+            TagBox[
+              InterpretationBox["\<\"1.414213562373095\"\>",
+                1.4142135623730951,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.189207115002721\"\>",
+                1.189207115002721,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.414213562373095\"\>",
+                3.4142135623730949,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.015051765128218\"\>",
+                1.0150517651282178,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.000673499771502\"\>",
+                1.0006734997715021,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.142606753941623\"\>",
+                3.1426067539416231,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.000027899128024\"\>",
+                1.0000278991280236,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.00000000479316\"\>",
+                1.0000000047931596,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592660966044\"\>",
+                3.1415926609660443,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.000000000097292\"\>",
+                1.0000000000972924,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]},
+          {
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"1.\"\>",
+                1.0,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)], 
+            TagBox[
+              InterpretationBox["\<\"3.141592653589793\"\>",
+                3.1415926535897931,
+                AutoDelete->True],
+              (NumberForm[ #, 200]&)]}
+          },
+        RowSpacings->1,
+        ColumnSpacings->3,
+        RowAlignments->Baseline,
+        ColumnAlignments->{Left}],
+      (TableForm[ #]&)]], "Output"]
+}, Open  ]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1152}, {0, 781}},
+WindowToolbars->"EditBar",
+WindowSize->{710, 623},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+StyleDefinitions -> "DemoText.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1717, 49, 135, 2, 60, "Input"],
+Cell[1855, 53, 159, 3, 86, "Input"],
+Cell[2017, 58, 663, 12, 276, "Input"],
+
+Cell[CellGroupData[{
+Cell[2705, 74, 87, 1, 40, "Input"],
+Cell[2795, 77, 53209, 1607, 1644, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

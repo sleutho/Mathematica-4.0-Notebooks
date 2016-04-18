@@ -1,0 +1,2177 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     72806,       1985]*)
+(*NotebookOutlinePosition[     73508,       2010]*)
+(*  CellTagsIndexPosition[     73464,       2006]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Vergleich von L\[ODoubleDot]sungsmethoden f\[UDoubleDot]r 
+linearer Gleichungssysteme\
+\>", "Subtitle"],
+
+Cell["Aufgabenstellung", "Subsubtitle"],
+
+Cell[TextData[{
+  "Man vergleiche verschiedene Methoden zur L\[ODoubleDot]sung von linearen \
+Gleichungssystemen Ax = b mit symetrischer positiv definiter \
+Koeffizientenmatrix A \[Element] ",
+  Cell[BoxData[
+      \(TraditionalForm\`\(\(\[DoubleStruckCapitalR]\^\(n, n\)\)\(\ \)\)\)]],
+  " am Beispiel der Hilbertmatrix. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Auswertung", "Subsubtitle"],
+
+Cell[BoxData[{
+    \(\(StylePrint[SequenceForm["\<ZEITAUFWAND\>"], "\<Text\>"];\)\), "\n", 
+    \(Print[precTime // DisplayForm]\), "\[IndentingNewLine]", 
+    \(\(StylePrint[
+        SequenceForm[\*"\"\<PR\[CapitalADoubleDot]ZISION (2-Norm \
+<=\!\(10\^\(-6\)\))\>\""], "\<Text\>"];\)\), "\n", 
+    \(Print[precTab // DisplayForm]\)}], "Input"],
+
+Cell["ZEITAUFWAND", "Text",
+  GeneratedCell->True,
+  CellAutoOverwrite->True],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {
+              
+              InterpretationBox["\<\"Hilbertmatrix \\!\\(\
+\[DoubleStruckCapitalR]\\^n\\),n=\"\>",
+                SequenceForm[ 
+                "Hilbertmatrix \!\(\[DoubleStruckCapitalR]\^n\),n="],
+                Editable->False], 
+              InterpretationBox["2",
+                SequenceForm[ 2],
+                Editable->False], 
+              InterpretationBox["4",
+                SequenceForm[ 4],
+                Editable->False], 
+              InterpretationBox["6",
+                SequenceForm[ 6],
+                Editable->False], 
+              InterpretationBox["8",
+                SequenceForm[ 8],
+                Editable->False], 
+              InterpretationBox["10",
+                SequenceForm[ 10],
+                Editable->False], 
+              InterpretationBox["12",
+                SequenceForm[ 12],
+                Editable->False], 
+              InterpretationBox["14",
+                SequenceForm[ 14],
+                Editable->False]},
+            {
+              InterpretationBox["\<\"gemDemoREL[A,b]\"\>",
+                SequenceForm[ "gemDemoREL[A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.05\"\>",
+                  .049999999999954525,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.05\"\>",
+                  .050000000000181899,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"cholesky[A,b]\"\>",
+                SequenceForm[ "cholesky[A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.05\"\>",
+                  .049999999999954525,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.06\"\>",
+                  .05999999999994543,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"SOR[A,b]\"\>",
+                SequenceForm[ "SOR[A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"0.06\"\>",
+                  .05999999999994543,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"2.69\"\>",
+                  2.6900000000000546,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"9.78\"\>",
+                  9.7799999999999727,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"14.4\"\>",
+                  14.389999999999873,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"18.9\"\>",
+                  18.900000000000091,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"25.1\"\>",
+                  25.100000000000136,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"45.4\"\>",
+                  45.3599999999999,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"GradVPr\[ADoubleDot][A,b]\"\>",
+                SequenceForm[ "GradVPr\[ADoubleDot][A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"3.84\"\>",
+                  3.8399999999999181,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"5.05\"\>",
+                  5.0500000000001819,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"5.99\"\>",
+                  5.9900000000000091,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"6.97\"\>",
+                  6.9700000000000273,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"8.35\"\>",
+                  8.3499999999999091,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"9.18\"\>",
+                  9.1800000000000637,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"konjGradVPr\[ADoubleDot][A,b]\"\>",
+                SequenceForm[ "konjGradVPr\[ADoubleDot][A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.06\"\>",
+                  .05999999999994543,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.06\"\>",
+                  .05999999999994543,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.05\"\>",
+                  .049999999999954525,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"LinearSolve[A,b]\"\>",
+                SequenceForm[ "LinearSolve[A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.\"\>",
+                  0.0,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.11\"\>",
+                  .11000000000012733,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"],
+
+Cell["PR\[CapitalADoubleDot]ZISION", "Text",
+  GeneratedCell->True,
+  CellAutoOverwrite->True],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {
+              
+              InterpretationBox["\<\"Hilbertmatrix \\!\\(\
+\[DoubleStruckCapitalR]\\^n\\),n=\"\>",
+                SequenceForm[ 
+                "Hilbertmatrix \!\(\[DoubleStruckCapitalR]\^n\),n="],
+                Editable->False], 
+              InterpretationBox["2",
+                SequenceForm[ 2],
+                Editable->False], 
+              InterpretationBox["4",
+                SequenceForm[ 4],
+                Editable->False], 
+              InterpretationBox["6",
+                SequenceForm[ 6],
+                Editable->False], 
+              InterpretationBox["8",
+                SequenceForm[ 8],
+                Editable->False], 
+              InterpretationBox["10",
+                SequenceForm[ 10],
+                Editable->False], 
+              InterpretationBox["12",
+                SequenceForm[ 12],
+                Editable->False], 
+              InterpretationBox["14",
+                SequenceForm[ 14],
+                Editable->False]},
+            {
+              InterpretationBox["\<\"gemDemoREL[A,b]\"\>",
+                SequenceForm[ "gemDemoREL[A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"15.4\"\>",
+                  15.35252977886304,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"12.7\"\>",
+                  12.74186961577316,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"9.94\"\>",
+                  9.9414760343265183,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"7.04\"\>",
+                  7.0419626829774682,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"3.69\"\>",
+                  3.6882821705105151,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.865\"\>",
+                  .86539249163279031,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.239\"\>",
+                  -.23877138068818848,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"cholesky[A,b]\"\>",
+                SequenceForm[ "cholesky[A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"15.7\"\>",
+                  15.65355977452702,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"13.\"\>",
+                  13.042899611437141,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"9.85\"\>",
+                  9.8466565789240388,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"7.08\"\>",
+                  7.079639329727363,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"3.77\"\>",
+                  3.7660445530121405,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.772\"\>",
+                  .77220931821297467,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.536\"\>",
+                  -.53605688253632189,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"SOR[A,b]\"\>",
+                SequenceForm[ "SOR[A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"6.2\"\>",
+                  6.2033233290025089,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"4.42\"\>",
+                  4.4201465851411808,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.271\"\>",
+                  -.27122778756329902,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.184\"\>",
+                  -.18448982288584967,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.0000131\"\>",
+                  -.000013121488033008701,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox[\("-6.34"\[Times]10\^"-6"\),
+                  -.63430748113406111*^-5,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox[\("-3.74"\[Times]10\^"-6"\),
+                  -.37417190119557328*^-5,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"GradVPr\[ADoubleDot][A,b]\"\>",
+                SequenceForm[ "GradVPr\[ADoubleDot][A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"5.78\"\>",
+                  5.7784840951429786,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"2.47\"\>",
+                  2.4680419602310324,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.059\"\>",
+                  -.058953553023650983,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.149\"\>",
+                  -.14890232805883885,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.0947\"\>",
+                  -.094727531745613061,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.03\"\>",
+                  -.030038195339073731,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox[\("-1.41"\[Times]10\^"-6"\),
+                  -.14089235287192063*^-5,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"konjGradVPr\[ADoubleDot][A,b]\"\>",
+                SequenceForm[ "konjGradVPr\[ADoubleDot][A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"15.5\"\>",
+                  15.47746851547134,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"9.62\"\>",
+                  9.6209458481501322,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"6.85\"\>",
+                  6.8496507489114382,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"6.08\"\>",
+                  6.0812258503881775,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"2.81\"\>",
+                  2.8085669535349078,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.00177\"\>",
+                  -.0017675649004049285,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-0.242\"\>",
+                  -.24171075770402151,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]},
+            {
+              InterpretationBox["\<\"LinearSolve[A,b]\"\>",
+                SequenceForm[ "LinearSolve[A,b]"],
+                Editable->False], 
+              TagBox[
+                InterpretationBox["\<\"15.4\"\>",
+                  15.35252977886304,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"12.8\"\>",
+                  12.765942474191284,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"9.73\"\>",
+                  9.7287679099685622,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"7.7\"\>",
+                  7.6978194410066143,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"3.72\"\>",
+                  3.7151031929580944,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.874\"\>",
+                  .873655231621422,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)], 
+              TagBox[
+                InterpretationBox["\<\"-1.03\"\>",
+                  -1.0343708365364461,
+                  AutoDelete->True],
+                (NumberForm[ #, 3]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Beobachtungen", "Subsubtitle"],
+
+Cell[TextData[{
+  "Das konjungierte Gradienetenverfahren mit Pr\[ADoubleDot]konditionierung \
+die Vorteile bzgl. des Zeitaufwandes mit einer ausreichenden \
+Pr\[ADoubleDot]zision. \nDieser Zusammenhang wird allerdings bei erh\
+\[ODoubleDot]hter Anforderung an das Abbruchkriterium besser deutlich. \nAlso \
+bei ",
+  Cell[BoxData[
+      \(\((2 - Norm\ )\) <= 10\^\(-8\)\)]],
+  ".\nAu\[SZ]erdem halte ich die erzeugten Parameter f\[UDoubleDot]r wenig \
+aussagekr\[ADoubleDot]ftig, da mit einer \[ADoubleDot]u\[SZ]erst schlecht \
+konditionierten Matrix getestet wurde. \nEs ist zu erwarten, dass die \
+Vorteile der iterativer Verfahren bei besser konditionierten Matrizen \
+deutlicher zum Tragen kommen."
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Algoryhtmen", "Subsubtitle"],
+
+Cell[BoxData[
+    \(Remove["\<Global`*\>"]\)], "Input"],
+
+Cell[BoxData[
+    \(\(M = 14;\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(Unprotect[NumberForm]\), "\[IndentingNewLine]", 
+    \(SetAttributes[NumberForm, Listable]\), "\[IndentingNewLine]", 
+    \(Attributes[NumberForm]\)}], "Input"],
+
+Cell[BoxData[
+    \({"NumberForm"}\)], "Output"],
+
+Cell[BoxData[
+    \({Listable}\)], "Output"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["L\[ODoubleDot]sungsalgorythmen", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["gemDemoDIA  [mat_,rhs_]\t\tmit diagonaler Pivotwahl ", "Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(gemDemoDIA[mat_, 
+        rhs_]\)\(:=\)\(Module[{a, b, n, \ k, l\ , s, 
+          abbruch\ }, \[IndentingNewLine]a = mat; b = rhs; n = Length[a]; 
+        k = 1; l = 0; s = 0; 
+        abbruch = 
+          False; \[IndentingNewLine]\[IndentingNewLine] (*GEM\ runter\
+*) \[IndentingNewLine]While[\ 
+          k \[LessEqual] n\  && \ \(! abbruch\), \ \ \[IndentingNewLine]If[
+            a[\([k, k]\)] \[Equal] 0, 
+            abbruch = 
+              True, \[IndentingNewLine]\(For[i = k + 1, 
+                i \[LessEqual] n, \(i++\), \[IndentingNewLine]l = 
+                  a[\([i, k]\)]/
+                    a[\([k, k]\)]; \[IndentingNewLine] (*\(a[\([i, k]\)] = 
+                      0;\)*) b[\([i]\)] = 
+                  b[\([i]\)] - l*b[\([k]\)]; \[IndentingNewLine]For[
+                  j = k + 1, 
+                  j \[LessEqual] 
+                    n, \(j++\), \[IndentingNewLine]a[\([i, j]\)] = 
+                    a[\([i, j]\)] - 
+                      l*a[\([k, 
+                            j]\)]\[IndentingNewLine]] (*Ende\ For\
+*) \[IndentingNewLine]] (*Ende\ For*) ;\)\[IndentingNewLine]] (*Ende\ If*) ; \
+\[IndentingNewLine]\(k++\)\[IndentingNewLine]] (*Ende\ While*) ; \
+\[IndentingNewLine]\[IndentingNewLine] \
+(*R\[UDoubleDot]ckw\[ADoubleDot]rtsanalyse*) \[IndentingNewLine]k = 
+          n; \[IndentingNewLine]If[
+          abbruch \[Equal] True, , \[IndentingNewLine]b[\([n]\)] = 
+            b[\([n]\)]\/a[\([n, n]\)]; \[IndentingNewLine]For[i = n - 1, 
+            i \[GreaterEqual] 1, \(i--\), \[IndentingNewLine]For[j = i + 1, 
+              j \[LessEqual] n, \(j++\), 
+              s += a[\([i, j]\)]*b[\([j]\)]]; \[IndentingNewLine]b[\([i]\)] = 
+              1\/a[\([i, i]\)]*\((b[\([i]\)] - s)\); 
+            s = 0\[IndentingNewLine]] (*Ende\ For*) \[IndentingNewLine]] \
+(*Ende\ If*) ; \[IndentingNewLine]If[abbruch \[Equal] True, 
+          Print["\<STOP\>"], 
+          b] (*R\[UDoubleDot]ckgabewert\ b\ enth\[ADoubleDot]lt\ die\ L\
+\[ODoubleDot]sung\ x*) \[IndentingNewLine]]\)\( (*Ende\ Modul*) \)\)\)], \
+"Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["gemDemoREL [mat_,rhs_]\t\tmit relativer Spaltenpivotwahl ", \
+"Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(gemDemoREL[mat_, 
+        rhs_]\)\(:=\)\(Module[{a, b, n, s, p, q, h, max, t, r, 
+          abbruch\ }, \[IndentingNewLine]a = mat; b = rhs; n = Length[a]; 
+        s = 0; p = 0; q = 0; \[IndentingNewLine]h = 0; max = 0; t = 0; r = 0; 
+        abbruch = 
+          False; \[IndentingNewLine]\[IndentingNewLine] (*GEM\ runter\
+*) \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] n - 1, \(k++\), \[IndentingNewLine]If[
+            abbruch \[Equal] True, , \[IndentingNewLine]For[i = k, 
+              i \[LessEqual] n, \(i++\), \[IndentingNewLine]s = 0; 
+              max = 0; \[IndentingNewLine]For[j = k, 
+                j \[LessEqual] n, \(j++\), \[IndentingNewLine]s = 
+                  s + Abs[
+                      a[\([i, 
+                          j]\)]]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]q = Abs[a[\([i, k]\)]]/s; \[IndentingNewLine]If[q > max, 
+                max = q; 
+                p = i, ]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]If[max \[Equal] 0, 
+              abbruch = True (*STOP*) , ]; \[IndentingNewLine]If[
+              p != k, \[IndentingNewLine]For[j = 1, 
+                j \[LessEqual] n, \(j++\), \[IndentingNewLine]h = 
+                  a[\([k, j]\)]; a[\([k, j]\)] = a[\([p, j]\)]; 
+                a[\([p, j]\)] = 
+                  h\[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]t \
+= b[\([k]\)]; b[\([k]\)] = b[\([p]\)]; 
+              b[\([p]\)] = 
+                t, \[IndentingNewLine]] (*Ende\ If*) ;  (*\(Print["\<A\>", 
+                  MatrixForm[a], "\<b\>", 
+                  MatrixForm[b]];\)*) \[IndentingNewLine]For[i = k + 1, 
+              i \[LessEqual] n, \(i++\), \[IndentingNewLine]a[\([i, k]\)] = 
+                a[\([i, k]\)]/a[\([k, k]\)]; 
+              b[\([i]\)] = 
+                b[\([i]\)] - a[\([i, k]\)]*b[\([k]\)]; \[IndentingNewLine]For[
+                j = k + 1, 
+                j \[LessEqual] n, \(j++\), \[IndentingNewLine]a[\([i, j]\)] = 
+                  a[\([i, j]\)] - 
+                    a[\([i, k]\)]*
+                      a[\([k, 
+                          j]\)]\[IndentingNewLine]] (*Ende\ For\
+*) \[IndentingNewLine]] (*Ende\ For*) \[IndentingNewLine]] (*Ende\ If\
+*) \[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]\[IndentingNewLine] \
+(*R\[UDoubleDot]ckw\[ADoubleDot]rtseinsetzen*) \[IndentingNewLine]If[
+          abbruch \[Equal] True, , \[IndentingNewLine]b[\([n]\)] = 
+            b[\([n]\)]\/a[\([n, n]\)]; \[IndentingNewLine]For[i = n - 1, 
+            i \[GreaterEqual] 1, \(i--\), \[IndentingNewLine]For[j = i + 1, 
+              j \[LessEqual] n, \(j++\), 
+              r += a[\([i, j]\)]*b[\([j]\)]]; \[IndentingNewLine]b[\([i]\)] = 
+              1\/a[\([i, i]\)]*\((b[\([i]\)] - r)\); 
+            r = 0\[IndentingNewLine]] (*Ende\ For*) \[IndentingNewLine]] \
+(*Ende\ If*) ; \[IndentingNewLine]\[IndentingNewLine]If[
+          abbruch \[Equal] True, Print["\<STOP\>"], 
+          b] (*R\[UDoubleDot]ckgabewert\ b\ enth\[ADoubleDot]lt\ die\ L\
+\[ODoubleDot]sung\ x*) \[IndentingNewLine]]\)\( (*Ende\ Modul*) \)\)\)], \
+"Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["cholesky[mat_,rhs_]", "Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(cholesky[mat_, rhs_]\)\(:=\)\(Module[{a, n, l, abbruch, b, y}, 
+        a = mat; \[IndentingNewLine]n = Length[a]; 
+        l = Table[0, {t, 1, n}, {s, 1, n}]; \[IndentingNewLine]abbruch = 
+          False; b = rhs; 
+        y = Table[
+            0, {i, 1, 
+              n}]; \[IndentingNewLine]\[IndentingNewLine] (*Cholesky - 
+            Zerlegung*) \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] n, \(k++\), \[IndentingNewLine]If[
+            a[\([k, k]\)] \[LessEqual] 0, 
+            abbruch = 
+              True, \[IndentingNewLine]l[\([k, 
+                  k]\)] = \@a[\([k, k]\)]; \[IndentingNewLine]For[j = k + 1, 
+              j \[LessEqual] 
+                n, \(j++\), \[IndentingNewLine]l[\([j, 
+                    k]\)] = \((a[\([k, j]\)]*l[\([k, k]\)])\)/
+                  a[\([k, k]\)]; \[IndentingNewLine]For[i = k + 1, 
+                i \[LessEqual] n, \(i++\), \[IndentingNewLine]a[\([i, j]\)] = 
+                  a[\([i, j]\)] - 
+                    a[\([k, j]\)]*
+                      a[\([k, i]\)]/
+                        a[\([k, 
+                            k]\)]]\[IndentingNewLine]] (*Ende\ For\
+*) \[IndentingNewLine]] (*Ende\ If*) \[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]\[IndentingNewLine] \
+(*R\[UDoubleDot]ckw\[ADoubleDot]rtseinsetzen*) \[IndentingNewLine]If[
+          abbruch == True, 
+          Print["\<STOP\>"], \[IndentingNewLine]y[\([1]\)] = 
+            b[\([1]\)]/l[\([1, 1]\)]; \[IndentingNewLine]For[i = 2, 
+            i \[LessEqual] \ 
+              n, \(i++\), \[IndentingNewLine]y[\([i]\)] = \((b[\([i]\)] - \
+\[Sum]\+\(j = 1\)\%\(i - 1\)l[\([i, j]\)]*y[\([j]\)])\)/
+                l[\([i, 
+                    i]\)]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]b[\([n]\)] = 
+            y[\([n]\)]/
+              l[\([n, n]\)]; \[IndentingNewLine]\[IndentingNewLine]For[
+            i = n - 1, 
+            i \[GreaterEqual] \ \ 1, \(i--\), \[IndentingNewLine]b[\([i]\)] = \
+\((y[\([i]\)] - \[Sum]\+\(j = i + 1\)\%n l[\([j, i]\)]*b[\([j]\)])\)/
+                l[\([i, 
+                    i]\)]\[IndentingNewLine]] (*Ende\ For*) ]; \
+\[IndentingNewLine]If[abbruch == True, Print["\<STOP\>"], 
+          b]\[IndentingNewLine]]\)\( (*Ende\ Module*) \)\)\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+SOR[mat_,rhs_,xS_,Fehler_,maxK_,\[Omega]_]\
+\>", "Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(SOR[mat_, rhs_, xS_, Fehler_, 
+        maxK_, \[Omega]_]\)\(:=\)\(Module[{A, n, b, eps, kmax, norm, x, k, 
+          r}, \[IndentingNewLine]A = mat; n = Length[A]; b = rhs; 
+        eps = Fehler; \[IndentingNewLine]kmax = maxK; norm = 0; x = xS; 
+        k = 0; w = \[Omega]; \[IndentingNewLine]\[IndentingNewLine] \
+(*Residuum\ testen*) \[IndentingNewLine]r = A . x - b; \[IndentingNewLine]For[
+          i = 1, i \[LessEqual] n, \(i++\), 
+          norm += r[\([i]\)]\^2] (*Ende\ For, 
+          2 - Norm*) ; \[IndentingNewLine]norm = \@norm; \[IndentingNewLine]\
+\[IndentingNewLine] (*solange\ bzgl . \ 2 - Norm\  < \ 
+            eps\ Iteration\ bis\ maxK\ fortsetzen*) \[IndentingNewLine]While[
+          norm \[GreaterEqual] eps\  && \ 
+            k \[LessEqual] kmax, \[IndentingNewLine]norm = 
+            0; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] \ 
+              n, \(i++\), \[IndentingNewLine]x[\([i]\)] = \((1 - w)\)*
+                  x[\([i]\)] + 
+                w\/A[\([i, i]\)]*\((b[\([i]\)] - \[Sum]\+\(j = 1\)\%\(i - \
+1\)A[\([i, j]\)]*x[\([j]\)] - \[Sum]\+\(j = i + 1\)\%n A[\([i, j]\)]*
+                          x[\([j]\)])\)\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]r = A . x - b; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] n, \(i++\), norm += r[\([i]\)]\^2] (*Ende\ For, 
+            2 - Norm*) ; \[IndentingNewLine]norm = \@norm; \
+\[IndentingNewLine]\(k++\)] (*Ende\ While*) ; \[IndentingNewLine]{k, 
+          x}]\)\( (*Ende\ Module*) \)\)\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["GradV[mat_,rhs_,AW_,Fehler_,maxK_]", "Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(GradV[mat_, rhs_, xS_, Fehler_, 
+        maxK_]\)\(:=\)\(Module[{A, n, b, eps, kmax, norm, x, r, alpha, k, 
+          p}, \[IndentingNewLine]A = mat; n = Length[A]; b = rhs; 
+        eps = Fehler; \[IndentingNewLine]kmax = maxK; norm = 0; 
+        x = xS; \[IndentingNewLine]r = A . x - b; 
+        k = 0; \[IndentingNewLine] (*Residuum\ \
+testen*) \[IndentingNewLine]For[i = 1, i \[LessEqual] n, \(i++\), 
+          norm += r[\([i]\)]\^2] (*Ende\ For, 
+          2 - Norm*) ; \[IndentingNewLine]norm = \@norm; \[IndentingNewLine]\
+\[IndentingNewLine]While[
+          norm \[GreaterEqual] eps\  && \ 
+            k \[LessEqual] kmax, \[IndentingNewLine]norm = 
+            0; \[IndentingNewLine]p = \(-r\); \[IndentingNewLine]alpha = 
+            r . r\/r . A . r; \[IndentingNewLine]x = 
+            x + alpha*p; \[IndentingNewLine]r = 
+            r + alpha*
+                A . p; \[IndentingNewLine] (*Residuum\ testen\
+*) \[IndentingNewLine]For[i = 1, i \[LessEqual] n, \(i++\), 
+            norm += r[\([i]\)]\^2] (*Ende\ For, 
+            2 - Norm*) ; \[IndentingNewLine]norm = \@norm; \
+\[IndentingNewLine]\(k++\)] (*Ende\ While*) ; \[IndentingNewLine]{k - 1, 
+          x}]\)\( (*Ende\ Module*) \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["GradVPr\[ADoubleDot][mat_,rhs_,AW_,Fehler_,maxK_]", "Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(GradVPr\[ADoubleDot][mat_, rhs_, xS_, Fehler_, 
+        maxK_]\)\(:=\)\(Module[{A, B, n, b, eps, kmax, norm, x, r, alpha, k, 
+          p, q, s}, \[IndentingNewLine]A = mat; n = Length[A]; b = rhs; 
+        eps = Fehler; \[IndentingNewLine]B = 
+          Table[If[i \[Equal] j, A[\([i, j]\)], 0], {i, 1, n}, {j, 1, 
+              n}]; \[IndentingNewLine]kmax = maxK; norm = 0; x = xS; 
+        q = Table[0, {i, 1, n}]; \[IndentingNewLine]s = 
+          Table[0, {i, 1, n}]; \[IndentingNewLine]r = A . x - b; 
+        k = 0; \[IndentingNewLine] (*Residuum\ \
+testen*) \[IndentingNewLine]For[i = 1, i \[LessEqual] n, \(i++\), 
+          norm += r[\([i]\)]\^2] (*Ende\ For, 
+          2 - Norm*) ; \[IndentingNewLine]norm = \@norm; \[IndentingNewLine]\
+\[IndentingNewLine]While[
+          norm \[GreaterEqual] eps\  && \ 
+            k \[LessEqual] kmax, \[IndentingNewLine]norm = 
+            0; \[IndentingNewLine]For[i = 1, i \[LessEqual] n, \(i++\), \ 
+            q[\([i]\)] = \(-\(r[\([i]\)]\/B[\([i, 
+                        i]\)]\)\)]; \[IndentingNewLine]s = 
+            A . q; \[IndentingNewLine]alpha = \(-\(r . q\/q . 
+                    s\)\); \[IndentingNewLine]x = 
+            x + alpha*q; \[IndentingNewLine]r = 
+            r + alpha*
+                s; \[IndentingNewLine] (*Residuum\ testen\
+*) \[IndentingNewLine]For[i = 1, i \[LessEqual] n, \(i++\), 
+            norm += r[\([i]\)]\^2] (*Ende\ For, 
+            2 - Norm*) ; \[IndentingNewLine]norm = \@norm; \
+\[IndentingNewLine]\(k++\)] (*Ende\ While*) ; \[IndentingNewLine]{k - 1, 
+          x}]\)\( (*Ende\ Module*) \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["konjGradV[mat_,rhs_,AW_,Fehler_,maxK_]", "Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(konjGradV[mat_, rhs_, xS_, Fehler_, 
+        maxK_]\)\(:=\)\(Module[{A, n, b, eps, kmax, norm, x, r0, r1, alpha, 
+          betha, k, p, s}, \[IndentingNewLine]A = mat; n = Length[A]; 
+        b = rhs; eps = Fehler; \[IndentingNewLine]kmax = maxK; norm = 0; 
+        x = xS; s = 
+          Table[0, {i, 1, n}]; \[IndentingNewLine]\[IndentingNewLine]r0 = 
+          A . x - b; k = 0; 
+        p = \(-r0\); \[IndentingNewLine] (*Residuum\ testen\
+*) \[IndentingNewLine]For[i = 1, i \[LessEqual] n, \(i++\), 
+          norm += r0[\([i]\)]\^2] (*Ende\ For, 
+          2 - Norm*) ; \[IndentingNewLine]norm = \@norm; \[IndentingNewLine]\
+\[IndentingNewLine]While[
+          norm \[GreaterEqual] eps\  && \ 
+            k \[LessEqual] kmax, \[IndentingNewLine]norm = 
+            0; \[IndentingNewLine]s = A . p; \[IndentingNewLine]alpha = 
+            r0 . r0\/p . s; \[IndentingNewLine]x = 
+            x + alpha*p; \[IndentingNewLine]r1 = 
+            r0 + alpha*s; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] n, \(i++\), norm += r1[\([i]\)]\^2] (*Ende\ For, 
+            2 - Norm*) ; \[IndentingNewLine]norm = \@norm; \
+\[IndentingNewLine]betha = 
+            r1 . s\/p . s; \[IndentingNewLine]p = \(-r1\) + 
+              betha*p; \[IndentingNewLine]r0 = 
+            r1; \[IndentingNewLine]\(k++\)] (*Ende\ While*) ; \
+\[IndentingNewLine]{k - 1, x}]\)\( (*Ende\ Module*) \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["konjGradVPr\[ADoubleDot][mat_,rhs_,xS_,Fehler_,maxK_]", "Subsubsection"],
+
+Cell[BoxData[
+    \(\(\(konjGradVPr\[ADoubleDot][mat_, rhs_, xS_, Fehler_, 
+        maxK_]\)\(:=\)\(Module[{A, n, B, b, eps, kmax, norm, x, r0, r1, 
+          alpha, betha, k, q0, q1, p, s, c}, \[IndentingNewLine]A = mat; 
+        n = Length[A]; kmax = maxK; 
+        norm = 0; \[IndentingNewLine]B = 
+          Table[If[i \[Equal] j, A[\([i, j]\)], 0], {i, 1, n}, {j, 1, n}]; 
+        b = rhs; eps = Fehler; \[IndentingNewLine]x = xS; k = 0; 
+        q0 = Table[0, {i, 1, n}]; 
+        q1 = Table[0, {i, 1, n}]; \[IndentingNewLine]r0 = A . x - b; 
+        s = Table[0, {i, 1, n}]; \[IndentingNewLine]For[i = 1, 
+          i \[LessEqual] n, \(i++\), norm += r0[\([i]\)]\^2] (*Ende\ For, 
+          2 - Norm*) ; \[IndentingNewLine]norm = \@norm; \
+\[IndentingNewLine]For[i = 1, i \[LessEqual] n, \(i++\), \ 
+          q0[\([i]\)] = \(-\(r0[\([i]\)]\/B[\([i, 
+                      i]\)]\)\)]; \[IndentingNewLine]p = 
+          q0; \[IndentingNewLine]While[
+          norm \[GreaterEqual] eps\  && \ 
+            k \[LessEqual] kmax, \[IndentingNewLine]norm = 
+            0; \[IndentingNewLine]s = A . p; 
+          c = r0 . 
+              q0; \[IndentingNewLine]alpha = \(-\(c\/p . 
+                    s\)\); \[IndentingNewLine]r1 = 
+            r0 + alpha*s; \[IndentingNewLine]x = 
+            x + alpha*p; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] n, \(i++\), 
+            norm += r1[\([i]\)]\^2] (*Ende\ For*) ; \[IndentingNewLine]norm = \
+\@norm; \[IndentingNewLine]If[norm \[LessEqual] eps, 
+            Break[], ]; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] n, \(i++\), \ 
+            q1[\([i]\)] = \(-\(r1[\([i]\)]\/B[\([i, 
+                        i]\)]\)\)]; \[IndentingNewLine]betha = 
+            r1 . q1\/c; \[IndentingNewLine]p = 
+            q1 + betha*p; \[IndentingNewLine]r0 = r1; 
+          q0 = q1; \[IndentingNewLine]\(k++\)] (*Ende\ While*) ; \
+\[IndentingNewLine]{k, x}]\)\( (*Ende\ Module*) \)\)\)], "Input"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Beispiele", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["Beispiel allg.", "Subsubsection"],
+
+Cell[BoxData[{
+    \(\(A = {{5. , 1.5, 0.55}, {1.5, 0.55, 0.225}, {0.55, 0.225, 
+            0.0979}};\)\), "\[IndentingNewLine]", 
+    \(\(b = {\(-2.247\), \(-0.9786\), \(-0.43672\)};\)\), \
+"\[IndentingNewLine]", 
+    \(\(x0 = {0. , 1. , 1. };\)\), "\[IndentingNewLine]", 
+    \(\(eps = 10\^\(-6\);\)\), "\[IndentingNewLine]", 
+    \(kmax = 5000; w = 1.7;\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(gemDemoDIA[A, b]\ \ \), "\[IndentingNewLine]", 
+    \(gemDemoREL[A, b]\), "\[IndentingNewLine]", 
+    \(cholesky[A, b]\), "\[IndentingNewLine]", 
+    \(SOR[A, b, x0, eps, kmax, w]\), "\[IndentingNewLine]", 
+    \(GradV[A, b, x0, eps, kmax]\), "\[IndentingNewLine]", 
+    \(GradVPr\[ADoubleDot][A, b, x0, eps, kmax]\), "\[IndentingNewLine]", 
+    \(konjGradV[A, b, x0, eps, kmax]\), "\[IndentingNewLine]", 
+    \(konjGradVPr\[ADoubleDot][A, b, x0, eps, 
+      kmax]\), "\[IndentingNewLine]", 
+    \(LinearSolve[A, b]\)}], "Input"],
+
+Cell[BoxData[
+    \({0.1216000000000026`, \(-0.10928571428573454`\), \
+\(-4.892857142857111`\)}\)], "Output"],
+
+Cell[BoxData[
+    \({0.12159999999999625`, \(-0.10928571428568347`\), \(-4.892857142857193`\
+\)}\)], "Output"],
+
+Cell[BoxData[
+    \({0.12160000000000425`, \(-0.10928571428574707`\), \(-4.892857142857091`\
+\)}\)], "Output"],
+
+Cell[BoxData[
+    \({188, {0.12160436548751728`, \(-0.1093142383645161`\), \
+\(-4.892817370497115`\)}}\)], "Output"],
+
+Cell[BoxData[
+    \({2080, {0.12165910661467585`, \(-0.10978417499119537`\), \
+\(-4.892035190103749`\)}}\)], "Output"],
+
+Cell[BoxData[
+    \({1154, {0.1216387407110879`, \(-0.10960143533443803`\), \
+\(-4.892347997395656`\)}}\)], "Output"],
+
+Cell[BoxData[
+    \({2, {0.12160000000076904`, \(-0.10928571428543199`\), \
+\(-4.892857142856962`\)}}\)], "Output"],
+
+Cell[BoxData[
+    \({2, {0.12159999999970333`, \(-0.10928571428671408`\), \
+\(-4.892857142859316`\)}}\)], "Output"],
+
+Cell[BoxData[
+    \({0.12160000000000264`, \(-0.10928571428573455`\), \(-4.892857142857111`\
+\)}\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\(ListPlot[
+        Table[{rel, \(SOR[A, b, x0, eps, kmax, rel]\)[\([1]\)]}, {rel, 0, 2, 
+            1\/10}], PlotLabel -> "\<\[Omega]-Suche\>", 
+        Frame \[Rule] True];\)\)], "Input"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.47619 0.0147151 0.000117697 [
+[.02381 -0.0125 -3 -9 ]
+[.02381 -0.0125 3 0 ]
+[.2619 -0.0125 -9 -9 ]
+[.2619 -0.0125 9 0 ]
+[.5 -0.0125 -3 -9 ]
+[.5 -0.0125 3 0 ]
+[.7381 -0.0125 -9 -9 ]
+[.7381 -0.0125 9 0 ]
+[.97619 -0.0125 -3 -9 ]
+[.97619 -0.0125 3 0 ]
+[ 0 0 -0.125 0 ]
+[-0.0125 .01472 -6 -4.5 ]
+[-0.0125 .01472 0 4.5 ]
+[-0.0125 .13241 -24 -4.5 ]
+[-0.0125 .13241 0 4.5 ]
+[-0.0125 .25011 -24 -4.5 ]
+[-0.0125 .25011 0 4.5 ]
+[-0.0125 .36781 -24 -4.5 ]
+[-0.0125 .36781 0 4.5 ]
+[-0.0125 .4855 -24 -4.5 ]
+[-0.0125 .4855 0 4.5 ]
+[-0.0125 .6032 -24 -4.5 ]
+[-0.0125 .6032 0 4.5 ]
+[ 0 0 -0.125 0 ]
+[ 0 .61803 .125 0 ]
+[ 1 0 .125 0 ]
+[.5 .63053 -23 0 ]
+[.5 .63053 23 12.875 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.02381 0 m
+.02381 .00625 L
+s
+[(0)] .02381 -0.0125 0 1 Mshowa
+.2619 0 m
+.2619 .00625 L
+s
+[(0.5)] .2619 -0.0125 0 1 Mshowa
+.5 0 m
+.5 .00625 L
+s
+[(1)] .5 -0.0125 0 1 Mshowa
+.7381 0 m
+.7381 .00625 L
+s
+[(1.5)] .7381 -0.0125 0 1 Mshowa
+.97619 0 m
+.97619 .00625 L
+s
+[(2)] .97619 -0.0125 0 1 Mshowa
+.125 Mabswid
+.07143 0 m
+.07143 .00375 L
+s
+.11905 0 m
+.11905 .00375 L
+s
+.16667 0 m
+.16667 .00375 L
+s
+.21429 0 m
+.21429 .00375 L
+s
+.30952 0 m
+.30952 .00375 L
+s
+.35714 0 m
+.35714 .00375 L
+s
+.40476 0 m
+.40476 .00375 L
+s
+.45238 0 m
+.45238 .00375 L
+s
+.54762 0 m
+.54762 .00375 L
+s
+.59524 0 m
+.59524 .00375 L
+s
+.64286 0 m
+.64286 .00375 L
+s
+.69048 0 m
+.69048 .00375 L
+s
+.78571 0 m
+.78571 .00375 L
+s
+.83333 0 m
+.83333 .00375 L
+s
+.88095 0 m
+.88095 .00375 L
+s
+.92857 0 m
+.92857 .00375 L
+s
+.25 Mabswid
+0 0 m
+1 0 L
+s
+0 .01472 m
+.00625 .01472 L
+s
+[(0)] -0.0125 .01472 1 0 Mshowa
+0 .13241 m
+.00625 .13241 L
+s
+[(1000)] -0.0125 .13241 1 0 Mshowa
+0 .25011 m
+.00625 .25011 L
+s
+[(2000)] -0.0125 .25011 1 0 Mshowa
+0 .36781 m
+.00625 .36781 L
+s
+[(3000)] -0.0125 .36781 1 0 Mshowa
+0 .4855 m
+.00625 .4855 L
+s
+[(4000)] -0.0125 .4855 1 0 Mshowa
+0 .6032 m
+.00625 .6032 L
+s
+[(5000)] -0.0125 .6032 1 0 Mshowa
+.125 Mabswid
+0 .03825 m
+.00375 .03825 L
+s
+0 .06179 m
+.00375 .06179 L
+s
+0 .08533 m
+.00375 .08533 L
+s
+0 .10887 m
+.00375 .10887 L
+s
+0 .15595 m
+.00375 .15595 L
+s
+0 .17949 m
+.00375 .17949 L
+s
+0 .20303 m
+.00375 .20303 L
+s
+0 .22657 m
+.00375 .22657 L
+s
+0 .27365 m
+.00375 .27365 L
+s
+0 .29719 m
+.00375 .29719 L
+s
+0 .32073 m
+.00375 .32073 L
+s
+0 .34427 m
+.00375 .34427 L
+s
+0 .39135 m
+.00375 .39135 L
+s
+0 .41489 m
+.00375 .41489 L
+s
+0 .43843 m
+.00375 .43843 L
+s
+0 .46196 m
+.00375 .46196 L
+s
+0 .50904 m
+.00375 .50904 L
+s
+0 .53258 m
+.00375 .53258 L
+s
+0 .55612 m
+.00375 .55612 L
+s
+0 .57966 m
+.00375 .57966 L
+s
+.25 Mabswid
+0 0 m
+0 .61803 L
+s
+.02381 .61178 m
+.02381 .61803 L
+s
+.2619 .61178 m
+.2619 .61803 L
+s
+.5 .61178 m
+.5 .61803 L
+s
+.7381 .61178 m
+.7381 .61803 L
+s
+.97619 .61178 m
+.97619 .61803 L
+s
+.125 Mabswid
+.07143 .61428 m
+.07143 .61803 L
+s
+.11905 .61428 m
+.11905 .61803 L
+s
+.16667 .61428 m
+.16667 .61803 L
+s
+.21429 .61428 m
+.21429 .61803 L
+s
+.30952 .61428 m
+.30952 .61803 L
+s
+.35714 .61428 m
+.35714 .61803 L
+s
+.40476 .61428 m
+.40476 .61803 L
+s
+.45238 .61428 m
+.45238 .61803 L
+s
+.54762 .61428 m
+.54762 .61803 L
+s
+.59524 .61428 m
+.59524 .61803 L
+s
+.64286 .61428 m
+.64286 .61803 L
+s
+.69048 .61428 m
+.69048 .61803 L
+s
+.78571 .61428 m
+.78571 .61803 L
+s
+.83333 .61428 m
+.83333 .61803 L
+s
+.88095 .61428 m
+.88095 .61803 L
+s
+.92857 .61428 m
+.92857 .61803 L
+s
+.25 Mabswid
+0 .61803 m
+1 .61803 L
+s
+.99375 .01472 m
+1 .01472 L
+s
+.99375 .13241 m
+1 .13241 L
+s
+.99375 .25011 m
+1 .25011 L
+s
+.99375 .36781 m
+1 .36781 L
+s
+.99375 .4855 m
+1 .4855 L
+s
+.99375 .6032 m
+1 .6032 L
+s
+.125 Mabswid
+.99625 .03825 m
+1 .03825 L
+s
+.99625 .06179 m
+1 .06179 L
+s
+.99625 .08533 m
+1 .08533 L
+s
+.99625 .10887 m
+1 .10887 L
+s
+.99625 .15595 m
+1 .15595 L
+s
+.99625 .17949 m
+1 .17949 L
+s
+.99625 .20303 m
+1 .20303 L
+s
+.99625 .22657 m
+1 .22657 L
+s
+.99625 .27365 m
+1 .27365 L
+s
+.99625 .29719 m
+1 .29719 L
+s
+.99625 .32073 m
+1 .32073 L
+s
+.99625 .34427 m
+1 .34427 L
+s
+.99625 .39135 m
+1 .39135 L
+s
+.99625 .41489 m
+1 .41489 L
+s
+.99625 .43843 m
+1 .43843 L
+s
+.99625 .46196 m
+1 .46196 L
+s
+.99625 .50904 m
+1 .50904 L
+s
+.99625 .53258 m
+1 .53258 L
+s
+.99625 .55612 m
+1 .55612 L
+s
+.99625 .57966 m
+1 .57966 L
+s
+.25 Mabswid
+1 0 m
+1 .61803 L
+s
+gsave
+.5 .63053 -84 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 20.875 translate 1 -1 scale
+63.000 13.000 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 13.000 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(w) show
+69.000 13.000 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+75.000 13.000 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(Suche) show
+105.000 13.000 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.008 w
+.02381 .60332 Mdot
+.07143 .60332 Mdot
+.11905 .60332 Mdot
+.16667 .60332 Mdot
+.21429 .44996 Mdot
+.2619 .35015 Mdot
+.30952 .28259 Mdot
+.35714 .23351 Mdot
+.40476 .19609 Mdot
+.45238 .16631 Mdot
+.5 .14206 Mdot
+.54762 .1217 Mdot
+.59524 .10416 Mdot
+.64286 .08898 Mdot
+.69048 .07521 Mdot
+.7381 .06274 Mdot
+.78571 .05061 Mdot
+.83333 .03684 Mdot
+.88095 .03602 Mdot
+.92857 .05873 Mdot
+.97619 .60332 Mdot
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+  ImageSize->{288, 177.938},
+  ImageMargins->{{43, 0}, {0, 0}},
+  ImageRegion->{{0, 1}, {0, 1}},
+  ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40005X0000gQ000`40O003h00O<Woo1000?7oo1000
+1Goo0P001Goo1000?7oo1@00>goo1@0017oo0P001Goo1000>Woo1@004goo000aOol00`00Oomoo`02
+Ool00`00Oomoo`0hOol00`00Oomoo`02Ool00`00Oomoo`02Ool20004Ool00`00Oomoo`02Ool00`00
+Oomoo`0kOol00`00Oomoo`0mOol00`00Oomoo`04Ool20004Ool00`00Oomoo`02Ool00`00Oomoo`0g
+Ool01@00Oomoogoo00004goo000aOol00`00Oomoo`02Ool00`00Oomoo`0hOol00`00Oomoo`02Ool0
+0`00Oomoo`0=Ool00`00Oomoo`0kOol00`00Oomoo`0mOol00`00Oomoo`0?Ool00`00Oomoo`0hOol0
+0`00Oomoo`0DOol0035oo`03001oogoo009oo`03001oogoo03Qoo`03001oogoo009oo`03001oogoo
+00eoo`03001oogoo03]oo`03001oogoo03eoo`03001oogoo00moo`03001oogoo03Uoo`03001oogoo
+01=oo`00<Goo00<007ooOol00Woo00<007ooOol0>7oo00<007ooOol00Woo00<007ooOol02Goo1000
+?Woo00<007ooOol0?Goo00<007ooOol02goo1000?Goo00<007ooOol04Woo000aOol00`00Oomoo`02
+Ool00`00Oomoo`0hOol00`00Oomoo`02Ool00`00Oomoo`09Ool00`00Oomoo`0oOol00`00Oomoo`0m
+Ool00`00Oomoo`0;Ool00`00Oomoo`0oOol00`00Oomoo`0AOol0035oo`03001oogoo009oo`03001o
+ogoo03Qoo`03001oogoo009oo`03001oogoo00Uoo`03001oogoo03eoo`<003eoo`<000eoo`03001o
+ogoo03]oo`05001oogooOol0000COol0039oo`@003aoo`@000aoo`D003eoo`03001oogoo03eoo`03
+001oogoo00]oo`D003Yoo`<001Aoo`00ogooJGoo003oOomYOol00?moofUoo`00ogooJGoo003oOomY
+Ool00?moofUoo`00ogooJGoo000]Oooo000`000<Ool002eoo`03001oogoo00Aoo`03001oogoo00]o
+o`03001oogoo00aoo`03001oogoo00]oo`03001oogoo00aoo`03001oogoo00]oo`03001oogoo00]o
+o`03001oogoo00aoo`03001oogoo00]oo`03001oogoo00]oo`03001oogoo00aoo`03001oogoo00]o
+o`03001oogoo00aoo`03001oogoo00]oo`03001oogoo00]oo`03001oogoo00aoo`03001oogoo00]o
+o`03001oogoo00]oo`03001oogoo00aoo`03001oogoo00]oo`03001oogoo00]oo`03001oogoo00Eo
+o`03001oogoo00Yoo`008goo10001Woo00<007ooOol017oo00<007ooOol0AGoo00<007ooOol0AGoo
+00<007ooOol0AGoo00<007ooOol0A7oo00<007ooOol01Goo00<007ooOol02Woo000ROol00`00Oomo
+o`02Ool00`00Oomoo`03Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool0029oo`03001oogoo009o
+o`03001oogoo00=oo`03001oogoo0?moobaoo`03001oogoo00Yoo`008Woo00<007ooOol00Woo00<0
+07ooOol00goo0`00ogoo:Woo0`0037oo000ROol00`00Oomoo`02Ool00`00Oomoo`03Ool00`00Oomo
+o`3oOol/Ool00`00Oomoo`0:Ool0029oo`03001oogoo009oo`03001oogoo00=oo`03001oogoo0?mo
+obaoo`03001oogoo00Yoo`008Woo00<007ooOol00Woo00<007ooOol00goo00<007ooOol0ogoo;7oo
+00<007ooOol02Woo000SOol40006Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001o
+ogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0n7oo0P0037oo0P008goo00<007ooOol0
+2Woo000]Ool2003iOol2000<Ool2000ROol2000<Ool002eoo`03001oogoo0?moobaoo`03001oogoo
+00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3YOol20010Ool0
+0`00Oomoo`0:Ool002eoo`03001oogoo0>Uoo`80041oo`03001oogoo00Yoo`00;Goo00<007ooOol0
+ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOolEOol2000EOol00`00Oomoo`0:Ool002eo
+o`800=aoo`8003Moo`8001Aoo`8000aoo`00;Goo00<007ooOol0fgoo0P00CWoo00<007ooOol02Woo
+000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo
+00Yoo`00;Goo00<007ooOol0cGoo0P00G7oo00<007ooOol02Woo000]Ool00`00Oomoo`3=Ool2001L
+Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo0P00ogoo;7oo
+0P0037oo000]Ool00`00Oomoo`2nOol2001[Ool00`00Oomoo`0:Ool002eoo`03001oogoo0;ioo`80
+06]oo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomo
+o`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0;1oo`8007Uoo`03001oogoo00Yoo`00;Goo
+00<007ooOol0/7oo0P00NGoo00<007ooOol02Woo000]Ool2003oOol/Ool2000<Ool002eoo`03001o
+ogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool0
+0`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool000]oo`D000=oo`@000Aoo`@000Aoo`@000Ioo`03001o
+ogoo0:5oo`8008Qoo`03001oogoo00Yoo`003Goo00<007ooOol00Woo00<007ooOol00Woo00@007oo
+Ool000Aoo`04001oogoo0004Ool00`00Oomoo`03Ool00`00Oomoo`2QOol20028Ool00`00Oomoo`0:
+Ool000eoo`03001oogoo009oo`03001oogoo009oo`04001oogoo0004Ool01000Oomoo`0017oo00<0
+07ooOol00goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000=Ool00`00Oomoo`02Ool00`00Oomo
+o`02Ool01000Oomoo`0017oo00@007ooOol000Aoo`03001oogoo00=oo`<00?moobYoo`<000aoo`00
+3Goo00<007ooOol00Woo00<007ooOol00Woo00@007ooOol000Aoo`04001oogoo0004Ool00`00Oomo
+o`03Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool000eoo`03001oogoo009oo`03001oogoo009o
+o`04001oogoo0004Ool01000Oomoo`0017oo00<007ooOol00goo00<007ooOol0ogoo;7oo00<007oo
+Ool02Woo000;Ool30004Ool00`00Oomoo`02Ool01000Oomoo`0017oo00@007ooOol000Aoo`03001o
+ogoo00=oo`03001oogoo09=oo`8009Ioo`03001oogoo00Yoo`003Goo00<007ooOol00goo100017oo
+100017oo10001Woo00<007ooOol0Tgoo0P00UWoo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/
+Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo0P00ogoo;7oo
+0P0037oo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03
+001oogoo00Yoo`00;Goo00<007ooOol0QGoo0P00Y7oo00<007ooOol02Woo000]Ool00`00Oomoo`25
+Ool2002TOol00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<0
+07ooOol0ogoo;7oo00<007ooOol02Woo000]Ool2003oOol/Ool2000<Ool002eoo`03001oogoo0?mo
+obaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomo
+o`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<0
+07ooOol0MWoo0P00/goo00<007ooOol02Woo000]Ool00`00Oomoo`1fOol2002cOol00`00Oomoo`0:
+Ool002eoo`800?moobaoo`8000aoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool0
+0`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00
+;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:
+Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007oo
+Ool02Woo000]Ool2003oOol/Ool2000<Ool002eoo`03001oogoo06Qoo`800<5oo`03001oogoo00Yo
+o`00;Goo00<007ooOol0J7oo0P00`Goo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00
+Oomoo`0:Ool000Yoo`D000Aoo`@000Aoo`@000Aoo`@000Ioo`03001oogoo0?moobaoo`03001oogoo
+00Yoo`002Woo00D007ooOomoo`0000=oo`03001oogoo009oo`04001oogoo0004Ool01000Oomoo`00
+17oo00<007ooOol00goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000;Ool00`00Oomoo`04Ool0
+0`00Oomoo`02Ool01000Oomoo`0017oo00@007ooOol000Aoo`03001oogoo00=oo`03001oogoo0?mo
+obaoo`03001oogoo00Yoo`0037oo00<007ooOol00goo00<007ooOol00Woo00@007ooOol000Aoo`04
+001oogoo0004Ool00`00Oomoo`03Ool3003oOolZOol3000<Ool000eoo`03001oogoo009oo`03001o
+ogoo009oo`04001oogoo0004Ool01000Oomoo`0017oo00<007ooOol00goo00<007ooOol0ogoo;7oo
+00<007ooOol02Woo000>Ool01@00Oomoogoo000017oo00@007ooOol000Aoo`04001oogoo0004Ool0
+0`00Oomoo`03Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool000Yoo`05001oogooOol00003Ool0
+0`00Oomoo`02Ool01000Oomoo`0017oo00@007ooOol000Aoo`03001oogoo00=oo`03001oogoo0?mo
+obaoo`03001oogoo00Yoo`002goo0`001Goo100017oo100017oo10001Woo00<007ooOol0ogoo;7oo
+00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?mo
+obaoo`03001oogoo00Yoo`00;Goo0P00ogoo;7oo0P0037oo000]Ool00`00Oomoo`3oOol/Ool00`00
+Oomoo`0:Ool002eoo`03001oogoo05Yoo`800<moo`03001oogoo00Yoo`00;Goo00<007ooOol0FWoo
+0P00cgoo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001o
+ogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool2
+003oOol/Ool2000<Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0
+ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001o
+ogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool0
+0`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`800?moobaoo`8000aoo`00;Goo00<007ooOol0
+ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001o
+ogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool0
+0`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00
+;Goo0P00ogoo;7oo0P0037oo000]Ool00`00Oomoo`1;Ool2003NOol00`00Oomoo`0:Ool002eoo`03
+001oogoo04]oo`800=ioo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo
+000;Ool30005Ool40004Ool40004Ool40006Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool000Yo
+o`05001oogooOol00003Ool00`00Oomoo`02Ool01000Oomoo`0017oo00@007ooOol000Aoo`03001o
+ogoo00=oo`03001oogoo0?moobaoo`03001oogoo00Yoo`003Woo00D007ooOomoo`0000Aoo`04001o
+ogoo0004Ool01000Oomoo`0017oo00<007ooOol00goo00<007ooOol0ogoo;7oo00<007ooOol02Woo
+000>Ool01@00Oomoogoo000017oo00@007ooOol000Aoo`04001oogoo0004Ool00`00Oomoo`03Ool3
+003oOolZOol3000<Ool000aoo`8000Aoo`03001oogoo009oo`04001oogoo0004Ool01000Oomoo`00
+17oo00<007ooOol00goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000>Ool01@00Oomoogoo0000
+17oo00@007ooOol000Aoo`04001oogoo0004Ool00`00Oomoo`03Ool00`00Oomoo`3oOol/Ool00`00
+Oomoo`0:Ool000Yoo`05001oogooOol00003Ool00`00Oomoo`02Ool01000Oomoo`0017oo00@007oo
+Ool000Aoo`03001oogoo00=oo`03001oogoo0?moobaoo`03001oogoo00Yoo`002goo0`001Goo1000
+17oo100017oo10001Woo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/
+Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo0P00ogoo;7oo
+0P0037oo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03
+001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/
+Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0
+ogoo;7oo00<007ooOol02Woo000]Ool2003oOol/Ool2000<Ool002eoo`03001oogoo0?moobaoo`03
+001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/
+Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0
+ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`800?mo
+obaoo`8000aoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/
+Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0
+?Goo0P00k7oo00<007ooOol02Woo000]Ool00`00Oomoo`0mOol2003/Ool00`00Oomoo`0:Ool002eo
+o`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo
+000]Ool2003oOol/Ool2000<Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<0
+07ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool000eo
+o`<000=oo`@000Aoo`@000Aoo`@000Ioo`03001oogoo0?moobaoo`03001oogoo00Yoo`003Woo00D0
+07ooOomoo`0000Aoo`04001oogoo0004Ool01000Oomoo`0017oo00<007ooOol00goo00<007ooOol0
+ogoo;7oo00<007ooOol02Woo000>Ool01@00Oomoogoo000017oo00@007ooOol000Aoo`04001oogoo
+0004Ool00`00Oomoo`03Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool000Yoo`H0009oo`03001o
+ogoo009oo`04001oogoo0004Ool01000Oomoo`0017oo00<007ooOol00goo0`00ogoo:Woo0`0037oo
+000;Ool01000Oomoo`000goo00<007ooOol00Woo00@007ooOol000Aoo`04001oogoo0004Ool00`00
+Oomoo`03Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool000]oo`04001oogoo0003Ool00`00Oomo
+o`02Ool01000Oomoo`0017oo00@007ooOol000Aoo`03001oogoo00=oo`03001oogoo0?moobaoo`03
+001oogoo00Yoo`0037oo00<007oo00000goo00<007ooOol00Woo00@007ooOol000Aoo`04001oogoo
+0004Ool00`00Oomoo`03Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool000eoo`8000Aoo`@000Ao
+o`@000Aoo`@000Ioo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo
+00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`800?moobaoo`80
+00aoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00
+Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo
+00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?mo
+obaoo`03001oogoo00Yoo`00;Goo0P00ogoo;7oo0P0037oo000]Ool00`00Oomoo`3oOol/Ool00`00
+Oomoo`0:Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo
+00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?mo
+obaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool2003oOol/
+Ool2000<Ool002eoo`03001oogoo0?moobaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo
+00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?mo
+obaoo`03001oogoo00Yoo`00;Goo00<007ooOol0ogoo;7oo00<007ooOol02Woo000]Ool00`00Oomo
+o`3oOol/Ool00`00Oomoo`0:Ool002eoo`800?moobaoo`8000aoo`00;Goo00<007ooOol0ogoo;7oo
+00<007ooOol02Woo000]Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool002eoo`03001oogoo0?mo
+obaoo`03001oogoo00Yoo`002goo100017oo100017oo100017oo10001Woo00<007ooOol0ogoo;7oo
+00<007ooOol02Woo000:Ool00`00Oomoo`02Ool01000Oomoo`0017oo00@007ooOol000Aoo`04001o
+ogoo0004Ool00`00Oomoo`03Ool00`00Oomoo`3oOol/Ool00`00Oomoo`0:Ool000moo`04001oogoo
+0004Ool01000Oomoo`0017oo00@007ooOol000Aoo`03001oogoo00=oo`03001oogoo0?moobaoo`03
+001oogoo00Yoo`003goo00@007ooOol000Aoo`04001oogoo0004Ool01000Oomoo`0017oo00<007oo
+Ool00goo0`000goo0P003Goo0P0037oo0P003Goo0P00lWoo0P0017oo0`0037oo000;Ool40003Ool0
+0`00Oomoo`02Ool01000Oomoo`0017oo00@007ooOol000Aoo`03001oogoo00=oo`03001oogoo00=o
+o`8000eoo`8000aoo`8000eoo`800?9oo`8000Ioo`03001oogoo00Yoo`002goo00<007ooOol017oo
+00<007ooOol00Woo00@007ooOol000Aoo`04001oogoo0004Ool00`00Oomoo`03Ool00`00Oomoo`3o
+Ool/Ool00`00Oomoo`0:Ool000]oo`03001oogoo00Aoo`03001oogoo009oo`04001oogoo0004Ool0
+1000Oomoo`0017oo00<007ooOol00goo00<007ooOol017oo00<007ooOol0AGoo00<007ooOol0AGoo
+00<007ooOol0AGoo00<007ooOol0A7oo00<007ooOol01Goo00<007ooOol02Woo000;Ool50003Ool4
+0004Ool40004Ool40006Ool00`00Oomoo`04Ool00`00Oomoo`0;Ool00`00Oomoo`0<Ool00`00Oomo
+o`0;Ool00`00Oomoo`0<Ool00`00Oomoo`0;Ool00`00Oomoo`0;Ool00`00Oomoo`0<Ool00`00Oomo
+o`0;Ool00`00Oomoo`0;Ool00`00Oomoo`0<Ool00`00Oomoo`0;Ool00`00Oomoo`0<Ool00`00Oomo
+o`0;Ool00`00Oomoo`0;Ool00`00Oomoo`0<Ool00`00Oomoo`0;Ool00`00Oomoo`0;Ool00`00Oomo
+o`0<Ool00`00Oomoo`0;Ool00`00Oomoo`0;Ool00`00Oomoo`05Ool00`00Oomoo`0:Ool002eoool0
+030000aoo`00ogooJGoo003oOomYOol00?moofUoo`00ogooJGoo003oOomYOol00?moofUoo`00ogoo
+JGoo003oOomYOol00:]oo`D000Yoo`03001oo`00008000Eoo`800003Ool00000009oo`@000=oo`<0
+0004Ool000000002Ool50028Ool00:Yoo`04001oogoo0002Ool00`00Oomoo`07Ool20003Ool01@00
+Oomoogoo00000Woo0P000Woo00<007ooOol00Woo00D007ooOomoo`0000=oo`04001oogoo002=Ool0
+0:Yoo`04001oogoo0002Ool00`00Ool000050007Ool01@00Oomoogoo00000goo00@007ooOol000Qo
+o`05001oogooOol00002Ool00`00Oomoo`2;Ool00:Yoo`04001oogoo0002Ool00`00Oomoo`0<Ool0
+1@00Oomoogoo00000goo00@007ooOol000Qoo`05001oogooOol00002Ool60028Ool00:Yoo`03001o
+ogoo00=oo`03001oogoo00Qoo`@000Aoo`05001oogooOol00002Ool01000Oomoogoo0P000goo0P00
+0Woo00@007ooOol000Aoo`03001oogoo08Ioo`00Zgoo00<007ooOol00Woo00<007ooOol01goo00<0
+07ooOol01Goo0P000Woo0P000goo0`0000=oo`00Ool00Woo00@007oo000000Aoo`@008Uoo`00^Woo
+00@007ooOomoo`8001=oo`03001oogoo099oo`00^goo0`0000=oo`00Ool04Goo0P00U7oo003oOomY
+Ool00?moofUoo`00ogooJGoo0000\
+\>"],
+  ImageRangeCache->{{{0, 359}, {221.375, 0}} -> {-0.36622, -548.033, \
+0.00869949, 35.1972}}]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Beispiel Hilbert", "Subsubsection"],
+
+Cell[BoxData[{
+    \(\(Hilbert[n_] := 
+        Table[N[1/\((i + j - 1)\)], {i, 1, n}, {j, 1, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(rSeite[n_] := Table[1. , {i, 1, n}];\)\), "\[IndentingNewLine]", 
+    \(\(xStart[n_] := Table[0. , {i, 1, n}];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(n = 3;\)\), "\[IndentingNewLine]", 
+    \(\(A = Hilbert[n];\)\), "\[IndentingNewLine]", 
+    \(\(b = rSeite[n];\)\), "\[IndentingNewLine]", 
+    \(\(x0 = xStart[n];\)\), "\[IndentingNewLine]", 
+    \(\(eps = 10\^\(-6\);\)\), "\[IndentingNewLine]", 
+    \(\(kmax = 150000;\)\), "\[IndentingNewLine]", 
+    \(\(w = 1.7;\)\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(gemDemoDIA[A, b]\), "\[IndentingNewLine]", 
+    \(gemDemoREL[A, b]\), "\[IndentingNewLine]", 
+    \(cholesky[A, b]\), "\[IndentingNewLine]", 
+    \(SOR[A, b, x0, eps, kmax, w]\), "\[IndentingNewLine]", 
+    \(GradV[A, b, x0, eps, kmax]\), "\[IndentingNewLine]", 
+    \(GradVPr\[ADoubleDot][A, b, x0, eps, kmax]\), "\[IndentingNewLine]", 
+    \(konjGradV[A, b, x0, eps, kmax]\), "\[IndentingNewLine]", 
+    \(konjGradVPr\[ADoubleDot][A, b, x0, eps, 
+      kmax]\), "\[IndentingNewLine]", 
+    \(LinearSolve[A, b]\)}], "Input"],
+
+Cell[BoxData[
+    \({3.000000000000032`, \(-24.000000000000163`\), 
+      30.000000000000153`}\)], "Output"],
+
+Cell[BoxData[
+    \({2.9999999999999947`, \(-23.99999999999994`\), 
+      29.999999999999932`}\)], "Output"],
+
+Cell[BoxData[
+    \({3.0000000000000284`, \(-24.000000000000156`\), 
+      30.00000000000015`}\)], "Output"],
+
+Cell[BoxData[
+    \({115, {3.0000053470143873`, \(-24.000011108689506`\), 
+        30.00000327611078`}}\)], "Output"],
+
+Cell[BoxData[
+    \({1700, {2.9999570403684688`, \(-23.999758343006004`\), 
+        29.99976705445013`}}\)], "Output"],
+
+Cell[BoxData[
+    \({694, {2.9999577389766943`, \(-23.999770267012494`\), 
+        29.99978194830721`}}\)], "Output"],
+
+Cell[BoxData[
+    \({2, {2.999999999999946`, \(-24.00000000000006`\), 
+        29.999999999999943`}}\)], "Output"],
+
+Cell[BoxData[
+    \({2, {3.000000000000128`, \(-23.99999999999976`\), 
+        30.000000000000252`}}\)], "Output"],
+
+Cell[BoxData[
+    \({3.0000000000000195`, \(-24.000000000000092`\), 
+      30.00000000000008`}\)], "Output"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Auswertung", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["Auswertung bzgl. Pr\[ADoubleDot]zision", "Subsubsection"],
+
+Cell[BoxData[{
+    \(\(Hilbert[n_] := 
+        Table[N[1/\((i + j - 1)\)], {i, 1, n}, {j, 1, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(HilbertBruch[n_] := 
+        Table[1/\((i + j - 1)\), {i, 1, n}, {j, 1, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(rSeite[n_] := Table[1. , {i, 1, n}];\)\), "\[IndentingNewLine]", 
+    \(\(rSeiteBruch[n_] := Table[1, {i, 1, n}];\)\), "\[IndentingNewLine]", 
+    \(\(xStart[n_] := Table[0. , {i, 1, n}];\)\[IndentingNewLine] (*\ 
+      x - \ genaue\ Lsg, \ 
+      xn\  - \ n\[ADoubleDot]herung\ *) \ \), "\[IndentingNewLine]", 
+    \(\(cacc[xn_, 
+          x_] := \(-Log[10, Max[Abs[\((xn - x)\)/x]]]\);\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(Auswertung1[
+        n_]\)\(:=\)\(Module[{A, ASt, b, bSt, x0, eps, kmax, w, Lsg, t, Index, 
+          r}, \[IndentingNewLine]r = {}; \[IndentingNewLine]For[Index = 2, 
+          Index \[LessEqual] \ n, 
+          Index += 2, \[IndentingNewLine]A = Hilbert[Index]; 
+          ASt = HilbertBruch[Index]; \[IndentingNewLine]b = rSeite[Index]; 
+          bSt = rSeiteBruch[Index]; \[IndentingNewLine]x0 = xStart[Index]; 
+          eps = 10\^\(-6\); \[IndentingNewLine]kmax = 10000; 
+          w = 1.5; \[IndentingNewLine]Lsg = 
+            LinearSolve[ASt, 
+              bSt]; \[IndentingNewLine]t = {cacc[gemDemoREL[A, b], 
+                Lsg], \[IndentingNewLine]cacc[cholesky[A, b], 
+                Lsg], \[IndentingNewLine]cacc[\(SOR[A, b, x0, eps, kmax, 
+                    w]\)[\([2]\)], 
+                Lsg], \[IndentingNewLine]cacc[\(GradVPr\[ADoubleDot][A, b, 
+                    x0, eps, kmax]\)[\([2]\)], 
+                Lsg], \[IndentingNewLine]cacc[\(konjGradVPr\[ADoubleDot][A, 
+                    b, x0, eps, kmax]\)[\([2]\)], 
+                Lsg], \[IndentingNewLine]cacc[LinearSolve[A, b], 
+                Lsg]}; \[IndentingNewLine]r = 
+            Append[r, 
+              t]]; \[IndentingNewLine]r]\)\( (*Ende\ Module*) \)\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(precTab = Auswertung1[M];\)\), "\[IndentingNewLine]", 
+    \(\(precTab = 
+        PrependTo[
+          NumberForm[precTab, 3], {SequenceForm["\<gemDemoREL[A,b]\>"], 
+            SequenceForm["\<cholesky[A,b]\>"], SequenceForm["\<SOR[A,b]\>"], 
+            SequenceForm["\<GradVPr\[ADoubleDot][A,b]\>"], 
+            SequenceForm["\<konjGradVPr\[ADoubleDot][A,b]\>"], 
+            SequenceForm["\<LinearSolve[A,b]\>"]}];\)\), \
+"\[IndentingNewLine]", 
+    \(\(precTab = Transpose[precTab];\)\), "\[IndentingNewLine]", 
+    \(\(precTab = 
+        PrependTo[precTab, 
+          Table[If[i \[Equal] 1, 
+              SequenceForm[\*"\"\<Hilbertmatrix \
+\!\(\[DoubleStruckCapitalR]\^n\),n=\>\""], 
+              SequenceForm[i + \((i - 2)\)]], {i, 1, 
+              M\/2 + 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(precTab = 
+        FrameBox[
+          GridBox[precTab, RowLines \[Rule] {True, False}, 
+            ColumnLines \[Rule] True]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(LinearSolve::"luc" \(\(:\)\(\ \)\) 
+      "Result for \!\(LinearSolve\) of badly conditioned matrix \!\(\
+\[LeftSkeleton] 1 \[RightSkeleton]\) may contain significant numerical \
+errors."\)], "Message"],
+
+Cell[BoxData[
+    \(LinearSolve::"luc" \(\(:\)\(\ \)\) 
+      "Result for \!\(LinearSolve\) of badly conditioned matrix \!\({\(\
+\[LeftSkeleton] 1 \[RightSkeleton]\)}\) may contain significant numerical \
+errors."\)], "Message"],
+
+Cell[BoxData[
+    \(LinearSolve::"luc" \(\(:\)\(\ \)\) 
+      "Result for \!\(LinearSolve\) of badly conditioned matrix \!\({\(\
+\[LeftSkeleton] 1 \[RightSkeleton]\)}\) may contain significant numerical \
+errors."\)], "Message"],
+
+Cell[BoxData[
+    \(General::"stop" \(\(:\)\(\ \)\) 
+      "Further output of \!\(LinearSolve :: \"luc\"\) will be suppressed \
+during this calculation."\)], "Message"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Auswertung bzgl. Zeit", "Subsubsection"],
+
+Cell[BoxData[{
+    \(\(Hilbert[n_] := 
+        Table[N[1/\((i + j - 1)\)], {i, 1, n}, {j, 1, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(rSeite[n_] := Table[1. , {i, 1, n}];\)\), "\[IndentingNewLine]", 
+    \(\(xStart[n_] := Table[0. , {i, 1, n}];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(Auswertung2[
+        n_]\)\(:=\)\(Module[{A, ASt, b, bSt, x0, eps, kmax, w, Lsg, t, Index, 
+          r}, \[IndentingNewLine]r = {}; \[IndentingNewLine]For[Index = 2, 
+          Index \[LessEqual] \ n, 
+          Index += 2, \[IndentingNewLine]A = Hilbert[Index]; 
+          b = rSeite[Index]; \[IndentingNewLine]x0 = xStart[Index]; 
+          eps = 10\^\(-6\); \[IndentingNewLine]kmax = 10000; 
+          w = 1.5; \[IndentingNewLine]t = {\(Timing[
+                    gemDemoREL[A, b]]\)[\([1]\)]/
+                Second, \[IndentingNewLine]\(Timing[
+                    cholesky[A, b]]\)[\([1]\)]/
+                Second, \[IndentingNewLine]\(Timing[
+                    SOR[A, b, x0, eps, kmax, w]]\)[\([1]\)]/
+                Second, \[IndentingNewLine]\(Timing[
+                    GradVPr\[ADoubleDot][A, b, x0, eps, kmax]]\)[\([1]\)]/
+                Second, \[IndentingNewLine]\(Timing[
+                    konjGradVPr\[ADoubleDot][A, b, x0, eps, kmax]]\)[\([1]\)]/
+                Second, \[IndentingNewLine]\(Timing[
+                    LinearSolve[A, b]]\)[\([1]\)]/
+                Second}; \[IndentingNewLine]r = 
+            Append[r, 
+              t]]; \[IndentingNewLine]r]\)\( (*Ende\ Module*) \)\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(precTime = Auswertung2[M];\)\), "\[IndentingNewLine]", 
+    \(\(precTime = 
+        PrependTo[
+          NumberForm[precTime, 3], {SequenceForm["\<gemDemoREL[A,b]\>"], 
+            SequenceForm["\<cholesky[A,b]\>"], SequenceForm["\<SOR[A,b]\>"], 
+            SequenceForm["\<GradVPr\[ADoubleDot][A,b]\>"], 
+            SequenceForm["\<konjGradVPr\[ADoubleDot][A,b]\>"], 
+            SequenceForm["\<LinearSolve[A,b]\>"]}];\)\), \
+"\[IndentingNewLine]", 
+    \(\(precTime = Transpose[precTime];\)\), "\[IndentingNewLine]", 
+    \(\(precTime = 
+        PrependTo[precTime, 
+          Table[If[i \[Equal] 1, 
+              SequenceForm[\*"\"\<Hilbertmatrix \
+\!\(\[DoubleStruckCapitalR]\^n\),n=\>\""], 
+              SequenceForm[i + \((i - 2)\)]], {i, 1, 
+              M\/2 + 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(precTime = 
+        FrameBox[
+          GridBox[precTime, RowLines \[Rule] {True, False}, 
+            ColumnLines \[Rule] True]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(LinearSolve::"luc" \(\(:\)\(\ \)\) 
+      "Result for \!\(LinearSolve\) of badly conditioned matrix \!\(\
+\[LeftSkeleton] 1 \[RightSkeleton]\) may contain significant numerical \
+errors."\)], "Message"],
+
+Cell[BoxData[
+    \(LinearSolve::"luc" \(\(:\)\(\ \)\) 
+      "Result for \!\(LinearSolve\) of badly conditioned matrix \!\({\(\
+\[LeftSkeleton] 1 \[RightSkeleton]\)}\) may contain significant numerical \
+errors."\)], "Message"],
+
+Cell[BoxData[
+    \(LinearSolve::"luc" \(\(:\)\(\ \)\) 
+      "Result for \!\(LinearSolve\) of badly conditioned matrix \!\({\(\
+\[LeftSkeleton] 1 \[RightSkeleton]\)}\) may contain significant numerical \
+errors."\)], "Message"],
+
+Cell[BoxData[
+    \(General::"stop" \(\(:\)\(\ \)\) 
+      "Further output of \!\(LinearSolve :: \"luc\"\) will be suppressed \
+during this calculation."\)], "Message"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1280}, {0, 933}},
+WindowToolbars->"EditBar",
+WindowSize->{1272, 900},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Magnification->1.25
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1739, 51, 113, 3, 117, "Subtitle"],
+Cell[1855, 56, 39, 0, 67, "Subsubtitle"],
+Cell[1897, 58, 335, 7, 38, "Text"],
+
+Cell[CellGroupData[{
+Cell[2257, 69, 33, 0, 67, "Subsubtitle"],
+Cell[2293, 71, 344, 6, 99, "Input"],
+Cell[2640, 79, 77, 2, 38, "Text"],
+Cell[2720, 83, 9651, 268, 146, "Print"],
+Cell[12374, 353, 94, 2, 38, "Text"],
+Cell[12471, 357, 10102, 268, 152, "Print"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[22610, 630, 36, 0, 67, "Subsubtitle"],
+Cell[22649, 632, 713, 13, 122, "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[23399, 650, 34, 0, 67, "Subsubtitle"],
+Cell[23436, 652, 55, 1, 35, "Input"],
+Cell[23494, 655, 44, 1, 35, "Input"],
+
+Cell[CellGroupData[{
+Cell[23563, 660, 181, 3, 77, "Input"],
+Cell[23747, 665, 48, 1, 35, "Output"],
+Cell[23798, 668, 44, 1, 35, "Output"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[23879, 674, 52, 0, 36, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[23956, 678, 77, 0, 51, "Subsubsection"],
+Cell[24036, 680, 2082, 39, 662, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[26155, 724, 84, 1, 33, "Subsubsection"],
+Cell[26242, 727, 3124, 56, 956, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[29403, 788, 44, 0, 51, "Subsubsection"],
+Cell[29450, 790, 2287, 44, 740, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[31774, 839, 75, 2, 51, "Subsubsection"],
+Cell[31852, 843, 1554, 25, 503, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[33443, 873, 59, 0, 51, "Subsubsection"],
+Cell[33505, 875, 1245, 22, 472, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[34787, 902, 74, 0, 33, "Subsubsection"],
+Cell[34864, 904, 1631, 28, 559, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[36532, 937, 63, 0, 33, "Subsubsection"],
+Cell[36598, 939, 1425, 25, 564, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[38060, 969, 78, 0, 33, "Subsubsection"],
+Cell[38141, 971, 1964, 35, 638, "Input"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[40154, 1012, 31, 0, 57, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[40210, 1016, 39, 0, 51, "Subsubsection"],
+Cell[40252, 1018, 371, 7, 141, "Input"],
+
+Cell[CellGroupData[{
+Cell[40648, 1029, 550, 10, 203, "Input"],
+Cell[41201, 1041, 109, 2, 35, "Output"],
+Cell[41313, 1045, 110, 2, 35, "Output"],
+Cell[41426, 1049, 110, 2, 35, "Output"],
+Cell[41539, 1053, 116, 2, 35, "Output"],
+Cell[41658, 1057, 118, 2, 35, "Output"],
+Cell[41779, 1061, 117, 2, 35, "Output"],
+Cell[41899, 1065, 115, 2, 35, "Output"],
+Cell[42017, 1069, 115, 2, 35, "Output"],
+Cell[42135, 1073, 110, 2, 35, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[42282, 1080, 210, 4, 74, "Input"],
+Cell[42495, 1086, 20401, 637, 233, 6362, 459, "GraphicsData", "PostScript", \
+"Graphics"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[62945, 1729, 41, 0, 33, "Subsubsection"],
+Cell[62989, 1731, 274, 5, 77, "Input"],
+Cell[63266, 1738, 356, 7, 162, "Input"],
+
+Cell[CellGroupData[{
+Cell[63647, 1749, 546, 10, 203, "Input"],
+Cell[64196, 1761, 108, 2, 35, "Output"],
+Cell[64307, 1765, 108, 2, 35, "Output"],
+Cell[64418, 1769, 108, 2, 35, "Output"],
+Cell[64529, 1773, 117, 2, 35, "Output"],
+Cell[64649, 1777, 118, 2, 35, "Output"],
+Cell[64770, 1781, 117, 2, 35, "Output"],
+Cell[64890, 1785, 114, 2, 35, "Output"],
+Cell[65007, 1789, 114, 2, 35, "Output"],
+Cell[65124, 1793, 108, 2, 35, "Output"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[65293, 1802, 32, 0, 36, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[65350, 1806, 63, 0, 51, "Subsubsection"],
+Cell[65416, 1808, 678, 13, 161, "Input"],
+Cell[66097, 1823, 1286, 22, 351, "Input"],
+
+Cell[CellGroupData[{
+Cell[67408, 1849, 978, 21, 176, "Input"],
+Cell[68389, 1872, 222, 4, 30, "Message"],
+Cell[68614, 1878, 228, 4, 30, "Message"],
+Cell[68845, 1884, 228, 4, 30, "Message"],
+Cell[69076, 1890, 168, 3, 30, "Message"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[69293, 1899, 46, 0, 51, "Subsubsection"],
+Cell[69342, 1901, 274, 5, 77, "Input"],
+Cell[69619, 1908, 1253, 22, 309, "Input"],
+
+Cell[CellGroupData[{
+Cell[70897, 1934, 987, 21, 267, "Input"],
+Cell[71887, 1957, 222, 4, 70, "Message"],
+Cell[72112, 1963, 228, 4, 70, "Message"],
+Cell[72343, 1969, 228, 4, 70, "Message"],
+Cell[72574, 1975, 168, 3, 70, "Message"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

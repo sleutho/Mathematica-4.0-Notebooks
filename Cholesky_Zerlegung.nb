@@ -1,0 +1,524 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     14739,        423]*)
+(*NotebookOutlinePosition[     15458,        448]*)
+(*  CellTagsIndexPosition[     15414,        444]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Cholesky-Zerlegung von symmetrischen positiv definiten Matrizen\
+\>", "Section"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "choleskyDIA[mat_]\t\tR\[UDoubleDot]ckgabewert { D , ",
+  Cell[BoxData[
+      \(TraditionalForm\`L\^T\)]],
+  "}"
+}], "Subsection"],
+
+Cell[BoxData[
+    \(\(\(choleskyDIA[mat_]\)\(:=\)\(Module[{a, n, d}, a = mat; 
+        n = Length[a]; 
+        d = Table[
+            0, {t, 1, n}, {s, 1, 
+              n}]; \[IndentingNewLine]\[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] n, \(k++\), \[IndentingNewLine]For[i = k + 1, 
+            i \[LessEqual] n, \(i++\), \[IndentingNewLine]l = 
+              a[\([i, k]\)]/a[\([k, k]\)]; \[IndentingNewLine]For[j = k + 1, 
+              j \[LessEqual] n, \(j++\), \[IndentingNewLine]a[\([i, j]\)] = 
+                a[\([i, j]\)] - 
+                  l*a[\([k, 
+                        j]\)]\[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]a[\([i, k]\)] = 
+              0\[IndentingNewLine]] (*Ende\ For*) \[IndentingNewLine]] (*Ende\
+\ For*) ; \[IndentingNewLine]\[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] n, \(k++\), \[IndentingNewLine]d[\([k, k]\)] = 
+            a[\([k, k]\)]; \[IndentingNewLine]a[\([k, k]\)] = 
+            1; \[IndentingNewLine]For[j = k + 1, 
+            j \[LessEqual] n, \(j++\), \[IndentingNewLine]a[\([k, j]\)] = 
+              a[\([k, j]\)]/
+                d[\([k, 
+                    k]\)]\[IndentingNewLine]] (*Ende\ For\
+*) \[IndentingNewLine]] (*Ende\ For*) ; \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] n, \(k++\), 
+          d[\([k, k]\)] = \@d[\([k, k]\)]]; \[IndentingNewLine]{d, 
+          a}]\)\( (*Ende\ Module*) \)\)\)], "Input",
+  CellLabel->"In[156]:="]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Beispiel 1", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(Hilbert[n_] := 
+        Table[1/\((i + j - 1)\), {i, 1, n}, {j, 1, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(lsg1 = choleskyDIA[Hilbert[3]];\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[lsg1[\([1]\)]]\), "\[IndentingNewLine]", 
+    \(MatrixForm[lsg1[\([2]\)]]\), "\[IndentingNewLine]", 
+    \(\(Lt1 = Transpose[lsg1[\([2]\)]];\)\), "\[IndentingNewLine]", 
+    \(\(l11 = Lt1 . lsg1[\([1]\)];\)\), "\[IndentingNewLine]", 
+    \(\(l21 = lsg1[\([1]\)] . lsg1[\([2]\)];\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[l11 . l21]\)}], "Input",
+  CellLabel->"In[157]:="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"1", "0", "0"},
+            {"0", \(1\/\(2\ \@3\)\), "0"},
+            {"0", "0", \(1\/\(6\ \@5\)\)}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[159]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"1", \(1\/2\), \(1\/3\)},
+            {"0", "1", "1"},
+            {"0", "0", "1"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[160]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"1", \(1\/2\), \(1\/3\)},
+            {\(1\/2\), \(1\/3\), \(1\/4\)},
+            {\(1\/3\), \(1\/4\), \(1\/5\)}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[164]//MatrixForm="]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Beispiel 2", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(W = {{9, \(-3\), 6, 3}, {\(-3\), 26, \(-17\), 14}, {6, \(-17\), 22, 
+            11}, {3, 14, 11, 50}};\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[W]\), "\[IndentingNewLine]", 
+    \(\(lsg2 = choleskyDIA[W];\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[lsg2[\([1]\)]]\), "\[IndentingNewLine]", 
+    \(MatrixForm[lsg2[\([2]\)]]\), "\[IndentingNewLine]", 
+    \(\(Lt2 = Transpose[lsg2[\([2]\)]];\)\), "\[IndentingNewLine]", 
+    \(\(l12 = Lt2 . lsg2[\([1]\)];\)\), "\[IndentingNewLine]", 
+    \(\(l22 = lsg2[\([1]\)] . lsg2[\([2]\)];\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[l12 . l22]\)}], "Input",
+  CellLabel->"In[165]:="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"9", \(-3\), "6", "3"},
+            {\(-3\), "26", \(-17\), "14"},
+            {"6", \(-17\), "22", "11"},
+            {"3", "14", "11", "50"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[166]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"3", "0", "0", "0"},
+            {"0", "5", "0", "0"},
+            {"0", "0", "3", "0"},
+            {"0", "0", "0", "2"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[168]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"1", \(-\(1\/3\)\), \(2\/3\), \(1\/3\)},
+            {"0", "1", \(-\(3\/5\)\), \(3\/5\)},
+            {"0", "0", "1", "2"},
+            {"0", "0", "0", "1"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[169]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"9", \(-3\), "6", "3"},
+            {\(-3\), "26", \(-17\), "14"},
+            {"6", \(-17\), "22", "11"},
+            {"3", "14", "11", "50"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[173]//MatrixForm="]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Beispiel 3", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(Y = {{3, 1, \(-1\)}, {1, 1, \(-1\)}, {\(-1\), \(-1\), 
+            3}};\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[Y]\), "\[IndentingNewLine]", 
+    \(\(lsg3 = choleskyDIA[Y];\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[lsg3[\([1]\)]]\), "\[IndentingNewLine]", 
+    \(MatrixForm[lsg3[\([2]\)]]\), "\[IndentingNewLine]", 
+    \(\(Lt3 = Transpose[lsg3[\([2]\)]];\)\), "\[IndentingNewLine]", 
+    \(\(l13 = Lt3 . lsg3[\([1]\)];\)\), "\[IndentingNewLine]", 
+    \(\(l23 = lsg3[\([1]\)] . lsg3[\([2]\)];\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[l23]\), "\[IndentingNewLine]", 
+    \(MatrixForm[l13 . l23]\)}], "Input",
+  CellLabel->"In[174]:="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"3", "1", \(-1\)},
+            {"1", "1", \(-1\)},
+            {\(-1\), \(-1\), "3"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[175]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {\(\@3\), "0", "0"},
+            {"0", \(\@\(2\/3\)\), "0"},
+            {"0", "0", \(\@2\)}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[177]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"1", \(1\/3\), \(-\(1\/3\)\)},
+            {"0", "1", \(-1\)},
+            {"0", "0", "1"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[178]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {\(\@3\), \(1\/\@3\), \(-\(1\/\@3\)\)},
+            {"0", \(\@\(2\/3\)\), \(-\@\(2\/3\)\)},
+            {"0", "0", \(\@2\)}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[182]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"3", "1", \(-1\)},
+            {"1", "1", \(-1\)},
+            {\(-1\), \(-1\), "3"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[183]//MatrixForm="]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "choleskyDIAProf[mat_]\tR\[UDoubleDot]ckgabewert ",
+  Cell[BoxData[
+      \(TraditionalForm\`\(L\&^\)\)]]
+}], "Subsection"],
+
+Cell[BoxData[
+    \(\(\(choleskyDIAProf[mat_]\)\(:=\)\(Module[{a, n, l, abbruch}, a = mat; 
+        n = Length[a]; l = Table[0, {t, 1, n}, {s, 1, n}]; 
+        abbruch = False; \[IndentingNewLine]For[k = 1, 
+          k \[LessEqual] n, \(k++\), \[IndentingNewLine]If[
+            a[\([k, k]\)] \[LessEqual] 0, 
+            abbruch = 
+              True, \[IndentingNewLine]l[\([k, 
+                  k]\)] = \@a[\([k, k]\)]; \[IndentingNewLine]For[j = k + 1, 
+              j \[LessEqual] 
+                n, \(j++\), \[IndentingNewLine]l[\([j, 
+                    k]\)] = \((a[\([k, j]\)]*l[\([k, k]\)])\)/
+                  a[\([k, k]\)]; \[IndentingNewLine]For[i = k + 1, 
+                i \[LessEqual] n, \(i++\), \[IndentingNewLine]a[\([i, j]\)] = 
+                  a[\([i, j]\)] - 
+                    a[\([k, j]\)]*
+                      a[\([k, i]\)]/
+                        a[\([k, 
+                            k]\)]]\[IndentingNewLine]] (*Ende\ For\
+*) \[IndentingNewLine]] (*Ende\ If*) \[IndentingNewLine]] (*Ende\ For*) ; \
+\[IndentingNewLine]If[abbruch == True, Print["\<STOP\>"], 
+          l]]\)\( (*Ende\ Module*) \)\)\)], "Input",
+  CellLabel->"In[227]:="]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Beispiel 4", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(Y = {{3, 1, \(-1\)}, {1, 1, \(-1\)}, {\(-1\), \(-1\), 
+            3}};\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[Y]\), "\[IndentingNewLine]", 
+    \(\(L = choleskyDIAProf[Y];\)\), "\[IndentingNewLine]", 
+    \(\(Lt = Transpose[L];\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[L]\), "\[IndentingNewLine]", 
+    \(MatrixForm[L . Lt]\), "\[IndentingNewLine]", 
+    \(\(Hilbert[n_] := 
+        Table[1/\((i + j - 1)\), {i, 1, n}, {j, 1, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(M = choleskyDIAProf[Hilbert[8]];\)\), "\[IndentingNewLine]", 
+    \(\(Mt = Transpose[M];\)\), "\[IndentingNewLine]", 
+    \(MatrixForm[M]\), "\[IndentingNewLine]", 
+    \(MatrixForm[M . Mt]\), "\[IndentingNewLine]", 
+    \(choleskyDIAProf[{{3, 1, \(-1\)}, {1, 1, \(-1\)}, {1, 
+          1, \(-1\)}}]\)}], "Input",
+  CellLabel->"In[239]:="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"3", "1", \(-1\)},
+            {"1", "1", \(-1\)},
+            {\(-1\), \(-1\), "3"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[240]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {\(\@3\), "0", "0"},
+            {\(1\/\@3\), \(\@\(2\/3\)\), "0"},
+            {\(-\(1\/\@3\)\), \(-\@\(2\/3\)\), \(\@2\)}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[243]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"3", "1", \(-1\)},
+            {"1", "1", \(-1\)},
+            {\(-1\), \(-1\), "3"}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[244]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"1", "0", "0", "0", "0", "0", "0", "0"},
+            {\(1\/2\), \(1\/\(2\ \@3\)\), "0", "0", "0", "0", "0", "0"},
+            {\(1\/3\), \(1\/\(2\ \@3\)\), \(1\/\(6\ \@5\)\), "0", "0", "0", 
+              "0", "0"},
+            {\(1\/4\), \(\(3\ \@3\)\/20\), \(1\/\(4\ \@5\)\), \(1\/\(20\ \
+\@7\)\), "0", "0", "0", "0"},
+            {\(1\/5\), \(2\/\(5\ \@3\)\), \(2\/\(7\ \@5\)\), \(1\/\(10\ \@7\)\
+\), \(1\/210\), "0", "0", "0"},
+            {\(1\/6\), \(5\/\(14\ \@3\)\), \(\(5\ \@5\)\/84\), \(5\/\(36\ \@7\
+\)\), \(1\/84\), \(1\/\(252\ \@11\)\), "0", "0"},
+            {\(1\/7\), \(\(3\ \@3\)\/28\), \(\(5\ \@5\)\/84\), \(1\/\(6\ \
+\@7\)\), \(3\/154\), \(1\/\(84\ \@11\)\), \(1\/\(924\ \@13\)\), "0"},
+            {\(1\/8\), \(7\/\(24\ \@3\)\), \(7\/\(24\ \@5\)\), \(\(7\ \
+\@7\)\/264\), \(7\/264\), \(7\/\(312\ \@11\)\), \(1\/\(264\ \@13\)\), \
+\(1\/\(3432\ \@15\)\)}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[248]//MatrixForm="],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {
+              "1", \(1\/2\), \(1\/3\), \(1\/4\), \(1\/5\), \(1\/6\), \
+\(1\/7\), \(1\/8\)},
+            {\(1\/2\), \(1\/3\), \(1\/4\), \(1\/5\), \(1\/6\), \(1\/7\), \
+\(1\/8\), \(1\/9\)},
+            {\(1\/3\), \(1\/4\), \(1\/5\), \(1\/6\), \(1\/7\), \(1\/8\), \
+\(1\/9\), \(1\/10\)},
+            {\(1\/4\), \(1\/5\), \(1\/6\), \(1\/7\), \(1\/8\), \(1\/9\), \
+\(1\/10\), \(1\/11\)},
+            {\(1\/5\), \(1\/6\), \(1\/7\), \(1\/8\), \(1\/9\), \(1\/10\), \(1\
+\/11\), \(1\/12\)},
+            {\(1\/6\), \(1\/7\), \(1\/8\), \(1\/9\), \(1\/10\), \(1\/11\), \
+\(1\/12\), \(1\/13\)},
+            {\(1\/7\), \(1\/8\), \(1\/9\), \(1\/10\), \(1\/11\), \(1\/12\), \
+\(1\/13\), \(1\/14\)},
+            {\(1\/8\), \(1\/9\), \(1\/10\), \(1\/11\), \(1\/12\), \(1\/13\), \
+\(1\/14\), \(1\/15\)}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output",
+  CellLabel->"Out[249]//MatrixForm="],
+
+Cell[BoxData[
+    \("STOP"\)], "Print",
+  CellLabel->"From In[239]:="]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 695}},
+WindowToolbars->"EditBar",
+WindowSize->{889, 638},
+WindowMargins->{{9, Automatic}, {Automatic, 2}},
+StyleDefinitions -> "TutorialBook.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1739, 51, 90, 2, 92, "Section"],
+
+Cell[CellGroupData[{
+Cell[1854, 57, 148, 5, 40, "Subsection"],
+Cell[2005, 64, 1449, 27, 526, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[3491, 96, 32, 0, 34, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[3548, 100, 598, 11, 192, "Input"],
+Cell[4149, 113, 294, 8, 96, "Output"],
+Cell[4446, 123, 276, 8, 82, "Output"],
+Cell[4725, 133, 306, 8, 96, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[5080, 147, 32, 0, 34, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[5137, 151, 655, 11, 215, "Input"],
+Cell[5795, 164, 336, 9, 94, "Output"],
+Cell[6134, 175, 315, 9, 94, "Output"],
+Cell[6452, 186, 350, 9, 108, "Output"],
+Cell[6805, 197, 336, 9, 94, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[7190, 212, 32, 0, 34, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[7247, 216, 672, 12, 238, "Input"],
+Cell[7922, 230, 278, 8, 76, "Output"],
+Cell[8203, 240, 285, 8, 98, "Output"],
+Cell[8491, 250, 284, 8, 82, "Output"],
+Cell[8778, 260, 316, 8, 106, "Output"],
+Cell[9097, 270, 278, 8, 76, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[9424, 284, 141, 4, 36, "Subsection"],
+Cell[9568, 290, 1177, 22, 351, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[10782, 317, 32, 0, 34, "Subsection"],
+
+Cell[CellGroupData[{
+Cell[10839, 321, 856, 17, 284, "Input"],
+Cell[11698, 340, 278, 8, 76, "Output"],
+Cell[11979, 350, 316, 8, 112, "Output"],
+Cell[12298, 360, 278, 8, 76, "Output"],
+Cell[12579, 370, 1066, 20, 256, "Output"],
+Cell[13648, 392, 978, 22, 222, "Output"],
+Cell[14629, 416, 70, 2, 28, "Print"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

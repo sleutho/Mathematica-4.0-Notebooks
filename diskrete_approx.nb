@@ -1,0 +1,1415 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     48296,       1274]*)
+(*NotebookOutlinePosition[     49187,       1305]*)
+(*  CellTagsIndexPosition[     49143,       1301]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell[TextData[{
+  "Diskrete Approximation\nMethode der kleinsten Quadrate\n",
+  StyleBox["(Sascha Leuthold, Matr.-Nr.:716193)",
+    FontSize->24]
+}], "Title"],
+
+Cell["Aufgabenstellung", "Subtitle"],
+
+Cell["\<\
+Zu einem gegebenen Datensatz (Stuetzpunkte, Basisfunktionen) ist die beste \
+diskrete Approximation mit Hilfe der Methode der kleinsten Quadrate zu \
+bestimmen. Dazu ist ein Programm (normalfit[]) zu entwickeln. Anschliessend \
+sind mehrer Approximationsaufgaben zu bearbeiten bzw. zu untersuchen.\
+\>", "Text"],
+
+Cell[TextData[StyleBox["mathematisches Vorgehen", "Text"]], "Subtitle"],
+
+Cell[TextData[{
+  "1) Input sortieren und die Matrix A aufbauen.\nd = ",
+  Cell[BoxData[
+      FormBox[
+        RowBox[{
+          FormBox[
+            RowBox[{
+              RowBox[{
+                FormBox[
+                  RowBox[{
+                    FormBox[
+                      RowBox[{
+                        RowBox[{
+                          FormBox[
+                            RowBox[{
+                              FormBox[\({{x\_1\),
+                                "TraditionalForm"], ",", \(y\_1\)}],
+                            "TraditionalForm"], "}"}], ",", \({x\_2\)}],
+                      "TraditionalForm"], ",", \(y\_2\)}],
+                  "TraditionalForm"], "}"}], ",", "...", ",", \({x\_m\)}],
+            "TraditionalForm"], ",", \(y\_m\)}], TraditionalForm]]],
+  "}}\t",
+  Cell[BoxData[
+      \(TraditionalForm\`G = {g\_1, g\_2,  ... , g\_m}\)]],
+  "\tA=",
+  Cell[BoxData[
+      FormBox[
+        RowBox[{"(", GridBox[{
+              {\(\(\(g\_1\)(x\_1)\  ... \) \(\(g\_n\)(x\_1)\)\)},
+              {\(\(\(g\_1\)(x\_m)\  ... \) \(\(g\_n\)(x\_m)\)\)}
+              }], ")"}], TraditionalForm]]],
+  "\n2) Ansatz: g(x) = ",
+  Cell[BoxData[
+      \(TraditionalForm\`\(\(\(\(c\_1\) \(\(g\_1\)(
+                  x)\)\)\(\ \)\(+\)\)\  ... \) . \ \(+c\_n\) \(\(g\_n\)(
+          x)\)\)]],
+  "\nNormalengleichung bilden und mit LinearSolve loesen.\n",
+  Cell[BoxData[
+      \(TraditionalForm\`\(A\^T\) Ac\  = \ \(A\^T\) y\)]],
+  "\n3) Diverse Auswertungen anstellen (Kondition, maximaler Abstand, \
+Grafik)"
+}], "Text"],
+
+Cell["Programmbeschreibung", "Subtitle"],
+
+Cell[TextData[{
+  "Folgende Programme fuehren die noetigen Berechnungen durch:\n\
+randomKnoten[A,B,N,f,p]\tsimuliert Messpunkte um f mit [A,B] als Intervall, N \
+als Anzahl der Knoten und p als prozentuale Abweichung.\n\
+normalfit[stuetzP,Basis,a,plot]\tfuehrt die Approximation mit der Methode der \
+kleinsten Quadrate durch. a ist ein optionaler Punkt des Interesses und plot \
+ein Optionsparameter zum Plotten von ",
+  Cell[BoxData[
+      \(TraditionalForm\`A, \(A\^T\) 
+        A\ und\ der\ \(\(Modellfunktionen\)\(.\)\)\)]],
+  "\nBei den anderen Funktionen handelt es sich lediglich um Hilfsfunktionen \
+zur Darstellung und Grafikgenerierung.\n\n\n\n\n\n"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Progs", "Subsubsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell["General Specifications", "Text"],
+
+Cell[BoxData[{
+    \(\(Remove["\<Global`*\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Off[General::spell];\)\), "\[IndentingNewLine]", 
+    \(\(Off[LinearSolve::luc];\)\), "\[IndentingNewLine]", 
+    \(\(Off[Inverse::luc];\)\), "\[IndentingNewLine]", 
+    \(\(Off[NumberForm::sigz];\)\), "\[IndentingNewLine]", 
+    \(\(SetOptions[{Graphics, GraphicsArray, Plot, ListPlot}, 
+        Frame \[Rule] True, AspectRatio \[Rule] 1, 
+        TextStyle \[Rule] {FontSlant \[Rule] "\<Italic\>", 
+            FontSize \[Rule] 14}, 
+        FormatType \[Rule] TraditionalForm];\)\), "\[IndentingNewLine]", 
+    \(\(Unprotect[NumberForm];\)\), "\[IndentingNewLine]", 
+    \(\(SetAttributes[NumberForm, Listable];\)\), "\[IndentingNewLine]", 
+    \(\(Attributes[NumberForm];\)\)}], "Input"],
+
+Cell["Aquidistant random points", "Text"],
+
+Cell[BoxData[
+    \(\(\(randomKnoten[A_, B_, N_, f_, p_]\)\(:=\)\(Module[{h, ret}, \ 
+        h = \((B - A)\)/\((N - 1)\); \[IndentingNewLine]ret\  = \ 
+          Table[{A + \((i - 1)\)*h, 
+              f[A + \((i - 1)\)*h]*\((1 + 
+                    p\/100*Random[Real, {\(-1\), 1}])\)}, {i, 1, 
+              N}]; \[IndentingNewLine]ret\[IndentingNewLine]]\)\( (*end\ \
+module*) \)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True],
+
+Cell["Monome-basis", "Text"],
+
+Cell[BoxData[
+    \(\(\(Monome[
+        N_]\)\(:=\)\(Module[{ret}, \[IndentingNewLine]ret\  = \ 
+          Table[x\^i, {i, 0, 
+              N - 1}]; \[IndentingNewLine]ret\[IndentingNewLine]]\)\( (*end\ \
+module*) \)\)\)], "Input"],
+
+Cell["diskrete Approximation, least square methode", "Text",
+  PageBreakAbove->True],
+
+Cell[BoxData[
+    \(\(\(normalfit[stuetzP_, Basis_, a_, 
+        plot_]\)\(:=\)\(\ \)\(Module[{cond, normalLGS, lsg, g, n, m, A}, 
+        m = Length[stuetzP]; n = Length[Basis]; 
+        normalLGS\  = \ 
+          Table[Basis[\([j]\)] /. x \[Rule] stuetzP[\([i, 1]\)], {i, 1, 
+              m}, {j, 1, n}]; \[IndentingNewLine]A = 
+          Transpose[normalLGS] . normalLGS; \[IndentingNewLine]lsg = \ 
+          LinearSolve[A, 
+            Transpose[normalLGS] . Table[stuetzP[\([i, 2]\)], {i, 1, m}]]; 
+        cond\  = \ 
+          Sqrt[Max[Abs[Eigenvalues[Transpose[A] . A]]]]*\ 
+            Sqrt[Max[
+                Abs[Eigenvalues[
+                    Inverse[Transpose[A]] . 
+                      Inverse[A]]]]]; \[IndentingNewLine]g[v_] = 
+          Sum[lsg[\([i]\)]*Basis[\([i]\)], {i, 1, n}] /. 
+            x \[Rule] v; \[IndentingNewLine]If[plot \[Equal] 1, 
+          Print["\<A=\>", 
+            normalLGS // MatrixForm, \*"\"\<;  \!\(A\^T\)A=\>\"", 
+            A // MatrixForm, \*"\"\<;  \!\(cond\_2\)(\!\(A\^T\)A)=\>\"", 
+            cond // N, "\<;  g[x]=\>", g[x] // N, "\<; MathematicaFit=\>", 
+            Fit[stuetzP, Basis, x]], ]; \[IndentingNewLine]{g[x], cond, 
+          g[a]}\[IndentingNewLine]]\)\( (*end\ module*) \)\)\)], "Input",
+  ShowGroupOpenCloseIcon->True],
+
+Cell["Evaluation-tools", "Text"],
+
+Cell[BoxData[
+    \(\(\(Report[Knoten_, basis_, A_, 
+        B_]\)\(:=\)\(Module[{g, grafik2, 
+          grafik3}, \[IndentingNewLine]g[
+            x_]\  = \ \(normalfit[Knoten, basis, 1, 
+              1]\)[\([1]\)]; \[IndentingNewLine]grafik2\  = \ 
+          Plot[g[x], {x, Min[Table[a[\([i, 1]\)], {i, 1, Length[a]}]] - 0.5, 
+              Max[Table[a[\([i, 1]\)], {i, 1, Length[a]}]] + 0.5}, 
+            DisplayFunction \[Rule] Identity, \ 
+            PlotStyle \[Rule] {RGBColor[0, 1, 
+                  0]}]; \[IndentingNewLine]grafik3\  = \ 
+          ListPlot[Knoten, DisplayFunction \[Rule] Identity, \ 
+            PlotStyle \[Rule] {PointSize[0.015], 
+                RGBColor[0, 0, 1]}]; \[IndentingNewLine]Show[grafik2, 
+          grafik3, DisplayFunction \[Rule] $DisplayFunction]; 
+        g[x]\[IndentingNewLine]]\)\( (*end\ module*) \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(EvalNormalFit[basis_, f_, A_, B_, m_, p_, 
+        plot_]\)\(:=\)\(Module[{g1, g2, max1, max2, temp1, b, c, d, g, 
+          knoten}, \[IndentingNewLine]Result = {}; 
+        Grafik = {}; \[IndentingNewLine]For[i = 1, 
+          i \[LessEqual] \ 
+            Length[m], \(i++\), \[IndentingNewLine]knoten\  = \ 
+            randomKnoten[A, B, m[\([i]\)], f, p] // 
+              N; \[IndentingNewLine]temp1 = 
+            normalfit[knoten, basis, 1, 0]; \[IndentingNewLine]g1\  = \ 
+            temp1[\([1]\)]; \[IndentingNewLine]g2 = 
+            Fit[knoten, basis, x]; \[IndentingNewLine]max1 = 
+            Max[Table[f[x], {x, A, B, 0.01}] - 
+                Table[g2 /. x \[Rule] c, {c, A, B, 
+                    0.01}]]; \[IndentingNewLine]max2 = 
+            Max[Table[f[x], {x, A, B, 0.01}] - 
+                Table[g1 /. x \[Rule] c, {c, A, B, 
+                    0.01}]]; \[IndentingNewLine]Result = 
+            AppendTo[
+              Result, {m[\([i]\)], p, temp1[\([2]\)], max1, \ 
+                max2}]; \[IndentingNewLine]If[
+            plot\  \[Equal] \ 1, \[IndentingNewLine]b = 
+              Plot[f[x], {x, A, B}, 
+                DisplayFunction \[Rule] 
+                  Identity, \ \ PlotStyle \[Rule] {RGBColor[1, 0, 
+                      0]}]; \[IndentingNewLine]c = 
+              Plot[g1 /. x \[Rule] u, {u, A, B}, 
+                DisplayFunction \[Rule] Identity, \ 
+                PlotStyle \[Rule] {RGBColor[0, 1, 
+                      0]}]; \[IndentingNewLine]d = 
+              ListPlot[knoten, DisplayFunction \[Rule] Identity, \ 
+                PlotStyle \[Rule] {PointSize[0.035], 
+                    RGBColor[0, 0, 1]}]; \[IndentingNewLine]If[\ 
+              Length[m]\  \[Equal] \ 1, \[IndentingNewLine]Show[b, c, d, 
+                DisplayFunction \[Rule] $DisplayFunction]; 
+              Break[], \[IndentingNewLine]Grafik = 
+                AppendTo[Grafik, 
+                  Show[b, c, d, 
+                    DisplayFunction \[Rule] 
+                      Identity]], \[IndentingNewLine]]\[IndentingNewLine], ] \
+(*end\ if*) \[IndentingNewLine]]; \[IndentingNewLine]If[
+          plot \[Equal] 1\  && \ \ Length[m]\  != \ 1, 
+          Show[GraphicsArray[Partition[Grafik, 2]], Frame \[Rule] True, 
+            FrameLabel \[Rule] {"\<\>", "\<\>", "\< = p\>" 
+                  p, "\<\>"}], ]; \
+\[IndentingNewLine]Result\[IndentingNewLine]]\)\( (*end\ module*) \)\)\)], \
+"Input"],
+
+Cell[BoxData[
+    \(\(\(Evaluation[a_, b_, h_, n_, m_, p_, plot_, 
+        basis_]\)\(:=\)\(Module[{}, \[IndentingNewLine]\(For[o = 1, 
+            o \[LessEqual] \ 
+              Length[p], \(++o\), \[IndentingNewLine]data\  = \ {}; 
+            t1 = {}; \[IndentingNewLine]If[n\  != \(-1\), 
+              data\  = 
+                EvalNormalFit[Monome[n], h, a, b, m, p[\([o]\)], plot], 
+              data\  = 
+                EvalNormalFit[basis, h, a, b, m, p[\([o]\)], 
+                  plot]]; \[IndentingNewLine]data\  = 
+              NumberForm[data, 6]; \[IndentingNewLine]data = 
+              PrependTo[
+                data, {"\<m\>", "\<p\>", \
+\*"\"\<\!\(cond\_2\)(\!\(A\^T\)A)\>\"", \
+\*"\"\<\[LeftDoubleBracket]f-normalfit\!\(\(\[RightDoubleBracket]\_\[Infinity]\
+\)\)\>\"", \*"\"\<\[LeftDoubleBracket]f-fit\!\(\(\[RightDoubleBracket]\_\
+\[Infinity]\)\)\>\""}]; \[IndentingNewLine]t1 = 
+              FrameBox[
+                GridBox[data, RowLines \[Rule] {True, False}, 
+                  ColumnLines \[Rule] True]]; \[IndentingNewLine]Print[
+              t1 // DisplayForm];\[IndentingNewLine]];\)\[IndentingNewLine]]\)\
+\( (*end\ module*) \)\)\)], "Input"]
+}, Closed]],
+
+Cell["( i ) ", "Subtitle",
+  ShowGroupOpenCloseIcon->True,
+  PageBreakAbove->True],
+
+Cell[CellGroupData[{
+
+Cell["lineare Regression (Beispiel aus der Vorlesung)", "Subsubsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(a = {{0, 2}, {1, 5}, {2, 4}, {3, 6}, {4, 
+            9}};\)\), "\[IndentingNewLine]", 
+    \(n = 2; basis = Monome[n];\), "\[IndentingNewLine]", 
+    \(\(Report[a, basis, \(-1\), 5];\)\)}], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[
+      RowBox[{"\<\"A=\"\>", "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", "0"},
+                {"1", "1"},
+                {"1", "2"},
+                {"1", "3"},
+                {"1", "4"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)], 
+        "\[InvisibleSpace]", "\<\";  \\!\\(A\\^T\\)A=\"\>", 
+        "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"5", "10"},
+                {"10", "30"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)], 
+        "\[InvisibleSpace]", "\<\";  \\!\\(cond\\_2\\)(\\!\\(A\\^T\\)A)=\"\>",
+         "\[InvisibleSpace]", "22.455467415507485`", 
+        "\[InvisibleSpace]", "\<\";  g[x]=\"\>", 
+        "\[InvisibleSpace]", \(\(\(2.2`\)\(\[InvisibleSpace]\)\) + 1.5`\ x\), 
+        "\[InvisibleSpace]", "\<\"; MathematicaFit=\"\>", 
+        "\[InvisibleSpace]", \(\(\(2.1999999999999966`\)\(\[InvisibleSpace]\)\
+\) + 1.500000000000002`\ x\)}],
+      SequenceForm[ "A=", 
+        MatrixForm[ {{1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}}], 
+        ";  \!\(A\^T\)A=", 
+        MatrixForm[ {{5, 10}, {10, 30}}], ";  \!\(cond\_2\)(\!\(A\^T\)A)=", 
+        22.455467415507485, ";  g[x]=", 
+        Plus[ 2.2000000000000002, 
+          Times[ 1.5, x]], "; MathematicaFit=", 
+        Plus[ 2.1999999999999966, 
+          Times[ 1.500000000000002, x]]],
+      Editable->False]], "Print"]
+}, Open  ]],
+
+Cell[TextData[{
+  "Es gibt keine Differenz zwischen der ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "-Fit-Funktion, und normalfit[ ]"
+}], "Text"]
+}, Closed]],
+
+Cell[" ( ii ) ", "Subtitle",
+  ShowGroupOpenCloseIcon->True,
+  PageBreakAbove->True],
+
+Cell[CellGroupData[{
+
+Cell["Aufgabe 1 (Gravitationskonstante)", "Subsubsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(a = {{0.1, \(-0.055\)}, {0.2, 0.095}, {0.3, 0.314}, {0.4, 
+            0.756}, {0.5, 1.137}};\)\), "\[IndentingNewLine]", 
+    \(n = 2; basis\  = \ {1, x, 1\/2*x\^2}; 
+    res\  = Report[a, basis, 0, 0.6];\), "\[IndentingNewLine]", 
+    \(Print["\<s(t) = \>", \ res]; 
+    Print[\*"\"\<\!\(s\_0\) = \>\"", \ res[\([1]\)]]; 
+    Print[\*"\"\<\!\(v\_0\) = \>\"", \ res[\([2, 1]\)]]; 
+    Print["\<g = \>", \ 
+      2*res[\([3, 
+            1]\)], "\< \[TildeTilde] Gravitationskonstante\>"];\)}], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[
+      RowBox[{"\<\"A=\"\>", "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", "0.1`", "0.005000000000000001`"},
+                {"1", "0.2`", "0.020000000000000004`"},
+                {"1", "0.3`", "0.045`"},
+                {"1", "0.4`", "0.08000000000000002`"},
+                {"1", "0.5`", "0.125`"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)], 
+        "\[InvisibleSpace]", "\<\";  \\!\\(A\\^T\\)A=\"\>", 
+        "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"5.`", "1.5`", "0.275`"},
+                {"1.5`", "0.55`", "0.11250000000000002`"},
+                {"0.275`", "0.11250000000000002`", "0.024475000000000004`"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)], 
+        "\[InvisibleSpace]", "\<\";  \\!\\(cond\\_2\\)(\\!\\(A\\^T\\)A)=\"\>",
+         "\[InvisibleSpace]", "17073.049676986382`", 
+        "\[InvisibleSpace]", "\<\";  g[x]=\"\>", 
+        "\[InvisibleSpace]", \(\(-0.12160000000000268`\) + 
+          0.10928571428573677`\ x + 4.892857142857105`\ x\^2\), 
+        "\[InvisibleSpace]", "\<\"; MathematicaFit=\"\>", 
+        "\[InvisibleSpace]", \(\(-0.12159999999999971`\) + 
+          0.10928571428571221`\ x + 4.8928571428571495`\ x\^2\)}],
+      SequenceForm[ "A=", 
+        MatrixForm[ {{1, .10000000000000001, .005000000000000001}, {
+          1, .20000000000000001, .020000000000000004}, {
+          1, .29999999999999999, .044999999999999998}, {
+          1, .40000000000000002, .080000000000000016}, {1, .5, .125}}], 
+        ";  \!\(A\^T\)A=", 
+        MatrixForm[ {{5.0, 1.5, .27500000000000002}, {
+          1.5, .55000000000000004, .11250000000000002}, {.27500000000000002, \
+.11250000000000002, .024475000000000004}}], ";  \!\(cond\_2\)(\!\(A\^T\)A)=", 
+        17073.049676986382, ";  g[x]=", 
+        Plus[ -.12160000000000268, 
+          Times[ .10928571428573677, x], 
+          Times[ 4.892857142857105, 
+            Power[ x, 2]]], "; MathematicaFit=", 
+        Plus[ -.12159999999999971, 
+          Times[ .10928571428571221, x], 
+          Times[ 4.8928571428571495, 
+            Power[ x, 2]]]],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("s(t) = "\[InvisibleSpace]\(\(-0.12160000000000268`\) \
++ 0.10928571428573677`\ x + 4.892857142857105`\ x\^2\)\),
+      SequenceForm[ "s(t) = ", 
+        Plus[ -.12160000000000268, 
+          Times[ .10928571428573677, x], 
+          Times[ 4.892857142857105, 
+            Power[ x, 2]]]],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("\!\(s\_0\) = \
+"\[InvisibleSpace]\(-0.12160000000000268`\)\),
+      SequenceForm[ "\!\(s\_0\) = ", -.12160000000000268],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("\!\(v\_0\) = \
+"\[InvisibleSpace]0.10928571428573677`\),
+      SequenceForm[ "\!\(v\_0\) = ", .10928571428573677],
+      Editable->False]], "Print"],
+
+Cell[BoxData[
+    InterpretationBox[\("g = "\[InvisibleSpace]9.78571428571421`\
+\[InvisibleSpace]" \[TildeTilde] Gravitationskonstante"\),
+      SequenceForm[ 
+      "g = ", 9.7857142857142101, " \[TildeTilde] Gravitationskonstante"],
+      Editable->False]], "Print"]
+}, Open  ]],
+
+Cell[TextData[{
+  "Es gibt keine deutliche Differenz zwischen der ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "-Fit-Funktion, und normalfit[ ]."
+}], "Text"]
+}, Closed]],
+
+Cell[" ( iii )", "Subtitle",
+  PageBreakAbove->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+    \(f[x] = x\^5\)]]], "Subsubsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(a = 0; b = 1; h[x_] := x\^5; n = 6; m = Table[i, {i, 5, 20, 5}]; 
+    p = {5}; Evaluation[a, b, h, n, m, p, 1, 1];\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+    \(f[x] = \ 
+      0.38*x\/\(1 + x\)\  - \ \((1 - Exp[\(-x\)])\)\)]]], "Subsubsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(a = 0.2; b = 3.0; 
+    h[x_] := 0.38*x\/\(1 + x\)\  - \ \((1 - Exp[\(-x\)])\); 
+    bas\  = \ {x\/\(1 + x\), \((1 - Exp[\(-x\)])\)}; m = {10}; p = {0, 1, 2}; 
+    Evaluation[a, b, h, \(-1\), m, p, 0, bas];\), "\[IndentingNewLine]", 
+    \(\(Evaluation[a, b, h, \(-1\), m, {5}, 1, bas];\)\)}], "Input"],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"m", 
+              "p", \(\(cond\_2\) \((\(A\^T\) 
+                    A)\)\), \(\(\[LeftDoubleBracket]\)\(f - 
+                normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\), \(\(\
+\[LeftDoubleBracket]\)\(f - fit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)},
+            {
+              TagBox[
+                InterpretationBox["\<\"10\"\>",
+                  10,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0\"\>",
+                  0,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"8424.01\"\>",
+                  8424.0145676210122,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("1.11022"\[Times]10\^"-16"\),
+                  .11102230246251565*^-15,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("7.18869"\[Times]10\^"-15"\),
+                  .71886940844478886*^-14,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"m", 
+              "p", \(\(cond\_2\) \((\(A\^T\) 
+                    A)\)\), \(\(\[LeftDoubleBracket]\)\(f - 
+                normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\), \(\(\
+\[LeftDoubleBracket]\)\(f - fit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)},
+            {
+              TagBox[
+                InterpretationBox["\<\"10\"\>",
+                  10,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"1\"\>",
+                  1,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"8424.01\"\>",
+                  8424.0145676210122,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.00023311\"\>",
+                  .00023310967330059107,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.00023311\"\>",
+                  .00023310967329370769,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"m", 
+              "p", \(\(cond\_2\) \((\(A\^T\) 
+                    A)\)\), \(\(\[LeftDoubleBracket]\)\(f - 
+                normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\), \(\(\
+\[LeftDoubleBracket]\)\(f - fit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)},
+            {
+              TagBox[
+                InterpretationBox["\<\"10\"\>",
+                  10,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"2\"\>",
+                  2,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"8424.01\"\>",
+                  8424.0145676210122,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.00277452\"\>",
+                  .0027745223759175486,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.00277452\"\>",
+                  .00277452237591988,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"m", 
+              "p", \(\(cond\_2\) \((\(A\^T\) 
+                    A)\)\), \(\(\[LeftDoubleBracket]\)\(f - 
+                normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\), \(\(\
+\[LeftDoubleBracket]\)\(f - fit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)},
+            {
+              TagBox[
+                InterpretationBox["\<\"10\"\>",
+                  10,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"5\"\>",
+                  5,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"8424.01\"\>",
+                  8424.0145676210122,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.00268185\"\>",
+                  .0026818481898351343,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.00268185\"\>",
+                  .0026818481898436553,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"]
+}, Open  ]],
+
+Cell["Erlaeuterungen:", "Subsubtitle"],
+
+Cell[TextData[{
+  "Wir sehen hier die Approximation der Funktion ",
+  Cell[BoxData[
+      \(f[x] = \ 0.38*x\/\(1 + x\)\  - \ \((1 - Exp[\(-x\)])\)\)]],
+  " mit dem Verfahren der Methode der kleinsten Quadrate. Dabei wurden \
+jeweils 10 Stuetzstellen verwendet. Diese Stuetzstellen sind aequidistant auf \
+dem Intervall [0.2,3.0] aufgeteilt. Dabei \"flackern\" die ",
+  Cell[BoxData[
+      \(TraditionalForm\`y\_i\)]],
+  " (i=1,2,...,10) der Stuetzstellen mit maximal p=0,1,2,5 Prozent Abweichung \
+um die Ausgangsfunktion."
+}], "Text"],
+
+Cell["Ergebnisse / Beobachtungen:", "Subsubtitle"],
+
+Cell[TextData[{
+  "Zunaechst kann man feststellen, dass die maximale Abweichung ",
+  Cell[BoxData[
+      \(\(\(\[LeftDoubleBracket]\)\(f - 
+        normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)\)]],
+  " unserer Approximierten Funktion von der vorgegebenen Funktion \"aehnliche\
+\" Groessenordnung beschreibt, wie die ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "-Funktion Fit[ ]. Das deutet darauf hin, dass diese ebenfalls die \
+Approximierte mit der Methode der kleinsten Quadrate konstruiert. Die \
+minimalen Abweichungen sind lediglich einer sauberen Implementierung \
+hinsichtlich der Praezision geschuldet. \nEs laesst sich beobachten, das die \
+maximale Abweichung ",
+  Cell[BoxData[
+      \(\(\(\[LeftDoubleBracket]\)\(f - 
+        normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)\)]],
+  " nicht im direkten Zusammenhang mit dem prozentalem Flackern p steht. Wie \
+man den Tabellen entnehmen kann ist ",
+  Cell[BoxData[
+      \(\(\(\[LeftDoubleBracket]\)\(f - 
+        normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)\)]],
+  " bei p = 5 kleiner als der Wert ",
+  Cell[BoxData[
+      \(\(\(\[LeftDoubleBracket]\)\(f - 
+        normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)\)]],
+  " mit einer Abweichung von p = 2 was sich nicht auf Anhieb begruenden \
+laesst."
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+    \(f[x] = 1\/\((1 + \((10*x - 5)\)\^2)\)\)]]], "Subsubsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[BoxData[
+    \(a = 0; b = 1; h[x_] := 1\/\((1 + \((10*x - 5)\)\^2)\); n = 14; 
+    m = {10, \ 100, \ 1000, \ 10000}; p = {10}; 
+    Evaluation[a, b, h, n, m, p, 1, 1];\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+    \(f[x] = \(-0.12\) + 0.11*x + 4.89*t\^2\)]]], "Subsubsection",
+  ShowGroupOpenCloseIcon->True],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(h[x_] := \(-0.12\) + 0.11*x + 4.89*x\^2;\)\), "\[IndentingNewLine]", 
+    \(a = randomKnoten[0, 0.1, 10, h, 8]\), "\[IndentingNewLine]", 
+    \(n = 3; basis = Monome[n];\), "\[IndentingNewLine]", 
+    \(\(Report[a, basis, 0, 0.5];\)\)}], "Input"],
+
+Cell[BoxData[
+    \({{0, \(-0.12123665825323439`\)}, {0.011111111111111112`, \
+\(-0.11128348113633556`\)}, {0.022222222222222223`, \
+\(-0.11659600404713424`\)}, {0.03333333333333333`, \
+\(-0.11523565737907099`\)}, {0.044444444444444446`, \
+\(-0.10144967306357244`\)}, {0.05555555555555556`, \(-0.098675397029988`\)}, \
+{0.06666666666666667`, \(-0.09269544641344499`\)}, {0.07777777777777778`, \
+\(-0.07957909889598462`\)}, {0.08888888888888889`, \
+\(-0.07460449853459579`\)}, {0.1`, \(-0.06066915959356572`\)}}\)], "Output"],
+
+Cell[BoxData[
+    InterpretationBox[
+      RowBox[{"\<\"A=\"\>", "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", "0", "0"},
+                {"1", "0.011111111111111112`", "0.0001234567901234568`"},
+                {"1", "0.022222222222222223`", "0.0004938271604938272`"},
+                {"1", "0.03333333333333333`", "0.0011111111111111111`"},
+                {"1", "0.044444444444444446`", "0.0019753086419753087`"},
+                {"1", "0.05555555555555556`", "0.00308641975308642`"},
+                {"1", "0.06666666666666667`", "0.0044444444444444444`"},
+                {"1", "0.07777777777777778`", "0.006049382716049383`"},
+                {"1", "0.08888888888888889`", "0.007901234567901235`"},
+                {"1", "0.1`", "0.010000000000000002`"}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]], 
+        "\[InvisibleSpace]", "\<\";  \\!\\(A\\^T\\)A=\"\>", 
+        "\[InvisibleSpace]", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"10.`", "0.5`", "0.03518518518518519`"},
+                {"0.5`", "0.03518518518518519`", "0.0027777777777777783`"},
+                {"0.03518518518518519`", "0.0027777777777777783`", 
+                  "0.00023369913122999548`"}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]], 
+        "\[InvisibleSpace]", "\<\";  \\!\\(cond\\_2\\)(\\!\\(A\\^T\\)A)=\"\>",
+         "\[InvisibleSpace]", "1.258208647117886`*^6", 
+        "\[InvisibleSpace]", "\<\";  g[x]=\"\>", 
+        "\[InvisibleSpace]", \(\(-0.11889096435419266`\) + 
+          0.09423519098401635`\ x + 4.824956094716603`\ x\^2\), 
+        "\[InvisibleSpace]", "\<\"; MathematicaFit=\"\>", 
+        "\[InvisibleSpace]", \(\(-0.11889096435419262`\) + 
+          0.09423519098401438`\ x + 4.8249560947166215`\ x\^2\)}],
+      SequenceForm[ "A=", 
+        MatrixForm[ {{1, 0, 0}, {
+          1, .011111111111111112, .00012345679012345679}, {
+          1, .022222222222222223, .00049382716049382717}, {
+          1, .033333333333333333, .0011111111111111111}, {
+          1, .044444444444444446, .0019753086419753087}, {
+          1, .055555555555555559, .00308641975308642}, {
+          1, .066666666666666666, .0044444444444444444}, {
+          1, .077777777777777779, .0060493827160493828}, {
+          1, .088888888888888892, .0079012345679012348}, {
+          1, .10000000000000001, .010000000000000002}}], ";  \!\(A\^T\)A=", 
+        MatrixForm[ {{.1*^2, .5, .035185185185185187}, {.5, \
+.035185185185185187, .0027777777777777783}, {.035185185185185187, \
+.0027777777777777783, .00023369913122999548}}], 
+        ";  \!\(cond\_2\)(\!\(A\^T\)A)=", 1258208.647117886, ";  g[x]=", 
+        Plus[ -.11889096435419266, 
+          Times[ .094235190984016351, x], 
+          Times[ 4.8249560947166028, 
+            Power[ x, 2]]], "; MathematicaFit=", 
+        Plus[ -.11889096435419262, 
+          Times[ .09423519098401438, x], 
+          Times[ 4.8249560947166215, 
+            Power[ x, 2]]]],
+      Editable->False]], "Print"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(a = 0.2; b = 3.0; h[x_] := \(-0.12\) + 0.11*x + 4.89*x\^2; 
+    m = {5, 10, 15, 25}; p = {0, 1, 2, 5};\), "\[IndentingNewLine]", 
+    \(\(Evaluation[a, b, h, 3, m, p, 1, 1];\)\)}], "Input"],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"m", 
+              "p", \(\(cond\_2\) \((\(A\^T\) 
+                    A)\)\), \(\(\[LeftDoubleBracket]\)\(f - 
+                normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\), \(\(\
+\[LeftDoubleBracket]\)\(f - fit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)},
+            {
+              TagBox[
+                InterpretationBox["\<\"5\"\>",
+                  5,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0\"\>",
+                  0,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"631.887\"\>",
+                  631.88725625197367,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("1.31839"\[Times]10\^"-15"\),
+                  .13183898417423734*^-14,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("2.69368"\[Times]10\^"-14"\),
+                  .26936786134967861*^-13,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"10\"\>",
+                  10,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0\"\>",
+                  0,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"773.04\"\>",
+                  773.03981934544436,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("1.69309"\[Times]10\^"-15"\),
+                  .16930901125533637*^-14,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("1.77636"\[Times]10\^"-14"\),
+                  .17763568394002505*^-13,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"15\"\>",
+                  15,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0\"\>",
+                  0,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"839.21\"\>",
+                  839.20977061613121,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("1.42109"\[Times]10\^"-14"\),
+                  .14210854715202004*^-13,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("1.42109"\[Times]10\^"-14"\),
+                  .14210854715202004*^-13,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"25\"\>",
+                  25,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0\"\>",
+                  0,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"900.696\"\>",
+                  900.69633135931281,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("1.42109"\[Times]10\^"-14"\),
+                  .14210854715202004*^-13,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox[\("3.90799"\[Times]10\^"-14"\),
+                  .3907985046680551*^-13,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"m", 
+              "p", \(\(cond\_2\) \((\(A\^T\) 
+                    A)\)\), \(\(\[LeftDoubleBracket]\)\(f - 
+                normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\), \(\(\
+\[LeftDoubleBracket]\)\(f - fit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)},
+            {
+              TagBox[
+                InterpretationBox["\<\"5\"\>",
+                  5,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"1\"\>",
+                  1,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"631.887\"\>",
+                  631.88725625197367,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.109257\"\>",
+                  .10925714715006052,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.109257\"\>",
+                  .10925714715012447,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"10\"\>",
+                  10,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"1\"\>",
+                  1,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"773.04\"\>",
+                  773.03981934544436,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.063381\"\>",
+                  .063381022642762019,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.063381\"\>",
+                  .063381022642783336,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"15\"\>",
+                  15,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"1\"\>",
+                  1,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"839.21\"\>",
+                  839.20977061613121,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0516612\"\>",
+                  .051661212752868835,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0516612\"\>",
+                  .051661212752868835,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"25\"\>",
+                  25,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"1\"\>",
+                  1,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"900.696\"\>",
+                  900.69633135931281,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0575263\"\>",
+                  .057526294962684688,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0575263\"\>",
+                  .057526294962656266,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"m", 
+              "p", \(\(cond\_2\) \((\(A\^T\) 
+                    A)\)\), \(\(\[LeftDoubleBracket]\)\(f - 
+                normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\), \(\(\
+\[LeftDoubleBracket]\)\(f - fit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)},
+            {
+              TagBox[
+                InterpretationBox["\<\"5\"\>",
+                  5,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"2\"\>",
+                  2,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"631.887\"\>",
+                  631.88725625197367,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.581291\"\>",
+                  .5812907623209469,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.581291\"\>",
+                  .58129076232098242,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"10\"\>",
+                  10,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"2\"\>",
+                  2,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"773.04\"\>",
+                  773.03981934544436,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.365431\"\>",
+                  .36543067718019273,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.365431\"\>",
+                  .36543067718019984,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"15\"\>",
+                  15,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"2\"\>",
+                  2,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"839.21\"\>",
+                  839.20977061613121,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0394411\"\>",
+                  .039441085935419493,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0394411\"\>",
+                  .039441085935410944,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"25\"\>",
+                  25,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"2\"\>",
+                  2,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"900.696\"\>",
+                  900.69633135931281,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0411365\"\>",
+                  .04113652034013171,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0411365\"\>",
+                  .041136520340096183,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"],
+
+Cell[BoxData[
+    TagBox[
+      FrameBox[GridBox[{
+            {"m", 
+              "p", \(\(cond\_2\) \((\(A\^T\) 
+                    A)\)\), \(\(\[LeftDoubleBracket]\)\(f - 
+                normalfit\)\(\[RightDoubleBracket]\_\[Infinity]\)\), \(\(\
+\[LeftDoubleBracket]\)\(f - fit\)\(\[RightDoubleBracket]\_\[Infinity]\)\)},
+            {
+              TagBox[
+                InterpretationBox["\<\"5\"\>",
+                  5,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"5\"\>",
+                  5,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"631.887\"\>",
+                  631.88725625197367,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.109285\"\>",
+                  .10928477787861546,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.109285\"\>",
+                  .10928477787858082,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"10\"\>",
+                  10,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"5\"\>",
+                  5,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"773.04\"\>",
+                  773.03981934544436,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.117159\"\>",
+                  .11715901058066258,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.117159\"\>",
+                  .11715901058066081,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"15\"\>",
+                  15,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"5\"\>",
+                  5,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"839.21\"\>",
+                  839.20977061613121,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.382295\"\>",
+                  .38229475760319787,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.382295\"\>",
+                  .38229475760319076,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]},
+            {
+              TagBox[
+                InterpretationBox["\<\"25\"\>",
+                  25,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"5\"\>",
+                  5,
+                  Editable->False],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"900.696\"\>",
+                  900.69633135931281,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0678812\"\>",
+                  .067881247387537438,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)], 
+              TagBox[
+                InterpretationBox["\<\"0.0678812\"\>",
+                  .067881247387520008,
+                  AutoDelete->True],
+                (NumberForm[ #, 6]&)]}
+            },
+          RowLines->{True, False},
+          ColumnLines->True]],
+      DisplayForm]], "Print"]
+}, Open  ]]
+}, Closed]]
+},
+FrontEndVersion->"4.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1152}, {0, 781}},
+ScreenStyleEnvironment->"Working",
+PrintingStyleEnvironment->"Printout",
+WindowToolbars->"EditBar",
+CellGrouping->Manual,
+WindowSize->{1144, 747},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+Magnification->1,
+StyleDefinitions -> "DemoText.nb"
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1717, 49, 158, 4, 125, "Title"],
+Cell[1878, 55, 36, 0, 41, "Subtitle"],
+Cell[1917, 57, 321, 5, 48, "Text"],
+Cell[2241, 64, 71, 0, 41, "Subtitle"],
+Cell[2315, 66, 1546, 41, 187, "Text"],
+Cell[3864, 109, 40, 0, 41, "Subtitle"],
+Cell[3907, 111, 672, 12, 323, "Text"],
+
+Cell[CellGroupData[{
+Cell[4604, 127, 62, 1, 44, "Subsubsection"],
+Cell[4669, 130, 38, 0, 29, "Text"],
+Cell[4710, 132, 775, 13, 220, "Input"],
+Cell[5488, 147, 41, 0, 29, "Text"],
+Cell[5532, 149, 432, 8, 114, "Input"],
+Cell[5967, 159, 28, 0, 29, "Text"],
+Cell[5998, 161, 232, 5, 103, "Input"],
+Cell[6233, 168, 84, 1, 29, "Text",
+  PageBreakAbove->True],
+Cell[6320, 171, 1296, 24, 224, "Input"],
+Cell[7619, 197, 32, 0, 29, "Text"],
+Cell[7654, 199, 871, 15, 160, "Input"],
+Cell[8528, 216, 2460, 46, 480, "Input"],
+Cell[10991, 264, 1182, 22, 225, "Input"]
+}, Closed]],
+Cell[12188, 289, 82, 2, 45, "Subtitle",
+  PageBreakAbove->True],
+
+Cell[CellGroupData[{
+Cell[12295, 295, 104, 1, 44, "Subsubsection"],
+
+Cell[CellGroupData[{
+Cell[12424, 300, 222, 4, 80, "Input"],
+Cell[12649, 306, 1508, 36, 85, "Print"]
+}, Open  ]],
+Cell[14172, 345, 158, 5, 29, "Text"]
+}, Closed]],
+Cell[14345, 353, 84, 2, 45, "Subtitle",
+  PageBreakAbove->True],
+
+Cell[CellGroupData[{
+Cell[14454, 359, 90, 1, 44, "Subsubsection"],
+
+Cell[CellGroupData[{
+Cell[14569, 364, 526, 10, 114, "Input"],
+Cell[15098, 376, 2276, 47, 111, "Print"],
+Cell[17377, 425, 361, 8, 25, "Print"],
+Cell[17741, 435, 193, 4, 25, "Print"],
+Cell[17937, 441, 187, 4, 25, "Print"],
+Cell[18127, 447, 268, 5, 25, "Print"]
+}, Open  ]],
+Cell[18410, 455, 169, 5, 29, "Text"]
+}, Closed]],
+Cell[18594, 463, 52, 1, 45, "Subtitle",
+  PageBreakAbove->True],
+
+Cell[CellGroupData[{
+Cell[18671, 468, 100, 2, 45, "Subsubsection"],
+Cell[18774, 472, 147, 2, 40, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[18958, 479, 150, 3, 33, "Subsubsection"],
+
+Cell[CellGroupData[{
+Cell[19133, 486, 322, 5, 71, "Input"],
+Cell[19458, 493, 1391, 37, 51, "Print"],
+Cell[20852, 532, 1367, 37, 49, "Print"],
+Cell[22222, 571, 1363, 37, 49, "Print"],
+Cell[23588, 610, 1365, 37, 49, "Print"]
+}, Open  ]],
+Cell[24968, 650, 38, 0, 58, "Subsubtitle"],
+Cell[25009, 652, 535, 11, 52, "Text"],
+Cell[25547, 665, 50, 0, 58, "Subsubtitle"],
+Cell[25600, 667, 1310, 28, 117, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[26947, 700, 126, 2, 37, "Subsubsection"],
+Cell[27076, 704, 185, 3, 54, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[27298, 712, 126, 2, 29, "Subsubsection"],
+
+Cell[CellGroupData[{
+Cell[27449, 718, 269, 4, 100, "Input"],
+Cell[27721, 724, 524, 8, 68, "Output"],
+Cell[28248, 734, 3154, 60, 201, "Print"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[31439, 799, 210, 3, 60, "Input"],
+Cell[31652, 804, 4248, 115, 109, "Print"],
+Cell[35903, 921, 4123, 115, 97, "Print"],
+Cell[40029, 1038, 4119, 115, 97, "Print"],
+Cell[44151, 1155, 4117, 115, 97, "Print"]
+}, Open  ]]
+}, Closed]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

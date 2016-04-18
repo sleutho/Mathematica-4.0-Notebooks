@@ -1,0 +1,505 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 4.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     18400,        435]*)
+(*NotebookOutlinePosition[     19126,        460]*)
+(*  CellTagsIndexPosition[     19082,        456]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Aufgabenstellung",
+  FontSize->16]], "Section"],
+
+Cell[TextData[{
+  "Wir wollen mit Hilfe der von Archimedes entdeckten Intervallschachtelung \
+die Kreiszahl \[Pi] ann\[ADoubleDot]hern. Dies geschieht mit regelm\
+\[ADoubleDot]\[SZ]igen ein- und umbeschriebenen Polygonen um einen Kreis. Die \
+Umf\[ADoubleDot]nge der Polygone ",
+  Cell[BoxData[
+      \(TraditionalForm\`U\_n = n*S\_n\)]],
+  " (\[ADoubleDot]u\[SZ]eres Polygon) und ",
+  Cell[BoxData[
+      \(TraditionalForm\`u\_n = \ n*s\_n\)]],
+  "(inneres Polygon) n\[ADoubleDot]hern sich schrittweise der Kreiszahl, wenn \
+der Radius des betreffenden Kreises mit 1/2 gew\[ADoubleDot]hlt wird. \nEs \
+gilt also ",
+  Cell[BoxData[
+      \(TraditionalForm\`u\_n\  < \ \[Pi]\  < \ U\_n\)]],
+  ", und zur jeweiligen gew\[UDoubleDot]nschten Ann\[ADoubleDot]herung muss \
+nur der Gard des Polygons erh\[ODoubleDot]ht werden. \nWir werden nun mit der \
+skizzierte Methode eine \[Pi] - Ann\[ADoubleDot]herung \
+durchf\[UDoubleDot]hren."
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+1. Version zur \[Pi] - Approximation (instabil)\
+\>", "Section",
+  FontSize->16],
+
+Cell[BoxData[{\(nn[x_, n_] := NumberForm[N[x], n]\), "\[IndentingNewLine]", 
+    RowBox[{
+      StyleBox[\(u[n_]\),
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[":=",
+        FontColor->RGBColor[1, 0, 0]], 
+      RowBox[{
+        StyleBox[\(u[n]\),
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox["=",
+          FontColor->RGBColor[1, 0, 0]], 
+        "\[IndentingNewLine]", \(Module[{s = 1/2*\@3, i, 
+            u}, \[IndentingNewLine]Do[s = \@\(1/2*\((1 - \@\(1 - s\^2\))\)\); 
+            u = 2\^\(i - 2\)*3*s, {i, 3, n}]; u]\)}]}], "\[IndentingNewLine]",
+   
+    RowBox[{
+      StyleBox[\(U[n_]\),
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[":=",
+        FontColor->RGBColor[1, 0, 0]], 
+      RowBox[{
+        StyleBox[\(U[n]\),
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox["=",
+          FontColor->RGBColor[1, 0, 0]], 
+        "\[IndentingNewLine]", \(Module[{s = 1/2*\@3, i, u, U, 
+            a}, \[IndentingNewLine]Do[s = \@\(1/2*\((1 - \@\(1 - s\^2\))\)\); 
+            u = 2\^\(i - 2\)*3*s; a = \@\(1 - s\^2\); 
+            U = u/a, \[IndentingNewLine]{i, 3, n}]; U]\)}]}]}], "Input",
+  CellLabel->"In[6]:="],
+
+Cell[BoxData[
+    \(Archimedes[n_] := {2\^\(n - 2\)*3, u[n], U[n], U[n] - u[n], Pi - u[n], 
+        U[n] - Pi}\)], "Input",
+  CellLabel->"In[10]:="],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(Tab1\  = \ 
+        Table[N[Archimedes[i], 16], {i, 3, 30}];\)\), "\[IndentingNewLine]", 
+    \(TableForm[Tab1]\)}], "Input",
+  CellLabel->"In[11]:="],
+
+Cell[BoxData[
+    TagBox[GridBox[{
+          {"6.`", "3.`", "3.4641016151377544`", "0.4641016151377544`", 
+            "0.14159265358979312`", "0.32250896154796127`"},
+          {"12.`", "3.1058285412302498`", "3.215390309173473`", 
+            "0.10956176794322303`", "0.035764112359543354`", 
+            "0.07379765558367968`"},
+          {"24.`", "3.132628613281237`", "3.1596599420974996`", 
+            "0.02703132881626269`", "0.008964040308556243`", 
+            "0.018067288507706447`"},
+          {"48.`", "3.139350203046872`", "3.1460862151314397`", 
+            "0.006736012084567644`", "0.0022424505429210484`", 
+            "0.004493561541646596`"},
+          {"96.`", "3.14103195089053`", "3.1427145996453887`", 
+            "0.0016826487548589064`", "0.0005607026992633379`", 
+            "0.0011219460555955685`"},
+          {"192.`", "3.1414524722853443`", "3.1418730499797065`", 
+            "0.00042057769436221193`", "0.0001401813044488165`", 
+            "0.00028039638991339544`"},
+          {"384.`", "3.141557607911622`", "3.1416627470566127`", 
+            "0.00010513914499066246`", "0.00003504567817103066`", 
+            "0.0000700934668196318`"},
+          {"768.`", "3.141583892148936`", "3.1416101766053073`", 
+            "0.000026284456371428178`", "8.76144085726338`*^-6", 
+            "0.000017523015514164797`"},
+          {"1536.`", "3.1415904632367617`", "3.141597034330238`", 
+            "6.571093476459566`*^-6", "2.1903530313949204`*^-6", 
+            "4.380740445064646`*^-6"},
+          {"3072.`", "3.1415921060430483`", "3.141593748815129`", 
+            "1.6427720805900492`*^-6", "5.475467448334825`*^-7", 
+            "1.0952253357565667`*^-6"},
+          {"6144.`", "3.1415925165881546`", "3.141592927281094`", 
+            "4.106929392122538`*^-7", "1.3700163847829572`*^-7", 
+            "2.736913007339581`*^-7"},
+          {"12288.`", "3.1415926186407894`", "3.1415927213140193`", 
+            "1.0267322991808214`*^-7", "3.4949003691053804`*^-8", 
+            "6.772422622702834`*^-8"},
+          {"24576.`", "3.1415926453212157`", "3.1415926709895228`", 
+            "2.5668307035431326`*^-8", "8.268577378345299`*^-9", 
+            "1.7399729657086027`*^-8"},
+          {"49152.`", "3.1415926453212157`", "3.1415926517382924`", 
+            "6.417076647835529`*^-9", 
+            "8.268577378345299`*^-9", \(-1.8515007305097697`*^-9\)},
+          {"98304.`", "3.1415926453212157`", "3.1415926469254853`", 
+            "1.604269606048092`*^-9", 
+            "8.268577378345299`*^-9", \(-6.664307772297207`*^-9\)},
+          {"196608.`", "3.1415926453212157`", "3.141592645722283`", 
+            "4.010671794674181`*^-10", 
+            "8.268577378345299`*^-9", \(-7.86751019887788`*^-9\)},
+          {"393216.`", "3.1415923038117377`", "3.141592303912004`", 
+            "1.0026646179994714`*^-10", 
+            "3.497780554084784`*^-7", \(-3.4967778894667845`*^-7\)},
+          {"786432.`", "3.1415923038117377`", "3.1415923038368043`", 
+            "2.5066615449986784`*^-11", 
+            "3.497780554084784`*^-7", \(-3.497529887930284`*^-7\)},
+          {"1.572864`*^6", "3.1415868396550413`", "3.1415868396613083`", 
+            "6.266986929404084`*^-12", 
+            "5.813934751852656`*^-6", \(-5.813928484865727`*^-6\)},
+          {"3.145728`*^6", "3.1415868396550413`", "3.141586839656608`", 
+            "1.566746732351021`*^-12", 
+            "5.813934751852656`*^-6", \(-5.813933185105924`*^-6\)},
+          {"6.291456`*^6", "3.1416742650217575`", "3.141674265022149`", 
+            "3.9168668308775523`*^-13", \(-0.00008161143196439014`\), 
+            "0.00008161143235607682`"},
+          {"1.2582912`*^7", "3.1416742650217575`", "3.1416742650218548`", 
+            "9.725553695716371`*^-14", \(-0.00008161143196439014`\), 
+            "0.00008161143206164567`"},
+          {"2.5165824`*^7", "3.1430727401700396`", "3.1430727401700636`", 
+            "2.398081733190338`*^-14", \(-0.0014800865802464536`\), 
+            "0.0014800865802704344`"},
+          {"5.0331648`*^7", "3.137475099502783`", "3.13747509950279`", 
+            "6.661338147750939`*^-15", 
+            "0.004117554087009978`", \(-0.004117554087003317`\)},
+          {"1.00663296`*^8", "3.181980515339464`", "3.181980515339465`", 
+            "1.3322676295501878`*^-15", \(-0.040387861749670684`\), 
+            "0.040387861749672016`"},
+          {"2.01326592`*^8", "3.`", "3.`", "0.`", 
+            "0.14159265358979312`", \(-0.14159265358979312`\)},
+          {"4.02653184`*^8", "3.`", "3.`", "0.`", 
+            "0.14159265358979312`", \(-0.14159265358979312`\)},
+          {"8.05306368`*^8", "0.`", "0.`", "0.`", 
+            "3.141592653589793`", \(-3.141592653589793`\)}
+          },
+        RowSpacings->1,
+        ColumnSpacings->3,
+        RowAlignments->Baseline,
+        ColumnAlignments->{Left}],
+      Function[ BoxForm`e$, 
+        TableForm[ BoxForm`e$]]]], "Output",
+  CellLabel->"Out[12]//TableForm="]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Beobachtung",
+  FontSize->16]], "Section"],
+
+Cell[TextData[{
+  "Dieser erste Versuch hat uns nicht zufrieden gestellt. In der Tabelle ist \
+zu sehen, dass die Ann\[ADoubleDot]herung im Maschinenbereich der Pr\
+\[ADoubleDot]zision 16  nur bis k = 49152 sinnvoll ist, Also \
+n\[ADoubleDot]hert nur das Polygon vom Grad 49152 die reelle Zahl \[Pi] in \
+diesem Zahlenbereich sinnvoll an. Danach scheint unsere Berechnung nicht mehr \
+zu fuktionieren. Nach Analyse der Berechnungsmethode ist die Fehlerquelle \
+entdeckt.\n",
+  Cell[BoxData[
+      \(TraditionalForm\`s\_n\)]],
+  " verursacht in dieser Form eine fehlerhafte Berechnung, denn ",
+  Cell[BoxData[
+      \(TraditionalForm\`s\_\(2  n\)\)]],
+  "=",
+  Cell[BoxData[
+      \(TraditionalForm\`\@\(1/2*\((1 - \@\(1 - s\_n\))\)\)\)]],
+  " konvergiert bei steigendem Polygongrad gegen Null . Also geht im \
+Maschienenbereich der Betrag von ",
+  Cell[BoxData[
+      \(TraditionalForm\`s\_n\)]],
+  " gegen Null und somit  ",
+  Cell[BoxData[
+      \(TraditionalForm\`\@\(1 - s\_n\)\)]],
+  " gegen 1. Daraus folgt eine starke Ausl\[ODoubleDot]schung (Abschneiden) \
+im Term ",
+  Cell[BoxData[
+      \(TraditionalForm\`1 - \@\(1 - s\_n\)\)]],
+  " . \nDie erste Version kann durch geschickte Umformung in eine stabilere \
+Version umgeformt werden. Der Term ",
+  Cell[BoxData[
+      \(TraditionalForm\`1 - \@\(1 - s\_n\)\)]],
+  " wird folgenderma\[SZ]en umgeformt:\n(",
+  Cell[BoxData[
+      \(TraditionalForm\`1 - \@\(1 - s\_n\)\)]],
+  ")*(",
+  Cell[BoxData[
+      FormBox[
+        FractionBox[
+          FormBox[\(1 + \@\(1 - s\_n\)\),
+            "TraditionalForm"], \(1 + \@\(1 - s\_n\)\)], TraditionalForm]]],
+  ") = ",
+  Cell[BoxData[
+      FormBox[
+        FractionBox[
+          RowBox[{
+            RowBox[{"(", 
+              FormBox[\(1 + \@\(1 - s\_n\)\),
+                "TraditionalForm"], ")"}], 
+            "*", \((1 - \@\(1 - s\_n\))\)}], \(1 + \@\(1 - s\_n\)\)], 
+        TraditionalForm]]],
+  " = ",
+  Cell[BoxData[
+      \(TraditionalForm\`s\_n\^2\/\(1 + \@\(1 - s\_n\)\)\)]],
+  "\nDie Ausl\[ODoubleDot]schung im betreffenden Term wurde somit behoben. \
+Wir berechnen nun die Kreiszahl mit dieser stabilen Version. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["2. Version zur \[Pi] - Approximation (stabil) ",
+  FontSize->16]], "Section"],
+
+Cell[BoxData[
+    \(Remove["\<Global`*\>"]\)], "Input",
+  CellLabel->"In[74]:="],
+
+Cell[BoxData[
+    \(nn[x_, n_] := NumberForm[N[x], n]\)], "Input",
+  CellLabel->"In[8]:="],
+
+Cell[BoxData[{
+    RowBox[{
+      StyleBox[\(uX[n_]\),
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[":=",
+        FontColor->RGBColor[1, 0, 0]], 
+      RowBox[{
+        StyleBox[\(uX[n]\),
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox["=",
+          FontColor->RGBColor[1, 0, 0]], 
+        "\[IndentingNewLine]", \(Module[{s = 1/2*N[\@3], i, 
+            u}, \[IndentingNewLine]Do[
+            s = \@\(s\^2/\((2*\((1 + \@\(1 - s\^2\))\))\)\); 
+            u = 2\^\(i - 2\)*3*s, {i, 3, n}]; u]\)}]}], "\n", 
+    RowBox[{
+      StyleBox[\(UX[n_]\),
+        FontColor->RGBColor[1, 0, 0]], 
+      StyleBox[":=",
+        FontColor->RGBColor[1, 0, 0]], 
+      RowBox[{
+        StyleBox[\(UX[n]\),
+          FontColor->RGBColor[1, 0, 0]], 
+        StyleBox["=",
+          FontColor->RGBColor[1, 0, 0]], 
+        "\[IndentingNewLine]", \(Module[{s = 1/2*N[\@3], i, u, U, a}, \n
+          Do[s = \@\(s\^2/\((2*\((1 + \@\(1 - s\^2\))\))\)\); 
+            u = 2\^\(i - 2\)*3*s; a = \@\(1 - s\^2\); 
+            U = u/a, \[IndentingNewLine]{i, 3, n}]; U]\)}]}]}], "Input",
+  CellLabel->"In[1]:="],
+
+Cell[BoxData[
+    \(ArchimedesX[n_] := {2\^\(n - 2\)*3, uX[n], UX[n], UX[n] - uX[n], 
+        Pi - uX[n], UX[n] - Pi}\)], "Input",
+  CellLabel->"In[3]:="],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(Tab2 = \ Table[N[ArchimedesX[i], 16], {i, 3, 30}];\)\), "\n", 
+    \(TableForm[Tab2]\)}], "Input",
+  CellLabel->"In[4]:="],
+
+Cell[BoxData[
+    TagBox[GridBox[{
+          {"6.`", "2.9999999999999996`", "3.4641016151377544`", 
+            "0.46410161513775483`", "0.14159265358979356`", 
+            "0.32250896154796127`"},
+          {"12.`", "3.105828541230249`", "3.215390309173472`", 
+            "0.10956176794322303`", "0.03576411235954424`", 
+            "0.07379765558367879`"},
+          {"24.`", "3.1326286132812378`", "3.1596599420975005`", 
+            "0.02703132881626269`", "0.008964040308555354`", 
+            "0.018067288507707335`"},
+          {"48.`", "3.1393502030468663`", "3.146086215131434`", 
+            "0.006736012084567644`", "0.0022424505429268216`", 
+            "0.0044935615416408226`"},
+          {"96.`", "3.1410319508905093`", "3.1427145996453683`", 
+            "0.0016826487548589064`", "0.000560702699283766`", 
+            "0.0011219460555751404`"},
+          {"192.`", "3.1414524722854615`", "3.1418730499798233`", 
+            "0.00042057769436176784`", "0.00014018130433157694`", 
+            "0.0002803963900301909`"},
+          {"384.`", "3.1415576079118575`", "3.141662747056848`", 
+            "0.00010513914499066246`", "0.00003504567793566338`", 
+            "0.00007009346705499908`"},
+          {"768.`", "3.1415838921483177`", "3.1416101766046887`", 
+            "0.00002628445637098409`", "8.76144147543556`*^-6", 
+            "0.000017523014895548528`"},
+          {"1536.`", "3.1415904632280496`", "3.1415970343215256`", 
+            "6.571093476015477`*^-6", "2.1903617435370393`*^-6", 
+            "4.380731732478438`*^-6"},
+          {"3072.`", "3.1415921059992713`", "3.1415937487713514`", 
+            "1.64277208014596`*^-6", "5.475905218155219`*^-7", 
+            "1.095181558330438`*^-6"},
+          {"6144.`", "3.1415925166921568`", "3.141592927385096`", 
+            "4.106929392122538`*^-7", "1.368976363380625`*^-7", 
+            "2.737953028741913`*^-7"},
+          {"12288.`", "3.141592619365383`", "3.141592722038613`", 
+            "1.0267322991808214`*^-7", "3.422440997269405`*^-8", 
+            "6.84488199453881`*^-8"},
+          {"24576.`", "3.1415926450336897`", "3.1415926707019968`", 
+            "2.5668307035431326`*^-8", "8.556103381351932`*^-9", 
+            "1.7112203654079394`*^-8"},
+          {"49152.`", "3.1415926514507664`", "3.141592657867843`", 
+            "6.417076647835529`*^-9", "2.1390267335164026`*^-9", 
+            "4.278049914319126`*^-9"},
+          {"98304.`", "3.141592653055036`", "3.1415926546593056`", 
+            "1.604269606048092`*^-9", "5.347571274683105`*^-10", 
+            "1.0695124785797816`*^-9"},
+          {"196608.`", "3.141592653456103`", "3.1415926538571703`", 
+            "4.010671794674181`*^-10", "1.336899480008924`*^-10", 
+            "2.673772314665257`*^-10"},
+          {"393216.`", "3.1415926535563696`", "3.141592653656636`", 
+            "1.0026646179994714`*^-10", "3.342348620094526`*^-11", 
+            "6.684297559900187`*^-11"},
+          {"786432.`", "3.1415926535814362`", "3.141592653606503`", 
+            "2.5066615449986784`*^-11", "8.356870750958478`*^-12", 
+            "1.6709744699028306`*^-11"},
+          {"1.572864`*^6", "3.1415926535877032`", "3.14159265359397`", 
+            "6.266986929404084`*^-12", "2.0898838215543947`*^-12", 
+            "4.177103107849689`*^-12"},
+          {"3.145728`*^6", "3.14159265358927`", "3.1415926535908367`", 
+            "1.566746732351021`*^-12", "5.231370892033738`*^-13", 
+            "1.0436096431476471`*^-12"},
+          {"6.291456`*^6", "3.1415926535896617`", "3.141592653590054`", 
+            "3.921307722976053`*^-13", "1.3145040611561853`*^-13", 
+            "2.6068036618198676`*^-13"},
+          {"1.2582912`*^7", "3.1415926535897594`", "3.141592653589857`", 
+            "9.769962616701378`*^-14", "3.375077994860476`*^-14", 
+            "6.394884621840902`*^-14"},
+          {"2.5165824`*^7", "3.1415926535897842`", "3.1415926535898087`", 
+            "2.4424906541753444`*^-14", "8.881784197001252`*^-15", 
+            "1.554312234475219`*^-14"},
+          {"5.0331648`*^7", "3.141592653589791`", "3.141592653589797`", 
+            "6.217248937900877`*^-15", "2.220446049250313`*^-15", 
+            "3.9968028886505635`*^-15"},
+          {"1.00663296`*^8", "3.1415926535897922`", "3.1415926535897936`", 
+            "1.3322676295501878`*^-15", "8.881784197001252`*^-16", 
+            "4.440892098500626`*^-16"},
+          {"2.01326592`*^8", "3.141592653589793`", "3.141592653589793`", 
+            "0.`", "0.`", "0.`"},
+          {"4.02653184`*^8", "3.141592653589793`", "3.141592653589793`", 
+            "0.`", "0.`", "0.`"},
+          {"8.05306368`*^8", "3.141592653589793`", "3.141592653589793`", 
+            "0.`", "0.`", "0.`"}
+          },
+        RowSpacings->1,
+        ColumnSpacings->3,
+        RowAlignments->Baseline,
+        ColumnAlignments->{Left}],
+      Function[ BoxForm`e$, 
+        TableForm[ BoxForm`e$]]]], "Output",
+  CellLabel->"Out[5]//TableForm="]
+}, Open  ]]
+}, Closed]]
+},
+FrontEndVersion->"4.2 for Microsoft Windows",
+ScreenRectangle->{{0, 800}, {0, 520}},
+WindowToolbars->"EditBar",
+WindowSize->{792, 492},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Magnification->1,
+StyleDefinitions -> "TutorialBook.nb"
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 71, 1, 90, "Section"],
+Cell[1850, 56, 942, 19, 152, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[2829, 80, 90, 3, 58, "Section"],
+Cell[2922, 85, 1167, 29, 297, "Input"],
+Cell[4092, 116, 148, 3, 36, "Input"],
+
+Cell[CellGroupData[{
+Cell[4265, 123, 173, 4, 61, "Input"],
+Cell[4441, 129, 4959, 89, 597, "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[9449, 224, 66, 1, 58, "Section"],
+Cell[9518, 227, 2145, 55, 285, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[11700, 287, 101, 1, 58, "Section"],
+Cell[11804, 290, 80, 2, 31, "Input"],
+Cell[11887, 294, 90, 2, 31, "Input"],
+Cell[11980, 298, 1107, 29, 275, "Input"],
+Cell[13090, 329, 154, 3, 55, "Input"],
+
+Cell[CellGroupData[{
+Cell[13269, 336, 145, 3, 54, "Input"],
+Cell[13417, 341, 4955, 90, 568, "Output"]
+}, Open  ]]
+}, Closed]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+
